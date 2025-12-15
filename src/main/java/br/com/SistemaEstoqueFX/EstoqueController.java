@@ -90,12 +90,6 @@ public class EstoqueController {
         TextField txtNome = new TextField(sugestaoNome);
         txtNome.setPromptText("Nome do produto");
 
-        // Autocomplete com nomes do estoque
-        java.util.List<String> nomes = Produto.estoque.stream()
-                .map(Produto::getNome)
-                .toList();
-        org.controlsfx.control.textfield.TextFields.bindAutoCompletion(txtNome, nomes);
-
         dialog.getDialogPane().setContent(txtNome);
 
         dialog.setResultConverter(button -> {
