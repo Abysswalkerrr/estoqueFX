@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.com.SistemaEstoqueFX.EstoqueController">
+
+    <top>
+        <HBox spacing="8" style="-fx-padding: 8;">
+            <Button text="Criar Produto" fx:id="btnCriar"   onAction="#onCriarProduto"/>
+            <Button text="Entrada"       fx:id="btnEntrada" onAction="#onEntrada"/>
+            <Button text="Saída"         fx:id="btnSaida"   onAction="#onSaida"/>
+            <Button text="Salvar"        fx:id="btnSalvar"  onAction="#onSalvar"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colCodigo" text="Código"/>
+                <TableColumn fx:id="colNome" text="Nome"/>
+                <TableColumn fx:id="colCategoria" text="Categoria"/>
+                <TableColumn fx:id="colQtdMin" text="Qtd Mínima"/>
+                <TableColumn fx:id="colValorUnd" text="Valor Und"/>
+                <TableColumn fx:id="colQtd" text="Qtd"/>
+                <TableColumn fx:id="colOrientacao" text="Orientação"/>
+                <TableColumn fx:id="colSaldo" text="Saldo"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

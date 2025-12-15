@@ -1,0 +1,218 @@
+package br.com.SistemaEstoqueFX;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+
+import java.io.IOException;
+
+public class EstoqueController {
+
+    @FXML private TableView<Produto> tabela;
+    @FXML private TableColumn<Produto, String> colCodigo;
+    @FXML private TableColumn<Produto, String> colNome;
+    @FXML private TableColumn<Produto, String> colCategoria;
+    @FXML private TableColumn<Produto, Integer> colQtdMin;
+    @FXML private TableColumn<Produto, String> colValorUnd;
+    @FXML private TableColumn<Produto, Integer> colQtd;
+    @FXML private TableColumn<Produto, String> colOrientacao;
+    @FXML private TableColumn<Produto, String> colSaldo;
+
+    @FXML private Button btnCriar;
+    @FXML private Button btnEntrada;
+    @FXML private Button btnSaida;
+    @FXML private Button btnSalvar;
+
+    private ObservableList<Produto> dados;
+
+    @FXML
+    public void initialize() {
+        // liga colunas aos getters de Produto
+        colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+        colQtdMin.setCellValueFactory(new PropertyValueFactory<>("vlrMin"));
+        colValorUnd.setCellValueFactory(new PropertyValueFactory<>("vlrUnd"));
+        colQtd.setCellValueFactory(new PropertyValueFactory<>("qtd"));
+
+        colOrientacao.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(
+                        Misc.isUrgente(cellData.getValue())
+                )
+        );
+        colSaldo.setCellValueFactory(cellData -> {
+            Produto p = cellData.getValue();
+            double saldo = p.getVlrUnd() * p.getQtd();
+            String saldoStr = String.format("%.2f", saldo);
+            return new javafx.beans.property.SimpleStringProperty("R$ " + saldoStr);
+        });
+
+        colValorUnd.setCellValueFactory(cellData -> {
+            Produto p = cellData.getValue();
+            double vlrUnd = p.getVlrUnd();
+            String vlrUndStr = String.format("%.2f", vlrUnd);
+            return new javafx.beans.property.SimpleStringProperty("R$ " + vlrUndStr);
+        });
+
+        dados = FXCollections.observableArrayList(Produto.estoque);
+        tabela.setItems(dados);
+
+        // colorir linhas urgentes
+        tabela.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Produto item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                } else if (item.getCompra()) {
+                    setStyle("-fx-background-color: yellow;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+    }
+
+    private String perguntarNomeProduto(String titulo, String mensagem) {
+        Produto selecionado = tabela.getSelectionModel().getSelectedItem();
+        String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
+
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(titulo);
+        dialog.setHeaderText(mensagem);
+
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        TextField txtNome = new TextField(sugestaoNome);
+        txtNome.setPromptText("Nome do produto");
+
+        // Autocomplete com nomes do estoque
+        java.util.List<String> nomes = Produto.estoque.stream()
+                .map(Produto::getNome)
+                .toList();
+        org.controlsfx.control.textfield.TextFields.bindAutoCompletion(txtNome, nomes);
+
+        dialog.getDialogPane().setContent(txtNome);
+
+        dialog.setResultConverter(button -> {
+            if (button == okButtonType) {
+                String n = txtNome.getText();
+                return (n == null || n.isBlank()) ? null : n;
+            }
+            return null;
+        });
+
+        return dialog.showAndWait().orElse(null);
+    }
+
+
+    @FXML
+    private void onCriarProduto() {
+        String nome = "";
+        String categoria = "";
+
+        while (nome.isBlank()) {
+            TextInputDialog dialogNome = new TextInputDialog();
+            dialogNome.setTitle("Criar Produto");
+            dialogNome.setHeaderText(null);
+            dialogNome.setContentText("Nome do produto:");
+            nome = dialogNome.showAndWait().orElse(null);
+            if (nome == null) return;
+            nome = nome.toUpperCase();
+        }
+
+        while (categoria.isBlank()) {
+            TextInputDialog dialogCategoria = new TextInputDialog();
+            dialogCategoria.setTitle("Criar Produto");
+            dialogCategoria.setHeaderText(null);
+            dialogCategoria.setContentText("Categoria:");
+            categoria = dialogCategoria.showAndWait().orElse(null);
+            if (categoria == null) return;
+            categoria = categoria.toUpperCase();
+            Misc.addCategoria(categoria);
+        }
+
+
+        int qtdMin, qtd;
+        double vlrUnd;
+
+        try {
+            TextInputDialog dMin = new TextInputDialog();
+            dMin.setTitle("Criar Produto");
+            dMin.setHeaderText(null);
+            dMin.setContentText("Quantidade mínima:");
+            qtdMin = Integer.parseInt(dMin.showAndWait().orElse("0").trim());
+
+            TextInputDialog dVlr = new TextInputDialog();
+            dVlr.setTitle("Criar Produto");
+            dVlr.setHeaderText(null);
+            dVlr.setContentText("Valor unitário:");
+            vlrUnd = Double.parseDouble(dVlr.showAndWait().orElse("0").replace(',', '.').trim());
+
+            TextInputDialog dQtd = new TextInputDialog();
+            dQtd.setTitle("Criar Produto");
+            dQtd.setHeaderText(null);
+            dQtd.setContentText("Quantidade em estoque:");
+            qtd = Integer.parseInt(dQtd.showAndWait().orElse("0").trim());
+        } catch (NumberFormatException ex) {
+            new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+            return;
+        }
+
+        Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria);
+        Produto.addEstoque(novo);
+        dados.setAll(Produto.estoque); // atualiza TableView
+    }
+
+    @FXML
+    private void onEntrada() {
+        String nome = perguntarNomeProduto("Entrada de estoque", "Informe o produto:");
+        if (nome == null) return;
+        nome = nome.toUpperCase();
+
+        TextInputDialog dialogQtd = new TextInputDialog();
+        dialogQtd.setTitle("Entrada de estoque");
+        dialogQtd.setHeaderText("Produto: " + nome);
+        dialogQtd.setContentText("Quantidade a entrar:");
+        try {
+            int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
+            Produto.entrada(qtd, nome);
+            dados.setAll(Produto.estoque); // atualiza TableView
+        } catch (NumberFormatException ex) {
+            new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
+        }
+    }
+
+    @FXML
+    private void onSaida() {
+        String nome = perguntarNomeProduto("Saída de estoque", "Informe o produto:");
+        if (nome == null) return;
+        nome = nome.toUpperCase();
+
+        TextInputDialog dialogQtd = new TextInputDialog();
+        dialogQtd.setTitle("Saída de estoque");
+        dialogQtd.setHeaderText("Produto: " + nome);
+        dialogQtd.setContentText("Quantidade a retirar:");
+        try {
+            int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
+            Produto.saida(qtd, nome);
+            dados.setAll(Produto.estoque); // atualiza TableView
+        } catch (NumberFormatException ex) {
+            new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
+        }
+    }
+
+    @FXML
+    private void onSalvar() {
+        try {
+            Leitor.salvarEstoque(Produto.estoque);
+            new Alert(Alert.AlertType.INFORMATION, "Estoque salvo com sucesso.").showAndWait();
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Erro ao salvar: " + e.getMessage()).showAndWait();
+        }
+    }
+}
