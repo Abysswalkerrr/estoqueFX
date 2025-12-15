@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.StringConverter;
 
 
 import java.io.IOException;
@@ -30,6 +33,7 @@ public class EstoqueController {
 
     @FXML
     public void initialize() {
+        tabela.setEditable(true);
         // liga colunas aos getters de Produto
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -56,6 +60,80 @@ public class EstoqueController {
             String vlrUndStr = String.format("%.2f", vlrUnd);
             return new javafx.beans.property.SimpleStringProperty("R$ " + vlrUndStr);
         });
+
+        colNome.setCellFactory(TextFieldTableCell.forTableColumn());
+        colNome.setOnEditCommit(event -> {
+            Produto p = event.getRowValue();
+            String novoNome = event.getNewValue();
+            if (novoNome == null || novoNome.isBlank()) return;
+            novoNome = novoNome.trim().toUpperCase();
+            p.setNome(novoNome);                    // precisa de setter de instância
+            // Se quiser manter mapaCodigo por código, nada a fazer aqui
+            tabela.refresh();
+        });
+
+        colCategoria.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCategoria.setOnEditCommit(event -> {
+            Produto p = event.getRowValue();
+            String novaCat = event.getNewValue();
+            if (novaCat == null || novaCat.isBlank()) return;
+            novaCat = novaCat.trim().toUpperCase();
+            p.setCategoria(novaCat);
+            Misc.addCategoria(novaCat);
+            tabela.refresh();
+        });
+
+        colQtdMin.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        colQtdMin.setOnEditCommit(event -> {
+            Produto p = event.getRowValue();
+            try {
+                int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
+                p.setVlrMin(novoMin);
+                Produto.atualizaCompra(p);
+                tabela.refresh();
+            } catch (NumberFormatException ex) {
+                // opcional: alert de valor inválido
+            }
+        });
+
+        colQtd.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        colQtd.setOnEditCommit(event -> {
+            Produto p = event.getRowValue();
+            try {
+                int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
+                p.setQtd(novaQtd);
+                Produto.atualizaCompra(p);
+                Misc.atualizaTotal();
+                tabela.refresh();
+            } catch (NumberFormatException ex) {
+                // opcional: alert
+            }
+        });
+
+        colValorUnd.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<String>() {
+            @Override
+            public String toString(String value) {
+                return value;
+            }
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        }));
+
+        colValorUnd.setOnEditCommit(event -> {
+            Produto p = event.getRowValue();
+            String texto = event.getNewValue();
+            try {
+                double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
+                p.setVlrUnd(novoVlr);
+                Misc.atualizaTotal();
+                tabela.refresh();
+            } catch (NumberFormatException ex) {
+                // opcional: alert
+            }
+        });
+
 
         dados = FXCollections.observableArrayList(Produto.estoque);
         tabela.setItems(dados);
@@ -102,7 +180,6 @@ public class EstoqueController {
 
         return dialog.showAndWait().orElse(null);
     }
-
 
     @FXML
     private void onCriarProduto() {
@@ -166,7 +243,7 @@ public class EstoqueController {
     private void onEntrada() {
         String nome = perguntarNomeProduto("Entrada de estoque", "Informe o produto:");
         if (nome == null) return;
-        nome = nome.toUpperCase();
+        nome = nome.trim().toUpperCase();
 
         TextInputDialog dialogQtd = new TextInputDialog();
         dialogQtd.setTitle("Entrada de estoque");

@@ -49,7 +49,16 @@ public class Produto {
 
 
     public static void entrada(int a, String nome) {
-        Produto p = mapaCodigo.get(getCodigoPorNome(nome));
+        String codigo = getCodigoPorNome(nome);
+        if (codigo == null) {
+            System.out.println("Produto não encontrado para entrada: " + nome);
+            return;
+        }
+        Produto p = mapaCodigo.get(codigo);
+        if (p == null) {
+            System.out.println("Produto não encontrado no mapa: " + codigo);
+            return;
+        }
         p.qtd += a;
         atualizaCompra(p);
         Misc.atualizaTotal();
@@ -57,13 +66,24 @@ public class Produto {
     }
 
     public static void saida(int a, String nome) {
-        Produto p = mapaCodigo.get(getCodigoPorNome(nome));
+        String codigo = getCodigoPorNome(nome);
+        if (codigo == null) {
+            System.out.println("Produto não encontrado para saída: " + nome);
+            return;
+        }
+        Produto p = mapaCodigo.get(codigo);
+        if (p == null) {
+            System.out.println("Produto não encontrado no mapa: " + codigo);
+            return;
+        }
         if (p.qtd >= a) {
             p.qtd -= a;
             atualizaCompra(p);
             Misc.atualizaTotal();
             ultimaAcao = "s";
-        } //else erro
+        } else {
+            System.out.println("Estoque insuficiente! Último estoque: " + p.qtd);
+        }
     }
 
     public static void addEstoque(Produto prod) {
@@ -108,6 +128,27 @@ public class Produto {
     public static void setUltimaAcao(String lastAction) {
         ultimaAcao = lastAction;
     }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setVlrMin(int vlrMin) {
+        this.vlrMin = vlrMin;
+    }
+
+    public void setVlrUnd(double vlrUnd) {
+        this.vlrUnd = vlrUnd;
+    }
+
+    public void setQtd(int qtd) {
+        this.qtd = qtd;
+    }
+
 
     public static String getUltimaAcao(){
         return  ultimaAcao;
@@ -156,8 +197,12 @@ public class Produto {
     }
 
     public static String getCodigoPorNome(String n) {
+        if (n == null) return null;
+        String buscado = n.trim().toUpperCase();
+
         for (Produto produto : estoque) {
-            if (produto.getNome().equals(n)) {
+            String nomeProd = produto.getNome();
+            if (nomeProd != null && nomeProd.trim().toUpperCase().equals(buscado)) {
                 return produto.codigo;
             }
         }
