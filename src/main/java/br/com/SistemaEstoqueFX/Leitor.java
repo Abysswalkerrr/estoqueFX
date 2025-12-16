@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
 import javax.swing.filechooser.FileSystemView;
@@ -76,7 +77,7 @@ public class Leitor {
         pw.close();
     }
 
-    public static void exportarEstoqueCSV(java.util.List<Produto> estoque) throws IOException {
+    public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
         File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
             pastaApp.mkdirs();
@@ -105,7 +106,7 @@ public class Leitor {
                 totalSaldo += saldo;
 
                 pw.println(
-                        codigo + ";" +
+                                codigo + ";" +
                                 nome + ";" +
                                 categoria + ";" +
                                 qtdMin + ";" +

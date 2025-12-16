@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="br.com.SistemaEstoqueFX.EstoqueController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="br.com.SistemaEstoqueFX.EstoqueController">
 
     <top>
         <HBox spacing="8" style="-fx-padding: 8;">
-            <Button text="Criar Produto" fx:id="btnCriar"   onAction="#onCriarProduto"/>
-            <Button text="Entrada"       fx:id="btnEntrada" onAction="#onEntrada"/>
-            <Button text="Saída"         fx:id="btnSaida"   onAction="#onSaida"/>
-            <Button text="Salvar"        fx:id="btnSalvar"  onAction="#onSalvar"/>
+            <Button fx:id="btnCriar" onAction="#onCriarProduto" text="Criar Produto" />
+            <Button fx:id="btnEntrada" onAction="#onEntrada" text="Entrada" />
+            <Button fx:id="btnSaida" onAction="#onSaida" text="Saída" />
+            <Button fx:id="btnSalvar" onAction="#onSalvar" text="Salvar" />
+            <Button fx:id="btnExportar" text="Exportar CSV" onAction="#onExportarCsv"/>
+
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <TextField fx:id="txtBusca" maxWidth="300" prefWidth="250" promptText="Buscar" HBox.hgrow="SOMETIMES" />
         </HBox>
+
     </top>
+
 
     <center>
         <TableView fx:id="tabela" prefHeight="400">
             <columns>
-                <TableColumn fx:id="colCodigo" text="Código"/>
-                <TableColumn fx:id="colNome" text="Nome"/>
-                <TableColumn fx:id="colCategoria" text="Categoria"/>
-                <TableColumn fx:id="colQtdMin" text="Qtd Mínima"/>
-                <TableColumn fx:id="colValorUnd" text="Valor Und"/>
-                <TableColumn fx:id="colQtd" text="Qtd"/>
-                <TableColumn fx:id="colOrientacao" text="Orientação"/>
-                <TableColumn fx:id="colSaldo" text="Saldo"/>
+                <TableColumn fx:id="colCodigo" text="Código" />
+                <TableColumn fx:id="colNome" text="Nome" />
+                <TableColumn fx:id="colCategoria" text="Categoria" />
+                <TableColumn fx:id="colQtdMin" text="Qtd Mínima" />
+                <TableColumn fx:id="colValorUnd" text="Valor Und" />
+                <TableColumn fx:id="colQtd" text="Qtd" />
+                <TableColumn fx:id="colOrientacao" text="Orientação" />
+                <TableColumn fx:id="colSaldo" text="Saldo" />
             </columns>
         </TableView>
     </center>

@@ -2,15 +2,17 @@ package br.com.SistemaEstoqueFX;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
+
 import javafx.util.StringConverter;
-
-
 import java.io.IOException;
+
 
 public class EstoqueController {
 
@@ -30,6 +32,10 @@ public class EstoqueController {
     @FXML private Button btnSalvar;
 
     private ObservableList<Produto> dados;
+    private FilteredList<Produto> filtrados;
+
+    @FXML private TextField txtBusca;
+
 
     @FXML
     public void initialize() {
@@ -67,8 +73,7 @@ public class EstoqueController {
             String novoNome = event.getNewValue();
             if (novoNome == null || novoNome.isBlank()) return;
             novoNome = novoNome.trim().toUpperCase();
-            p.setNome(novoNome);                    // precisa de setter de instância
-            // Se quiser manter mapaCodigo por código, nada a fazer aqui
+            p.setNome(novoNome);
             tabela.refresh();
         });
 
@@ -92,7 +97,7 @@ public class EstoqueController {
                 Produto.atualizaCompra(p);
                 tabela.refresh();
             } catch (NumberFormatException ex) {
-                // opcional: alert de valor inválido
+                // erro inválido
             }
         });
 
@@ -106,7 +111,7 @@ public class EstoqueController {
                 Misc.atualizaTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
-                // opcional: alert
+                // erro inválido
             }
         });
 
@@ -130,13 +135,34 @@ public class EstoqueController {
                 Misc.atualizaTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
-                // opcional: alert
+                // erro inválido
             }
         });
 
 
         dados = FXCollections.observableArrayList(Produto.estoque);
-        tabela.setItems(dados);
+        filtrados = new FilteredList<>(dados, p -> true);
+
+        txtBusca.textProperty().addListener((obs, oldValue, newValue) -> {
+            String filtro = (newValue == null) ? "" : newValue.trim().toUpperCase();
+
+            filtrados.setPredicate(produto -> {
+                if (filtro.isEmpty()) return true;
+
+                String nome = produto.getNome() == null ? "" : produto.getNome().toUpperCase();
+                String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
+                String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
+
+                return nome.contains(filtro)
+                        || cat.contains(filtro)
+                        || cod.contains(filtro);
+            });
+        });
+
+        SortedList<Produto> ordenados = new SortedList<>(filtrados);
+        ordenados.comparatorProperty().bind(tabela.comparatorProperty());
+
+        tabela.setItems(ordenados);
 
         // colorir linhas urgentes
         tabela.setRowFactory(tv -> new TableRow<>() {
@@ -154,13 +180,13 @@ public class EstoqueController {
         });
     }
 
-    private String perguntarNomeProduto(String titulo, String mensagem) {
+    private String perguntarNomeProduto(String titulo) {
         Produto selecionado = tabela.getSelectionModel().getSelectedItem();
         String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
 
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(titulo);
-        dialog.setHeaderText(mensagem);
+        dialog.setHeaderText("Informe o produto:");
 
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
@@ -241,7 +267,7 @@ public class EstoqueController {
 
     @FXML
     private void onEntrada() {
-        String nome = perguntarNomeProduto("Entrada de estoque", "Informe o produto:");
+        String nome = perguntarNomeProduto("Entrada de estoque");
         if (nome == null) return;
         nome = nome.trim().toUpperCase();
 
@@ -260,7 +286,7 @@ public class EstoqueController {
 
     @FXML
     private void onSaida() {
-        String nome = perguntarNomeProduto("Saída de estoque", "Informe o produto:");
+        String nome = perguntarNomeProduto("Saída de estoque");
         if (nome == null) return;
         nome = nome.toUpperCase();
 
@@ -281,9 +307,26 @@ public class EstoqueController {
     private void onSalvar() {
         try {
             Leitor.salvarEstoque(Produto.estoque);
+            Produto.setUltimaAcao("s");
             new Alert(Alert.AlertType.INFORMATION, "Estoque salvo com sucesso.").showAndWait();
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Erro ao salvar: " + e.getMessage()).showAndWait();
         }
     }
+
+    @FXML
+    private void onExportarCsv() {
+        try {
+            Leitor.exportarEstoqueCSV(Produto.estoque);
+
+            new Alert(Alert.AlertType.INFORMATION,
+                    "CSV exportado com sucesso em:\nDocumentos/" + Leitor.nomePasta + "/estoque.csv")
+                    .showAndWait();
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Erro ao exportar CSV: " + e.getMessage())
+                    .showAndWait();
+        }
+    }
+
 }

@@ -62,7 +62,7 @@ public class Produto {
         p.qtd += a;
         atualizaCompra(p);
         Misc.atualizaTotal();
-        ultimaAcao = "e";
+        setUltimaAcao("e");
     }
 
     public static void saida(int a, String nome) {
@@ -80,7 +80,7 @@ public class Produto {
             p.qtd -= a;
             atualizaCompra(p);
             Misc.atualizaTotal();
-            ultimaAcao = "s";
+            setUltimaAcao("e");
         } else {
             System.out.println("Estoque insuficiente! Último estoque: " + p.qtd);
         }
@@ -90,39 +90,39 @@ public class Produto {
         estoque.add(prod);
         mapaCodigo.put(prod.codigo, prod);
         Misc.atualizaTotal();
-        ultimaAcao = "c";
+        setUltimaAcao("c");
     }
 
     public static void setVlrMin(int a, String codigo) {
         Produto p = mapaCodigo.get(codigo);
         p.vlrMin = a;
-        ultimaAcao = "t";
+        setUltimaAcao("t");
     }
 
     public static void setVlrUnd(double a, String codigo) {
         Produto p = mapaCodigo.get(codigo);
         p.vlrUnd = a;
         Misc.atualizaTotal();
-        ultimaAcao = "t";
+        setUltimaAcao("t");
     }
 
     public static void setQtd(int a, String codigo) {
         Produto p = mapaCodigo.get(codigo);
         p.qtd = a;
         Misc.atualizaTotal();
-        ultimaAcao = "t";
+        setUltimaAcao("t");
     }
 
     public static void setNome(String nome,  String codigo) {
         Produto p = mapaCodigo.get(codigo);
         p.nome = nome;
-        ultimaAcao = "t";
+        setUltimaAcao("t");
     }
 
     public static void setCategoria(String categoria, String codigo) {
         Produto p = mapaCodigo.get(codigo);
         p.categoria = categoria;
-        ultimaAcao = "t";
+        setUltimaAcao("t");
     }
 
     public static void setUltimaAcao(String lastAction) {
@@ -131,24 +131,28 @@ public class Produto {
 
     public void setNome(String nome) {
         this.nome = nome;
+        setUltimaAcao("t");
     }
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+        setUltimaAcao("t");
     }
 
     public void setVlrMin(int vlrMin) {
         this.vlrMin = vlrMin;
+        setUltimaAcao("t");
     }
 
     public void setVlrUnd(double vlrUnd) {
         this.vlrUnd = vlrUnd;
+        setUltimaAcao("t");
     }
 
     public void setQtd(int qtd) {
         this.qtd = qtd;
+        setUltimaAcao("t");
     }
-
 
     public static String getUltimaAcao(){
         return  ultimaAcao;
