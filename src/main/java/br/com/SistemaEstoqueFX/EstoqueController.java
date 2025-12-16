@@ -30,6 +30,7 @@ public class EstoqueController {
     @FXML private Button btnEntrada;
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
+    @FXML private Button btnExportar;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
@@ -329,4 +330,22 @@ public class EstoqueController {
         }
     }
 
+    @FXML
+    private void onSobre(){
+        String msg = """
+            SistemaEstoqueFX
+            Versão: 1.0.0
+
+            Autor: Arthur
+
+            Pasta de dados:
+            %s
+            """.formatted(Leitor.getPath()); // ou texto fixo
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sobre SistemaEstoqueFX");
+        alert.setHeaderText("Sobre o sistema");
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
 }

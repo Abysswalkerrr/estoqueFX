@@ -3,21 +3,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="br.com.SistemaEstoqueFX.EstoqueController">
+<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.SistemaEstoqueFX.EstoqueController">
 
     <top>
-        <HBox spacing="8" style="-fx-padding: 8;">
-            <Button fx:id="btnCriar" onAction="#onCriarProduto" text="Criar Produto" />
-            <Button fx:id="btnEntrada" onAction="#onEntrada" text="Entrada" />
-            <Button fx:id="btnSaida" onAction="#onSaida" text="Saída" />
-            <Button fx:id="btnSalvar" onAction="#onSalvar" text="Salvar" />
-            <Button fx:id="btnExportar" text="Exportar CSV" onAction="#onExportarCsv"/>
+        <VBox>
+            <MenuBar>
+                <Menu text="Ajuda">
+                    <MenuItem text="Sobre" onAction="#onSobre"/>
+                </Menu>
+            </MenuBar>
 
+            <HBox spacing="8" style="-fx-padding: 8;">
+                <Button fx:id="btnCriar" onAction="#onCriarProduto" text="Criar Produto" />
+                <Button fx:id="btnEntrada" onAction="#onEntrada" text="Entrada" />
+                <Button fx:id="btnSaida" onAction="#onSaida" text="Saída" />
+                <Button fx:id="btnSalvar" onAction="#onSalvar" text="Salvar" />
+                <Button fx:id="btnExportar" onAction="#onExportarCsv" text="Exportar CSV" />
 
-            <Region HBox.hgrow="ALWAYS" />
+                <Region HBox.hgrow="ALWAYS" />
 
-            <TextField fx:id="txtBusca" maxWidth="300" prefWidth="250" promptText="Buscar" HBox.hgrow="SOMETIMES" />
-        </HBox>
+                <TextField fx:id="txtBusca" maxWidth="300" prefWidth="250" promptText="Buscar" HBox.hgrow="SOMETIMES" />
+            </HBox>
+        </VBox>
 
     </top>
 

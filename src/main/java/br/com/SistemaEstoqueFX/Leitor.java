@@ -10,10 +10,9 @@ import java.io.IOException;
 import javax.swing.filechooser.FileSystemView;
 
 public class Leitor {
-    public static String nomeArquivo = "estoque.txt";
+    static String nomeArquivo = "estoque.txt";
     static String nomePasta = "Sistema estoque";
     static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
-
 
     public static ArrayList<Produto> carregarEstoque() throws IOException {
         ArrayList<Produto> estoque = new ArrayList<>();
@@ -121,6 +120,11 @@ public class Leitor {
             pw.println(";;;;;;;;");
             pw.println(";;;;;;;Saldo total;" + totalSaldo);
         }
+    }
+
+    public static String getPath(){
+        File pastaApp = new File(pastaDocs, nomePasta);
+        return pastaApp.getAbsolutePath();
     }
 
 
