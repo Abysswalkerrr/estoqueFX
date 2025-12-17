@@ -13,6 +13,7 @@ public class Produto {
     private String categoria;
     private boolean compraUrgente;
     private static String ultimaAcao = "i";
+    private String descricao;
 
     static ArrayList<Produto> estoque = new ArrayList<>();
     private static int proximoCodigo = 1;
@@ -27,9 +28,28 @@ public class Produto {
         this.qtd = qtd;
         this.vlrUnd = vlrUnd;
         compraUrgente = vlrMin > qtd;
+        descricao = "";
     }
 
     // Construtor para produtos carregados do arquivo (código já existe)
+    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String descricao) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.categoria = categoria;
+        this.vlrMin = vlrMin;
+        this.qtd = qtd;
+        this.vlrUnd = vlrUnd;
+        compraUrgente = vlrMin > qtd;
+        this.descricao = descricao;
+
+
+        // Atualiza o próximo código se necessário
+        int codigoNum = Integer.parseInt(codigo);
+        if (codigoNum >= proximoCodigo) {
+            proximoCodigo = codigoNum + 1;
+        }
+    }
+
     public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd) {
         this.codigo = codigo;
         this.nome = nome;
@@ -38,6 +58,7 @@ public class Produto {
         this.qtd = qtd;
         this.vlrUnd = vlrUnd;
         compraUrgente = vlrMin > qtd;
+        this.descricao = "";
 
 
         // Atualiza o próximo código se necessário
@@ -154,6 +175,11 @@ public class Produto {
         setUltimaAcao("t");
     }
 
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+        setUltimaAcao("t");
+    }
+
     public static String getUltimaAcao(){
         return  ultimaAcao;
     }
@@ -186,6 +212,10 @@ public class Produto {
         return compraUrgente;
     }
 
+    public String getDescricao() {
+        return  descricao;
+    }
+
     public static Produto getProdutoPorCodigo(String codigo) {
         for (Produto p : Produto.estoque) {
             if (p.getCodigo().equals(codigo)) {
@@ -197,7 +227,7 @@ public class Produto {
 
     @Override
     public String toString() {
-        return codigo + "|" + nome + "|" + categoria + "|" + vlrMin + "|" + vlrUnd + "|" + qtd;
+        return codigo + "|" + nome + "|" + categoria + "|" + vlrMin + "|" + vlrUnd + "|" + qtd + "|" + descricao;
     }
 
     public static String getCodigoPorNome(String n) {

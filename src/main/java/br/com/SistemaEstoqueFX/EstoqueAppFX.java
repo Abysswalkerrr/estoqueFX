@@ -47,9 +47,8 @@ public class EstoqueAppFX extends Application {
                             "Erro ao salvar antes de sair: " + e.getMessage()).showAndWait();
                     event.consume(); // mantém aberto se der erro
                 }
-            } else {
-                // "Não salvar"
             }
+            //else não salva
         });
         stage.show();
     }

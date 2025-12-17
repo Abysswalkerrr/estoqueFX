@@ -35,11 +35,12 @@
                 <TableColumn fx:id="colCodigo" text="Código" />
                 <TableColumn fx:id="colNome" text="Nome" />
                 <TableColumn fx:id="colCategoria" text="Categoria" />
-                <TableColumn fx:id="colQtdMin" text="Qtd Mínima" />
+                <TableColumn fx:id="colQtdMin" text="Qtd Mín" />
                 <TableColumn fx:id="colValorUnd" text="Valor Und" />
                 <TableColumn fx:id="colQtd" text="Qtd" />
                 <TableColumn fx:id="colOrientacao" text="Orientação" />
                 <TableColumn fx:id="colSaldo" text="Saldo" />
+                <TableColumn fx:id="colDescricao" text="Descrição" />
             </columns>
         </TableView>
     </center>

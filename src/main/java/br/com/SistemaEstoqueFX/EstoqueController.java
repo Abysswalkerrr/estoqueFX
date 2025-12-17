@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
 import javafx.util.StringConverter;
@@ -25,6 +26,7 @@ public class EstoqueController {
     @FXML private TableColumn<Produto, Integer> colQtd;
     @FXML private TableColumn<Produto, String> colOrientacao;
     @FXML private TableColumn<Produto, String> colSaldo;
+    @FXML private TableColumn<Produto, String> colDescricao;
 
     @FXML private Button btnCriar;
     @FXML private Button btnEntrada;
@@ -48,6 +50,7 @@ public class EstoqueController {
         colQtdMin.setCellValueFactory(new PropertyValueFactory<>("vlrMin"));
         colValorUnd.setCellValueFactory(new PropertyValueFactory<>("vlrUnd"));
         colQtd.setCellValueFactory(new PropertyValueFactory<>("qtd"));
+        colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 
         colOrientacao.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(
@@ -141,6 +144,70 @@ public class EstoqueController {
         });
 
 
+
+        colDescricao.setCellFactory(col -> new TableCell<Produto, String>() {
+            private final Text text = new Text();
+
+            {
+                setGraphic(text);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setPrefHeight(Control.USE_COMPUTED_SIZE);
+                text.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
+
+                // Observa a seleção desta célula
+                selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+                    if (isNowSelected) {
+                        text.setFill(javafx.scene.paint.Color.WHITE);
+                    } else {
+                        text.setFill(javafx.scene.paint.Color.BLACK);
+                    }
+                });
+
+                setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && !isEmpty()) {
+                        Produto p = getTableView().getItems().get(getIndex());
+                        abrirDialogoDescricao(p);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    text.setText("");
+                } else {
+                    text.setText(item);
+                }
+                // garante cor inicial correta
+                if (isSelected()) {
+                    text.setFill(javafx.scene.paint.Color.WHITE);
+                } else {
+                    text.setFill(javafx.scene.paint.Color.BLACK);
+                }
+            }
+        });
+
+        tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        colCodigo.setMinWidth(50);
+        colCodigo.setMaxWidth(50);
+        colQtdMin.setMinWidth(60);
+        colQtdMin.setMaxWidth(100);
+        colQtd.setMinWidth(75);
+        colQtd.setMaxWidth(100);
+        colValorUnd.setMinWidth(100);
+        colValorUnd.setMaxWidth(130);
+        colSaldo.setMinWidth(120);
+        colSaldo.setMaxWidth(150);
+        colOrientacao.setMinWidth(135);
+        colOrientacao.setMaxWidth(135);
+        colDescricao.setMinWidth(150);
+        colDescricao.setPrefWidth(300);
+
+
+
+
         dados = FXCollections.observableArrayList(Produto.estoque);
         filtrados = new FilteredList<>(dados, p -> true);
 
@@ -208,10 +275,51 @@ public class EstoqueController {
         return dialog.showAndWait().orElse(null);
     }
 
+    private void abrirDialogoDescricao(Produto p) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Editar descrição");
+
+        ButtonType okButtonType = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        TextArea area = new TextArea(p.getDescricao());
+        area.setWrapText(true);
+        area.setPrefRowCount(6);
+        area.setPrefColumnCount(40);
+
+        area.setStyle(
+                "-fx-control-inner-background: #ffffff;" +
+                        "-fx-background-color: #f0f0f0;" +
+                        "-fx-text-fill: black;"
+        );
+
+        dialog.getDialogPane().setContent(area);
+
+        dialog.getDialogPane().setStyle(
+                "-fx-background-color: #e0e0e0;" +
+                        "-fx-text-fill: black;"
+        );
+
+        dialog.setResultConverter(button -> {
+            if (button == okButtonType) {
+                return area.getText();
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(novaDesc -> {
+            if (novaDesc == null) novaDesc = "";
+            novaDesc = novaDesc.trim();
+            p.setDescricao(novaDesc);
+            tabela.refresh();
+        });
+    }
+
     @FXML
     private void onCriarProduto() {
         String nome = "";
         String categoria = "";
+        String descricao = "";
 
         while (nome.isBlank()) {
             TextInputDialog dialogNome = new TextInputDialog();

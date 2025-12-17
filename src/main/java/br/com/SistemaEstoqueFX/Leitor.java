@@ -33,26 +33,21 @@ public class Leitor {
 
             if (linha.isEmpty()) continue;
 
-            String[] campos = linha.split("\\|");
+            String[] partes = linha.split("\\|");
+            if (partes.length >= 6) {
+                String codigo    = partes[0];
+                String nome      = partes[1];
+                String categoria = partes[2];
+                int vlrMin       = Integer.parseInt(partes[3]);
+                double vlrUnd    = Double.parseDouble(partes[4].replace(',', '.'));
+                int qtd          = Integer.parseInt(partes[5]);
 
-            if (campos.length == 6) {
-                try {
-                    Produto p = new Produto(
-                            campos[0].trim(),
-                            campos[1].trim(),
-                            campos[2].trim(),
-                            Integer.parseInt(campos[3].trim()),
-                            Double.parseDouble(campos[4].trim()),
-                            Integer.parseInt(campos[5].trim())
+                String desc = (partes.length >= 7) ? partes[6] : ""; // compatível com versões antigas
 
-                    );
-                    estoque.add(p);
-                } catch (NumberFormatException e) {
-                    System.out.println("Erro ao processar linha " + linhaNum + ": " + linha);
-                }
-            } else {
-                System.out.println("Linha " + linhaNum + " com formato inválido: " + linha);
+                Produto p = new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc);
+                estoque.add(p);
             }
+
         }
 
         sc.close();
@@ -89,7 +84,7 @@ public class Leitor {
                         java.nio.charset.StandardCharsets.UTF_8))) {
 
             // Cabeçalho
-            pw.println("Código;Nome;Categoria;Qtd Mínima;Valor Und;Qtd;Urgência;Saldo");
+            pw.println("Código;Nome;Categoria;Qtd Mínima;Valor Und;Qtd;Urgência;Saldo;Descrição");
 
             double totalSaldo = 0.0;
 
@@ -102,6 +97,7 @@ public class Leitor {
                 int qtd          = p.getQtd();
                 String urgencia  = p.getCompra() ? "Compra urgente" : "Estoque suficiente";
                 double saldo     = vlrUnd * qtd;
+                String descricao = p.getDescricao();
                 totalSaldo += saldo;
 
                 pw.println(
@@ -112,7 +108,8 @@ public class Leitor {
                                 vlrUnd + ";" +
                                 qtd + ";" +
                                 urgencia + ";" +
-                                saldo
+                                saldo + ";" +
+                                descricao
                 );
             }
 
