@@ -330,8 +330,6 @@ public class EstoqueController {
     private void onCriarProduto() {
         String nome = "";
         String categoria = "";
-        String descricao = "";
-
         while (nome.isBlank()) {
             TextInputDialog dialogNome = new TextInputDialog();
             dialogNome.setTitle("Criar Produto");
