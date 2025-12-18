@@ -13,6 +13,17 @@ import javafx.util.converter.IntegerStringConverter;
 
 import javafx.util.StringConverter;
 import java.io.IOException;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+
 
 
 public class EstoqueController {
@@ -441,14 +452,14 @@ public class EstoqueController {
     @FXML
     private void onSobre(){
         String msg = """
-            SistemaEstoqueFX
-            Versão: 1.0.0
+            %s
+            Versão: %s
 
             Autor: Arthur
 
             Pasta de dados:
             %s
-            """.formatted(Leitor.getPath()); // ou texto fixo
+            """.formatted(AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sobre SistemaEstoqueFX");
@@ -456,4 +467,106 @@ public class EstoqueController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+
+    @FXML
+    private void onVerificarAtualizacoes() {
+        try {
+            java.net.URL url = new java.net.URL(AppInfo.UPDATE_URL);
+            try (java.io.BufferedReader in = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(url.openStream(), java.nio.charset.StandardCharsets.UTF_8))) {
+
+                String json = in.lines().collect(java.util.stream.Collectors.joining());
+
+                String versaoRemota = extrairVersao(json);
+                String linkInstaller = extrairInstaller(json);
+
+                if (versaoRemota == null || linkInstaller == null) {
+                    mostrarInfo("Atualização", "Não foi possível ler informações do release.");
+                    return;
+                }
+
+                if (versaoRemota.equals(AppInfo.VERSAO)) {
+                    mostrarInfo("Atualização", "Você já está na última versão (" + AppInfo.VERSAO + ").");
+                    return;
+                }
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Nova versão disponível");
+                alert.setHeaderText("Versão atual: " + AppInfo.VERSAO + "\nNova versão: " + versaoRemota);
+                alert.setContentText("Deseja baixar o novo instalador agora?");
+                alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+                alert.showAndWait().ifPresent(bt -> {
+                    if (bt == ButtonType.YES) {
+                        baixarEExecutarInstaller(linkInstaller, versaoRemota);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            mostrarErro("Erro ao verificar atualizações: " + e.getMessage());
+        }
+    }
+
+    private String extrairVersao(String json) {
+        // Pega "tag_name": "v1.0.1" → retorna "1.0.1"
+        String tagPattern = "\"tag_name\":\"([^\"]+)\"";
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(tagPattern);
+        java.util.regex.Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            String tag = matcher.group(1); // "v1.0.1"
+            return tag.replace("v", "");  // "1.0.1"
+        }
+        return null;
+    }
+
+    private String extrairInstaller(String json) {
+        // Pega o primeiro .msi em "browser_download_url"
+        String msiPattern = "\"browser_download_url\":\"([^\"]+\\.msi)\"";
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(msiPattern);
+        java.util.regex.Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            return matcher.group(1); // URL completa do .msi
+        }
+        return null;
+    }
+
+    private void baixarEExecutarInstaller(String urlInstaller, String versao) {
+        try {
+            java.net.URL url = new java.net.URL(urlInstaller);
+            java.nio.file.Path temp = java.nio.file.Files.createTempFile(
+                    "SistemaEstoqueFX-" + versao + "-", ".msi");
+
+            try (java.io.InputStream in = url.openStream()) {
+                java.nio.file.Files.copy(in, temp, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Abre o instalador (Windows)
+            new ProcessBuilder("msiexec", "/i", temp.toAbsolutePath().toString())
+                    .inheritIO()
+                    .start();
+
+            mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
+        } catch (Exception e) {
+            mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
+        }
+    }
+
+    private void mostrarInfo(String titulo, String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    private void mostrarErro(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erro");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
 }
