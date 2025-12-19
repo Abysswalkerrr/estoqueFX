@@ -12,8 +12,5 @@
         <module>desktop-app</module>
         <module>updater-core</module>
         <module>updater-app</module>
-        <module>desktop-app</module>
-        <module>updater-core</module>
-        <module>updater-app</module>
     </modules>
 </project>
