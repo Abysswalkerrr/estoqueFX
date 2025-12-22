@@ -6,7 +6,7 @@ public class Launcher {
      static void main(String[] args) {
          try {
              Runtime.getRuntime().exec(
-                     "java -cp updater-app/target/updater-app-1.0.0.jar com.estoquefx.updater.UpdaterApp"
+                     "java --module-path updater-app/target/updater-app-1.0.0.jar --add-modules com.estoquefx.updaterapp -m com.estoquefx.updaterapp/com.estoquefx.updater.UpdaterApp"
              );
          } catch (java.io.IOException e) {
              e.printStackTrace();

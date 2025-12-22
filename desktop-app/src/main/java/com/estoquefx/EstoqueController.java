@@ -1,8 +1,7 @@
 package com.estoquefx;
 
 
-import com.estoquefx.updater.core.UpdateService;
-import com.estoquefx.updater.core.UpdateInfo;
+import com.estoquefx.updater.core.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -450,7 +449,7 @@ public class EstoqueController {
 
             Pasta de dados:
             %s
-            """.formatted(AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
+            """.formatted(com.estoquefx.updater.core.AppInfo.NOME_APP, com.estoquefx.updater.core.AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sobre SistemaEstoqueFX");
