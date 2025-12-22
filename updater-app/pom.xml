@@ -10,8 +10,28 @@
         <version>1.0.0</version>
     </parent>
 
+
     <artifactId>updater-app</artifactId>
     <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.6.6</version>
+                <configuration>
+                    <name>EstoqueFX-Updater</name>
+                    <mainJar>updater-app-1.0.0.jar</mainJar>
+                    <mainClass>com.estoquefx.updater.UpdaterApp</mainClass>
+                    <destination>${project.build.directory}/installer</destination>
+                    <type>msi</type>
+                    <winConsole>true</winConsole>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
     <dependencies>
         <dependency>
