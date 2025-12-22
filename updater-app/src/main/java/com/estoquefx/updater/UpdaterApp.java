@@ -1,5 +1,8 @@
 package com.estoquefx.updater;
 
+import com.estoquefx.updater.core.UpdateInfo;
+import com.estoquefx.updater.core.UpdateService;
+
 import java.nio.file.Path;
 
 public class UpdaterApp {

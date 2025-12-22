@@ -1,6 +1,9 @@
 package com.estoquefx;
 
 
+import com.estoquefx.updater.core.UpdateService;
+import com.estoquefx.updater.core.UpdateInfo;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;

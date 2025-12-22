@@ -1,7 +1,9 @@
-module com.estoquefx.estoquefx {
-    requires javafx.controls;
+module com.estoquefx {
+    requires com.estoquefx.updater.core;
+
     requires javafx.fxml;
 
+    requires javafx.controls;
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;

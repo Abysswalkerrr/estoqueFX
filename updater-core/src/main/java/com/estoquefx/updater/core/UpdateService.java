@@ -1,4 +1,4 @@
-package com.estoquefx.updater;
+package com.estoquefx.updater.core;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

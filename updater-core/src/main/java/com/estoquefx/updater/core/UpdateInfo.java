@@ -1,4 +1,4 @@
-package com.estoquefx.updater;
+package com.estoquefx.updater.core;
 
 public class UpdateInfo {
     private final String versaoAtual;
