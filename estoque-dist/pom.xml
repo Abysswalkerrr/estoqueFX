@@ -71,9 +71,9 @@
                     <mainClass>com.estoquefx.Launcher</mainClass>
                     <destination>${project.build.directory}/installer</destination>
                     <appVersion>1.0.3</appVersion>
-                    <vendor>Valube</vendor>           <!-- ← Empresa -->
-                    <copyright>© 2025 Valube</copyright>  <!-- ← Copyright -->
-                    <imageType>MSI</imageType>
+                    <vendor>Valube</vendor>
+                    <copyright>© 2025 Valube</copyright>
+                    <type>MSI</type>
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>
                 </configuration>
