@@ -24,6 +24,11 @@
             <artifactId>updater-app</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.estoquefx</groupId>
+            <artifactId>updater-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -34,13 +39,14 @@
                 <version>3.6.1</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>copy-app-jars</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeArtifactIds>desktop-app,updater-app,updater-core</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/app</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -52,6 +58,7 @@
                 <executions>
                     <execution>
                         <id>jpackage</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jpackage</goal>
                         </goals>
@@ -59,10 +66,14 @@
                 </executions>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
+                    <input>${project.build.directory}/app</input>
                     <mainJar>desktop-app-1.0.0.jar</mainJar>
                     <mainClass>com.estoquefx.Launcher</mainClass>
                     <destination>${project.build.directory}/installer</destination>
-                    <type>msi</type>
+                    <appVersion>1.0.3</appVersion>
+                    <vendor>Valube</vendor>           <!-- ← Empresa -->
+                    <copyright>© 2025 Valube</copyright>  <!-- ← Copyright -->
+                    <imageType>MSI</imageType>
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>
                 </configuration>
