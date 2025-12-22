@@ -2,10 +2,10 @@ package com.estoquefx;
 
 import java.util.HashSet;
 
+//todo nomes iguais
+//todo autocomplete
+
 public class Misc {
-    /* todo funcionalidades
-     *   todo remover nomes conflitantes
-     *    */
     public static HashSet<String> categorias = new HashSet<>();
 
     private static double total;

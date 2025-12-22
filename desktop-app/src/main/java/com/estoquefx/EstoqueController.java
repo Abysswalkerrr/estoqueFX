@@ -9,13 +9,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
+import org.controlsfx.control.textfield.TextFields;
+
 import javafx.util.StringConverter;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class EstoqueController {
@@ -157,15 +162,6 @@ public class EstoqueController {
                 setPrefHeight(Control.USE_COMPUTED_SIZE);
                 text.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
 
-                // Observa a seleção desta célula
-                selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-                    if (isNowSelected) {
-                        text.setFill(javafx.scene.paint.Color.WHITE);
-                    } else {
-                        text.setFill(javafx.scene.paint.Color.BLACK);
-                    }
-                });
-
                 setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && !isEmpty()) {
                         Produto p = getTableView().getItems().get(getIndex());
@@ -182,17 +178,13 @@ public class EstoqueController {
                 } else {
                     text.setText(item);
                 }
-                // garante cor inicial correta
-                if (isSelected()) {
-                    text.setFill(javafx.scene.paint.Color.WHITE);
-                } else {
-                    text.setFill(javafx.scene.paint.Color.BLACK);
-                }
             }
         });
 
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+        colNome.setMinWidth(90);
+        colNome.setMaxWidth(200);
         colCodigo.setMinWidth(50);
         colCodigo.setMaxWidth(50);
         colQtdMin.setMinWidth(60);
@@ -277,6 +269,42 @@ public class EstoqueController {
 
         return dialog.showAndWait().orElse(null);
     }
+
+    private String perguntarNomeProdutoComAutocomplete(String titulo) {
+        Produto selecionado = tabela.getSelectionModel().getSelectedItem();
+        String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
+
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(titulo);
+        dialog.setHeaderText("Informe o produto:");
+
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        TextField txtNome = new TextField(sugestaoNome);
+        txtNome.setPromptText("Nome do produto");
+
+        // Cria lista de nomes dos produtos para autocomplete
+        List<String> nomesProdutos = Produto.estoque.stream()
+                .map(Produto::getNome)
+                .collect(Collectors.toList());
+
+        // Aplica autocomplete usando ControlsFX
+        TextFields.bindAutoCompletion(txtNome, nomesProdutos);
+
+        dialog.getDialogPane().setContent(txtNome);
+
+        dialog.setResultConverter(button -> {
+            if (button == okButtonType) {
+                String n = txtNome.getText();
+                return (n == null || n.isBlank()) ? null : n;
+            }
+            return null;
+        });
+
+        return dialog.showAndWait().orElse(null);
+    }
+
 
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
@@ -377,7 +405,7 @@ public class EstoqueController {
 
     @FXML
     private void onEntrada() {
-        String nome = perguntarNomeProduto("Entrada de estoque");
+        String nome = perguntarNomeProdutoComAutocomplete("Entrada de estoque");
         if (nome == null) return;
         nome = nome.trim().toUpperCase();
 
@@ -396,7 +424,7 @@ public class EstoqueController {
 
     @FXML
     private void onSaida() {
-        String nome = perguntarNomeProduto("Saída de estoque");
+        String nome = perguntarNomeProdutoComAutocomplete("Saída de estoque");
         if (nome == null) return;
         nome = nome.toUpperCase();
 
