@@ -283,22 +283,20 @@ public class EstoqueController {
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
-        TextField txtNome = new TextField(sugestaoNome);
-        txtNome.setPromptText("Nome do produto");
+        TextField txtAutoComplete = new TextField(sugestaoNome);
+        txtAutoComplete.setPromptText("Nome do produto");
 
-        // Cria lista de nomes dos produtos para autocomplete
         List<String> nomesProdutos = Produto.estoque.stream()
                 .map(Produto::getNome)
                 .collect(Collectors.toList());
 
-        // Aplica autocomplete usando ControlsFX
-        TextFields.bindAutoCompletion(txtNome, nomesProdutos);
+        TextFields.bindAutoCompletion(txtAutoComplete, nomesProdutos);
 
-        dialog.getDialogPane().setContent(txtNome);
+        dialog.getDialogPane().setContent(txtAutoComplete);
 
         dialog.setResultConverter(button -> {
             if (button == okButtonType) {
-                String n = txtNome.getText();
+                String n = txtAutoComplete.getText();
                 return (n == null || n.isBlank()) ? null : n;
             }
             return null;
@@ -516,8 +514,9 @@ public class EstoqueController {
                 if (bt == ButtonType.YES) {
                     try {
                         var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
-                        service.runInstaller(path);
                         mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
+                        service.runInstaller(path);
+
                     } catch (Exception e) {
                         mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
                     }
@@ -529,7 +528,7 @@ public class EstoqueController {
     }
 
 
-    private void mostrarInfo(String titulo, String msg) {
+    public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
         alert.setHeaderText(null);

@@ -43,10 +43,11 @@ public class UpdateService {
         return temp;
     }
 
-    public Process runInstaller(Path installerPath) throws Exception {
-        return new ProcessBuilder("msiexec", "/i", installerPath.toAbsolutePath().toString())
+    public void runInstaller(Path installerPath) throws Exception {
+        new ProcessBuilder("msiexec", "/i", installerPath.toAbsolutePath().toString(), "/passive")
                 .inheritIO()
                 .start();
+        System.exit(0);
     }
 
     private String extrairVersao(String json) {

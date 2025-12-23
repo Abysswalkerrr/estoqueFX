@@ -9,8 +9,8 @@
         <VBox>
             <MenuBar>
                 <Menu text="Ajuda">
-                    <MenuItem text="Sobre" onAction="#onSobre"/>
-                    <MenuItem text="Verificar atualizações" onAction="#onVerificarAtualizacoes"/>
+                    <MenuItem onAction="#onSobre" text="Sobre" />
+                    <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
                 </Menu>
             </MenuBar>
 
@@ -33,14 +33,14 @@
     <center>
         <TableView fx:id="tabela" prefHeight="400">
             <columns>
-                <TableColumn fx:id="colCodigo" text="Código" />
-                <TableColumn fx:id="colNome" text="Nome" />
-                <TableColumn fx:id="colCategoria" text="Categoria" />
-                <TableColumn fx:id="colQtdMin" text="Qtd Mín" />
-                <TableColumn fx:id="colValorUnd" text="Valor Und" />
-                <TableColumn fx:id="colQtd" text="Qtd" />
-                <TableColumn fx:id="colOrientacao" text="Orientação" />
-                <TableColumn fx:id="colSaldo" text="Saldo" />
+                <TableColumn fx:id="colCodigo" prefWidth="45.00000077486038" text="Código" />
+                <TableColumn fx:id="colNome" prefWidth="111.40000534057617" text="Nome" />
+                <TableColumn fx:id="colCategoria" prefWidth="103.00001525878906" text="Categoria" />
+                <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín" />
+                <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und" />
+                <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd" />
+                <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação" />
+                <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo" />
                 <TableColumn fx:id="colDescricao" text="Descrição" />
             </columns>
         </TableView>
