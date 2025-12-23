@@ -197,8 +197,8 @@ public class EstoqueController {
         colValorUnd.setMaxWidth(130);
         colSaldo.setMinWidth(120);
         colSaldo.setMaxWidth(150);
-        colOrientacao.setMinWidth(135);
-        colOrientacao.setMaxWidth(135);
+        colOrientacao.setMinWidth(105);
+        colOrientacao.setMaxWidth(105);
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
 
@@ -526,7 +526,6 @@ public class EstoqueController {
             mostrarErro("Erro ao verificar atualizações: " + e.getMessage());
         }
     }
-
 
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
