@@ -41,11 +41,13 @@ public class EstoqueController {
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
     @FXML private Button btnExportar;
+    @FXML private Button btnTeste;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
 
     @FXML private TextField txtBusca;
+    @FXML private TextField txtAutoComplete;
 
 
     @FXML
@@ -541,6 +543,11 @@ public class EstoqueController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void onTeste(){
+
     }
 
 }
