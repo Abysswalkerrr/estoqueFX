@@ -136,7 +136,9 @@ public class Produto {
 
     public static void setNome(String nome,  String codigo) {
         Produto p = mapaCodigo.get(codigo);
+        Misc.removeNome(p.nome);
         p.nome = nome;
+        Misc.addNome(p.nome);
         setUltimaAcao("t");
     }
 
@@ -151,6 +153,8 @@ public class Produto {
     }
 
     public void setNome(String nome) {
+        Misc.removeNome(this.nome);
+        Misc.addNome(nome);
         this.nome = nome;
         setUltimaAcao("t");
     }

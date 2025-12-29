@@ -15,12 +15,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
-import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.control.textfield.*;
 
 import javafx.util.StringConverter;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 
 public class EstoqueController {
@@ -47,7 +46,6 @@ public class EstoqueController {
     private FilteredList<Produto> filtrados;
 
     @FXML private TextField txtBusca;
-    @FXML private TextField txtAutoComplete;
 
 
     @FXML
@@ -88,6 +86,7 @@ public class EstoqueController {
             if (novoNome == null || novoNome.isBlank()) return;
             novoNome = novoNome.trim().toUpperCase();
             p.setNome(novoNome);
+
             tabela.refresh();
         });
 
@@ -155,7 +154,7 @@ public class EstoqueController {
 
 
 
-        colDescricao.setCellFactory(col -> new TableCell<Produto, String>() {
+        colDescricao.setCellFactory(col -> new TableCell<>() {
             private final Text text = new Text();
 
             {
@@ -272,37 +271,27 @@ public class EstoqueController {
         return dialog.showAndWait().orElse(null);
     }
 
-    private String perguntarNomeProdutoComAutocomplete(String titulo) {
-        Produto selecionado = tabela.getSelectionModel().getSelectedItem();
-        String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
+    public String pedirProduto(HashSet<String> produtos, String title) {
 
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle(titulo);
-        dialog.setHeaderText("Informe o produto:");
+        try {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle(title);
+            dialog.setHeaderText("Informe o nome do produto");
 
-        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+            TextField editor = dialog.getEditor();
+            editor.setPromptText("Nome do produto");
 
-        TextField txtAutoComplete = new TextField(sugestaoNome);
-        txtAutoComplete.setPromptText("Nome do produto");
+            TextFields.bindAutoCompletion(editor, produtos);
+            String resultado = dialog.showAndWait().orElse("");
 
-        List<String> nomesProdutos = Produto.estoque.stream()
-                .map(Produto::getNome)
-                .collect(Collectors.toList());
-
-        TextFields.bindAutoCompletion(txtAutoComplete, nomesProdutos);
-
-        dialog.getDialogPane().setContent(txtAutoComplete);
-
-        dialog.setResultConverter(button -> {
-            if (button == okButtonType) {
-                String n = txtAutoComplete.getText();
-                return (n == null || n.isBlank()) ? null : n;
-            }
-            return null;
-        });
-
-        return dialog.showAndWait().orElse(null);
+            return resultado;
+        } catch (RuntimeException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Erro" + ex.getMessage());
+            alert.showAndWait();
+            return "";
+        }
     }
 
 
@@ -405,7 +394,7 @@ public class EstoqueController {
 
     @FXML
     private void onEntrada() {
-        String nome = perguntarNomeProdutoComAutocomplete("Entrada de estoque");
+        String nome = pedirProduto(Misc.nomes, "Entrada de produto");
         if (nome == null) return;
         nome = nome.trim().toUpperCase();
 
@@ -424,8 +413,9 @@ public class EstoqueController {
 
     @FXML
     private void onSaida() {
-        String nome = perguntarNomeProdutoComAutocomplete("Saída de estoque");
-        if (nome == null) return;
+
+        String nome = pedirProduto(Misc.nomes, "Saida de produto");
+        if (nome.isEmpty()) return;
         nome = nome.toUpperCase();
 
         TextInputDialog dialogQtd = new TextInputDialog();
@@ -543,9 +533,5 @@ public class EstoqueController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void onTeste(){
-
-    }
 
 }

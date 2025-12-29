@@ -48,6 +48,13 @@
           <type>msi</type>
           <winShortcut>true</winShortcut>
           <winMenu>true</winMenu>
+          <arguments>
+            <argument>--add-exports</argument>
+            <argument>javafx.base/com.sun.javafx.event=ALL-UNNAMED</argument>
+            <argument>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</argument>
+            <argument>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</argument>
+            <argument>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</argument>
+          </arguments>
         </configuration>
       </plugin>
     </plugins>
