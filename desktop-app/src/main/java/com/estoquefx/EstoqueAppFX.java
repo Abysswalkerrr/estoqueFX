@@ -55,25 +55,9 @@ public class EstoqueAppFX extends Application {
             }
             //else não salva
         });
-        verificarAtualizacaoSilenciosa();
+        EstoqueController.verificarAtualizacaoSilenciosa();
         stage.show();
     }
 
-    public static void verificarAtualizacaoSilenciosa() {
-        UpdateService service = new UpdateService();
-
-        try {
-            UpdateInfo info = service.checkForUpdate();
-
-            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
-                return;
-            }
-
-            Platform.runLater(() -> EstoqueController.mostrarDialogAtualizacao(service, info));
-
-        } catch (Exception e) {
-            System.err.println("Erro ao verificar update: " + e.getMessage());
-        }
-    }
 
 }

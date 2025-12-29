@@ -3,15 +3,20 @@ package com.estoquefx;
 
 import com.estoquefx.updater.core.*;
 
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -19,6 +24,7 @@ import org.controlsfx.control.textfield.*;
 
 import javafx.util.StringConverter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 
 
@@ -294,26 +300,6 @@ public class EstoqueController {
         }
     }
 
-    public static void mostrarDialogAtualizacao(UpdateService service, UpdateInfo info) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Nova versão disponível");
-        alert.setHeaderText("Versão atual: " + info.getVersaoAtual() + "\nNova versão: " + info.getVersaoRemota());
-        alert.setContentText("Deseja baixar o novo instalador agora?");
-        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-
-        alert.showAndWait().ifPresent(bt -> {
-            if (bt == ButtonType.YES) {
-                try {
-                    var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
-                    new EstoqueController().mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
-                    service.runInstaller(path);
-                } catch (Exception e) {
-                    new EstoqueController().mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
-                }
-            }
-        });
-    }
-
     public void servicoUpdater(){
         UpdateService service = new UpdateService();
 
@@ -355,6 +341,27 @@ public class EstoqueController {
 
     }
 
+    public static void verificarAtualizacaoSilenciosa() {
+        UpdateService service = new UpdateService();
+
+        try {
+            UpdateInfo info = service.checkForUpdate();
+
+            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
+                return;
+            }
+
+            // ✅ CORRIGIDO: declara service final para lambda
+            final UpdateService finalService = service;
+            Platform.runLater(() -> {
+                new EstoqueController().mostrarDialogComProgresso(finalService, info);
+            });
+
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar update: " + e.getMessage());
+        }
+    }
+
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Editar descrição");
@@ -393,6 +400,62 @@ public class EstoqueController {
             p.setDescricao(novaDesc);
             tabela.refresh();
         });
+    }
+
+    public void mostrarDialogComProgresso(UpdateService service, UpdateInfo info) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Atualização disponível");
+        dialog.setHeaderText("Baixando nova versão " + info.getVersaoRemota());
+
+        ProgressBar progressBar = new ProgressBar(0);
+        progressBar.setPrefWidth(300);
+
+        Label statusLabel = new Label("Iniciando download...");
+        statusLabel.setStyle("-fx-font-weight: bold;");
+
+        VBox content = new VBox(10, statusLabel, progressBar);
+        content.setAlignment(Pos.CENTER);
+        dialog.getDialogPane().setContent(content);
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        UpdateService.ProgressCallback callback = new UpdateService.ProgressCallback() {
+            @Override
+            public void updateProgress(double progress) {
+                Platform.runLater(() -> progressBar.setProgress(progress));
+            }
+
+            @Override
+            public void updateMessage(String message) {
+                Platform.runLater(() -> statusLabel.setText(message));
+            }
+        };
+
+        Task<Void> downloadTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Path installer = service.downloadInstallerComBarra(
+                        info.getUrlInstaller(),
+                        info.getVersaoRemota(),
+                        callback
+                );
+
+                Platform.runLater(() -> {
+                    try {
+                        service.runInstaller(installer);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    mostrarInfo("Sucesso", "Instalador executado!");
+                });
+                return null;
+            }
+        };
+
+        dialog.setOnCloseRequest(e -> downloadTask.cancel());
+        new Thread(downloadTask).start();
+
+        dialog.showAndWait();
     }
 
     @FXML

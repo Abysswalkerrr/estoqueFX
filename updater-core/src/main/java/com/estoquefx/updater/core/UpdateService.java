@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 public class UpdateService {
 
+    public interface ProgressCallback {
+        void updateProgress(double progress); // 0.0 a 1.0
+        void updateMessage(String message);
+    }
+
     public UpdateInfo checkForUpdate() throws Exception {
         URL url = new URL(AppInfo.UPDATE_URL);
         try (BufferedReader in = new BufferedReader(
@@ -38,6 +43,38 @@ public class UpdateService {
 
         try (InputStream in = url.openStream()) {
             Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return temp;
+    }
+
+    public Path downloadInstallerComBarra(String urlInstaller, String versao, ProgressCallback callback) throws Exception {
+        URL url = new URL(urlInstaller);
+        Path temp = Files.createTempFile("SistemaEstoqueFX-" + versao + "-", ".msi");
+
+        try (InputStream in = url.openStream()) {
+            long totalBytes = url.openConnection().getContentLengthLong();
+            long bytesRead = 0;
+            byte[] buffer = new byte[8192];
+            int bytes;
+
+            callback.updateMessage("Baixando " + (totalBytes / 1024 / 1024) + "MB...");
+
+            try (java.io.OutputStream out = Files.newOutputStream(temp)) {
+                while ((bytes = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytes);
+                    bytesRead += bytes;
+
+                    double progress = totalBytes > 0 ? (double) bytesRead / totalBytes : 0;
+                    callback.updateProgress(progress);
+
+                    callback.updateMessage(String.format("Baixando... %.1f%% (%d/%d MB)",
+                            progress * 100, bytesRead / 1024 / 1024, totalBytes / 1024 / 1024));
+                }
+            }
+
+            callback.updateProgress(1.0);
+            callback.updateMessage("Download concluído!");
         }
 
         return temp;
