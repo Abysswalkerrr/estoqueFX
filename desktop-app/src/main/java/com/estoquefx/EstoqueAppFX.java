@@ -1,6 +1,9 @@
 package com.estoquefx;
 
+import com.estoquefx.updater.core.UpdateInfo;
+import com.estoquefx.updater.core.UpdateService;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -52,7 +55,25 @@ public class EstoqueAppFX extends Application {
             }
             //else não salva
         });
+        verificarAtualizacaoSilenciosa();
         stage.show();
+    }
+
+    public static void verificarAtualizacaoSilenciosa() {
+        UpdateService service = new UpdateService();
+
+        try {
+            UpdateInfo info = service.checkForUpdate();
+
+            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
+                return;
+            }
+
+            Platform.runLater(() -> EstoqueController.mostrarDialogAtualizacao(service, info));
+
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar update: " + e.getMessage());
+        }
     }
 
 }

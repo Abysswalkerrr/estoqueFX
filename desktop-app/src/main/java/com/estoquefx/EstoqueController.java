@@ -294,6 +294,66 @@ public class EstoqueController {
         }
     }
 
+    public static void mostrarDialogAtualizacao(UpdateService service, UpdateInfo info) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Nova versão disponível");
+        alert.setHeaderText("Versão atual: " + info.getVersaoAtual() + "\nNova versão: " + info.getVersaoRemota());
+        alert.setContentText("Deseja baixar o novo instalador agora?");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        alert.showAndWait().ifPresent(bt -> {
+            if (bt == ButtonType.YES) {
+                try {
+                    var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
+                    new EstoqueController().mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
+                    service.runInstaller(path);
+                } catch (Exception e) {
+                    new EstoqueController().mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void servicoUpdater(){
+        UpdateService service = new UpdateService();
+
+        try {
+            UpdateInfo info = service.checkForUpdate();
+
+            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null) {
+                mostrarInfo("Atualização", "Não foi possível ler informações do release.");
+                return;
+            }
+
+            if (!info.hasUpdate()) {
+                mostrarInfo("Atualização", "Você já está na última versão (" + info.getVersaoAtual() + ").");
+                return;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Nova versão disponível");
+            alert.setHeaderText("Versão atual: " + info.getVersaoAtual()
+                    + "\nNova versão: " + info.getVersaoRemota());
+            alert.setContentText("Deseja baixar o novo instalador agora?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+            alert.showAndWait().ifPresent(bt -> {
+                if (bt == ButtonType.YES) {
+                    try {
+                        var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
+                        mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
+                        service.runInstaller(path);
+
+                    } catch (Exception e) {
+                        mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            mostrarErro("Erro ao verificar atualizações: " + e.getMessage());
+        }
+
+    }
 
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
@@ -478,43 +538,7 @@ public class EstoqueController {
 
     @FXML
     private void onVerificarAtualizacoes() {
-        UpdateService service = new UpdateService();
-
-        try {
-            UpdateInfo info = service.checkForUpdate();
-
-            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null) {
-                mostrarInfo("Atualização", "Não foi possível ler informações do release.");
-                return;
-            }
-
-            if (!info.hasUpdate()) {
-                mostrarInfo("Atualização", "Você já está na última versão (" + info.getVersaoAtual() + ").");
-                return;
-            }
-
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Nova versão disponível");
-            alert.setHeaderText("Versão atual: " + info.getVersaoAtual()
-                    + "\nNova versão: " + info.getVersaoRemota());
-            alert.setContentText("Deseja baixar o novo instalador agora?");
-            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-
-            alert.showAndWait().ifPresent(bt -> {
-                if (bt == ButtonType.YES) {
-                    try {
-                        var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
-                        mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
-                        service.runInstaller(path);
-
-                    } catch (Exception e) {
-                        mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
-                    }
-                }
-            });
-        } catch (Exception e) {
-            mostrarErro("Erro ao verificar atualizações: " + e.getMessage());
-        }
+        servicoUpdater();
     }
 
     public void mostrarInfo(String titulo, String msg) {
