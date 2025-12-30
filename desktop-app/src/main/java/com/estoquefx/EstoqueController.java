@@ -322,7 +322,8 @@ public class EstoqueController {
             alert.setTitle("Nova versão disponível");
             alert.setHeaderText("Versão atual: " + info.getVersaoAtual()
                     + "\nNova versão: " + info.getVersaoRemota());
-            alert.setContentText("Deseja baixar o novo instalador agora?");
+            alert.setContentText("Novidades: " + info.getChangeLog()
+                    + "\nDeseja baixar o novo instalador agora?");
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
             alert.showAndWait().ifPresent(bt -> {
@@ -401,7 +402,8 @@ public class EstoqueController {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setTitle("Atualização disponível");
                 confirm.setHeaderText("Versão atual: " + info.getVersaoAtual() + "\nNova versão: " + info.getVersaoRemota());
-                confirm.setContentText("Deseja baixar agora?");
+                confirm.setContentText("Novidades: " + info.getChangeLog()
+                                        + "\nDeseja baixar agora?");
                 confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
                 confirm.showAndWait().ifPresent(result -> {

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class UpdateService {
 
+
     public UpdateInfo checkForUpdate() throws Exception {
         URL url = new URL(AppInfo.UPDATE_URL);
         try (BufferedReader in = new BufferedReader(
@@ -26,12 +27,13 @@ public class UpdateService {
 
             String versaoRemota = extrairVersao(json);
             String linkInstaller = extrairInstaller(json);
+            String changeLog = extrairChangelog(json);
 
             if (versaoRemota == null || linkInstaller == null) {
-                return new UpdateInfo(AppInfo.VERSAO, null, null);
+                return new UpdateInfo(AppInfo.VERSAO, null, null, null);
             }
 
-            return new UpdateInfo(AppInfo.VERSAO, versaoRemota, linkInstaller);
+            return new UpdateInfo(AppInfo.VERSAO, versaoRemota, linkInstaller, changeLog);
         }
     }
 
@@ -104,4 +106,18 @@ public class UpdateService {
         }
         return null;
     }
+
+    private String extrairChangelog(String json) {
+        String changelogPattern = "\"body\":\"([^\"]+)\"";
+        Pattern pattern = Pattern.compile(changelogPattern);
+        Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            String changelog = matcher.group(1);
+            return changelog;
+        }
+        return null;
+    }
+
+
 }

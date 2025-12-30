@@ -4,16 +4,19 @@ public class UpdateInfo {
     private final String versaoAtual;
     private final String versaoRemota;
     private final String urlInstaller;
+    private final String changeLog;
 
-    public UpdateInfo(String versaoAtual, String versaoRemota, String urlInstaller) {
+    public UpdateInfo(String versaoAtual, String versaoRemota, String urlInstaller, String changeLog) {
         this.versaoAtual = versaoAtual;
         this.versaoRemota = versaoRemota;
         this.urlInstaller = urlInstaller;
+        this.changeLog = changeLog;
     }
 
     public String getVersaoAtual() { return versaoAtual; }
     public String getVersaoRemota() { return versaoRemota; }
     public String getUrlInstaller() { return urlInstaller; }
+    public String getChangeLog() { return changeLog; }
 
     public boolean hasUpdate() {
         if (versaoRemota == null) return false;
