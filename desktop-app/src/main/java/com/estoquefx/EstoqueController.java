@@ -2,6 +2,7 @@ package com.estoquefx;
 
 
 import com.estoquefx.updater.core.*;
+import com.estoquefx.*;
 
 
 import javafx.application.Platform;
@@ -24,8 +25,11 @@ import org.controlsfx.control.textfield.*;
 
 import javafx.util.StringConverter;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.function.LongConsumer;
 
 
 public class EstoqueController {
@@ -234,7 +238,6 @@ public class EstoqueController {
 
         tabela.setItems(ordenados);
 
-        // colorir linhas urgentes
         tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
             protected void updateItem(Produto item, boolean empty) {
@@ -250,6 +253,7 @@ public class EstoqueController {
         });
     }
 
+    //função depreciada por existir um com autocomplete
     private String perguntarNomeProduto(String titulo) {
         Produto selecionado = tabela.getSelectionModel().getSelectedItem();
         String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
@@ -340,27 +344,6 @@ public class EstoqueController {
 
     }
 
-    public static void verificarAtualizacaoSilenciosa() {
-        UpdateService service = new UpdateService();
-
-        try {
-            UpdateInfo info = service.checkForUpdate();
-
-            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
-                return;
-            }
-
-            // ✅ CORRIGIDO: declara service final para lambda
-            final UpdateService finalService = service;
-            Platform.runLater(() -> {
-                new EstoqueController().mostrarDialogComProgresso(finalService, info);
-            });
-
-        } catch (Exception e) {
-            System.err.println("Erro ao verificar update: " + e.getMessage());
-        }
-    }
-
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Editar descrição");
@@ -400,51 +383,102 @@ public class EstoqueController {
         });
     }
 
-    public void mostrarDialogComProgresso(UpdateService service, UpdateInfo info) {
+    public static void mostrarInfoStatic(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void verificarAtualizacaoSilenciosa() {
+        UpdateService service = new UpdateService();
+
+        try {
+            UpdateInfo info = service.checkForUpdate();
+
+            if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
+                return;
+            }
+
+            Platform.runLater(() -> {
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Atualização disponível");
+                confirm.setHeaderText("Versão atual: " + info.getVersaoAtual() + "\nNova versão: " + info.getVersaoRemota());
+                confirm.setContentText("Deseja baixar agora?");
+                confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+                confirm.showAndWait().ifPresent(result -> {
+                    if (result == ButtonType.YES) {
+                        new EstoqueController().mostrarDialogDownloadComProgresso(info);
+                    }
+                });
+            });
+
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar update: " + e.getMessage());
+        }
+    }
+
+    public void mostrarDialogDownloadComProgresso(UpdateInfo info) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Atualização disponível");
         dialog.setHeaderText("Baixando nova versão " + info.getVersaoRemota());
 
-        // ✅ VARIÁVEIS FINAIS - lambda consegue acessar
-        final ProgressBar progressBar = new ProgressBar(0);
+        ProgressBar progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
-
-        final Label statusLabel = new Label("Iniciando download...");
-        statusLabel.setStyle("-fx-font-weight: bold;");
+        Label statusLabel = new Label("Preparando download...");
 
         VBox content = new VBox(10, statusLabel, progressBar);
         content.setAlignment(Pos.CENTER);
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        // ✅ AGORA FUNCIONA
-        UpdateService.SimpleProgressCallback callback = (progress, message) -> {
-            Platform.runLater(() -> {
-                progressBar.setProgress(progress);
-                statusLabel.setText(message);
-            });
-        };
-
-        Task<Void> downloadTask = new Task<Void>() {
+        Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Path installer = service.downloadInstallerComBarra(
-                        info.getUrlInstaller(), info.getVersaoRemota(), callback);
-                Platform.runLater(() -> {
-                    try {
-                        service.runInstaller(installer);
-                    } catch (Exception e) {
-                        new Alert(Alert.AlertType.ERROR, "Erro: " + e.getMessage()).showAndWait();
+                // Descobre o tamanho total do arquivo
+                URL url = new URL(info.getUrlInstaller());
+                URLConnection conn = url.openConnection();
+                long totalBytes = conn.getContentLengthLong();
+
+                updateMessage("Baixando " + (totalBytes / 1024 / 1024) + " MB...");
+
+                LongConsumer progressBytes = downloaded -> {
+                    if (totalBytes > 0) {
+                        updateProgress(downloaded, totalBytes);
+                        updateMessage(String.format("Baixando... %.1f%% (%d/%d MB)",
+                                downloaded * 100.0 / totalBytes,
+                                downloaded / 1024 / 1024,
+                                totalBytes / 1024 / 1024));
+                    } else {
+                        updateMessage("Baixando...");
                     }
-                });
+                };
+
+                Path installer = UpdateService.downloadInstallerWithProgress(
+                        info.getUrlInstaller(),
+                        info.getVersaoRemota(),
+                        progressBytes,
+                        totalBytes
+                );
+
+                updateMessage("Executando instalador...");
+                UpdateService.runInstaller(installer);
                 return null;
             }
         };
 
-        dialog.setOnCloseRequest(_ -> downloadTask.cancel());
-        new Thread(downloadTask).start();
+        // Liga UI às propriedades da Task
+        progressBar.progressProperty().bind(task.progressProperty());
+        statusLabel.textProperty().bind(task.messageProperty());
+
+        dialog.setOnCloseRequest(e -> task.cancel());
+
+        new Thread(task).start();
         dialog.showAndWait();
     }
+
 
     @FXML
     private void onCriarProduto() {

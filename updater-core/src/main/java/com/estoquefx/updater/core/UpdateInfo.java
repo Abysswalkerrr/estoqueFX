@@ -16,6 +16,20 @@ public class UpdateInfo {
     public String getUrlInstaller() { return urlInstaller; }
 
     public boolean hasUpdate() {
-        return versaoRemota != null && !versaoRemota.equals(versaoAtual);
+        if (versaoRemota == null) return false;
+
+        String[] atualParts = versaoAtual.split("\\.");
+        String[] remotaParts = versaoRemota.split("\\.");
+
+        for (int i = 0; i < Math.min(atualParts.length, remotaParts.length); i++) {
+            int atualNum = Integer.parseInt(atualParts[i]);
+            int remotaNum = Integer.parseInt(remotaParts[i]);
+
+            if (remotaNum > atualNum) return true;
+            else if (remotaNum < atualNum) return false;
+        }
+
+        // Mesma versão (ex: 1.1.1 vs 1.1.1.0)
+        return remotaParts.length > atualParts.length;
     }
 }
