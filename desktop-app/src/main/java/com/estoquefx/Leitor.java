@@ -25,26 +25,15 @@ public class Leitor {
         }
 
         Scanner sc = new Scanner(arquivo);
-        int linhaNum = 0;
 
         while (sc.hasNextLine()) {
-            linhaNum++;
             String linha = sc.nextLine().trim();
 
             if (linha.isEmpty()) continue;
 
             String[] partes = linha.split("\\|");
             if (partes.length >= 6) {
-                String codigo    = partes[0];
-                String nome      = partes[1];
-                String categoria = partes[2];
-                int vlrMin       = Integer.parseInt(partes[3]);
-                double vlrUnd    = Double.parseDouble(partes[4].replace(',', '.'));
-                int qtd          = Integer.parseInt(partes[5]);
-
-                String desc = (partes.length >= 7) ? partes[6] : ""; // compatível com versões antigas
-
-                Produto p = new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc);
+                Produto p = infoProduto(partes);
                 estoque.add(p);
             }
 
@@ -53,6 +42,19 @@ public class Leitor {
         sc.close();
         System.out.println("Estoque carregado: " + estoque.size() + " produtos.");
         return estoque;
+    }
+
+    private static Produto infoProduto(String[] partes) {
+        String codigo    = partes[0];
+        String nome      = partes[1];
+        String categoria = partes[2];
+        int vlrMin       = Integer.parseInt(partes[3]);
+        double vlrUnd    = Double.parseDouble(partes[4].replace(',', '.'));
+        int qtd          = Integer.parseInt(partes[5]);
+
+        String desc = (partes.length >= 7) ? partes[6] : ""; // compatível com versões antigas
+
+        return new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc);
     }
 
     public static void salvarEstoque(ArrayList<Produto> estoque) throws IOException {

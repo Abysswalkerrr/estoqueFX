@@ -1,9 +1,6 @@
 package com.estoquefx;
 
-import com.estoquefx.updater.core.UpdateInfo;
-import com.estoquefx.updater.core.UpdateService;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
