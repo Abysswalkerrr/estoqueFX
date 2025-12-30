@@ -328,10 +328,7 @@ public class EstoqueController {
             alert.showAndWait().ifPresent(bt -> {
                 if (bt == ButtonType.YES) {
                     try {
-                        var path = service.downloadInstaller(info.getUrlInstaller(), info.getVersaoRemota());
-                        mostrarInfo("Atualização", "Instalador baixado. Siga as instruções da nova janela.");
-                        service.runInstaller(path);
-
+                        mostrarDialogDownloadComProgresso(info);
                     } catch (Exception e) {
                         mostrarErro("Erro ao baixar/abrir instalador: " + e.getMessage());
                     }

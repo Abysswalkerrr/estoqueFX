@@ -17,11 +17,6 @@ import java.util.stream.Collectors;
 
 public class UpdateService {
 
-    public static interface ProgressCallback {
-        void updateProgress(double progress); // 0.0 a 1.0
-        void updateMessage(String message);
-    }
-
     public UpdateInfo checkForUpdate() throws Exception {
         URL url = new URL(AppInfo.UPDATE_URL);
         try (BufferedReader in = new BufferedReader(

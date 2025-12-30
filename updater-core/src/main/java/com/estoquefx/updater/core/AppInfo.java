@@ -4,10 +4,13 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.1.2";
+            "1.1.3";
     public static final String UPDATE_URL =
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
     public static String novidades = """
+            1.1.3
+            Correções da barra de download e instalador.
+            
             1.1.2
             Aba de novidades de versão implementada.
             
