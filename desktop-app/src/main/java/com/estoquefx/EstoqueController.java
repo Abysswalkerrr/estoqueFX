@@ -2,7 +2,6 @@ package com.estoquefx;
 
 
 import com.estoquefx.updater.core.*;
-import com.estoquefx.*;
 
 
 import javafx.application.Platform;

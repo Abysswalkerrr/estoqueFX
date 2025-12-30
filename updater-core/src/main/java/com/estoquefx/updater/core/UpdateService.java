@@ -81,7 +81,7 @@ public class UpdateService {
     }
 
     public static void runInstaller(Path installerPath) throws Exception {
-        new ProcessBuilder("msiexec", "/i", installerPath.toAbsolutePath().toString(), "/passive")
+        new ProcessBuilder("msiexec", "/i", installerPath.toAbsolutePath().toString(), "/qb+")
                 .inheritIO()
                 .start();
         System.exit(0);
