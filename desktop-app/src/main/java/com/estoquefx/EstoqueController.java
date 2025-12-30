@@ -46,7 +46,6 @@ public class EstoqueController {
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
     @FXML private Button btnExportar;
-    @FXML private Button btnTeste;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
@@ -134,11 +133,12 @@ public class EstoqueController {
             }
         });
 
-        colValorUnd.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<String>() {
+        colValorUnd.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
             @Override
             public String toString(String value) {
                 return value;
             }
+
             @Override
             public String fromString(String string) {
                 return string;
@@ -211,9 +211,9 @@ public class EstoqueController {
 
 
         dados = FXCollections.observableArrayList(Produto.estoque);
-        filtrados = new FilteredList<>(dados, p -> true);
+        filtrados = new FilteredList<>(dados, _ -> true);
 
-        txtBusca.textProperty().addListener((obs, oldValue, newValue) -> {
+        txtBusca.textProperty().addListener((_, _, newValue) -> {
             String filtro = (newValue == null) ? "" : newValue.trim().toUpperCase();
 
             filtrados.setPredicate(produto -> {
@@ -235,7 +235,7 @@ public class EstoqueController {
         tabela.setItems(ordenados);
 
         // colorir linhas urgentes
-        tabela.setRowFactory(tv -> new TableRow<>() {
+        tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
             protected void updateItem(Produto item, boolean empty) {
                 super.updateItem(item, empty);
@@ -288,9 +288,8 @@ public class EstoqueController {
             editor.setPromptText("Nome do produto");
 
             TextFields.bindAutoCompletion(editor, produtos);
-            String resultado = dialog.showAndWait().orElse("");
 
-            return resultado;
+            return dialog.showAndWait().orElse("");
         } catch (RuntimeException ex) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erro");
@@ -395,7 +394,6 @@ public class EstoqueController {
         });
 
         dialog.showAndWait().ifPresent(novaDesc -> {
-            if (novaDesc == null) novaDesc = "";
             novaDesc = novaDesc.trim();
             p.setDescricao(novaDesc);
             tabela.refresh();
@@ -407,54 +405,44 @@ public class EstoqueController {
         dialog.setTitle("Atualização disponível");
         dialog.setHeaderText("Baixando nova versão " + info.getVersaoRemota());
 
-        ProgressBar progressBar = new ProgressBar(0);
+        // ✅ VARIÁVEIS FINAIS - lambda consegue acessar
+        final ProgressBar progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
 
-        Label statusLabel = new Label("Iniciando download...");
+        final Label statusLabel = new Label("Iniciando download...");
         statusLabel.setStyle("-fx-font-weight: bold;");
 
         VBox content = new VBox(10, statusLabel, progressBar);
         content.setAlignment(Pos.CENTER);
         dialog.getDialogPane().setContent(content);
-
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        UpdateService.ProgressCallback callback = new UpdateService.ProgressCallback() {
-            @Override
-            public void updateProgress(double progress) {
-                Platform.runLater(() -> progressBar.setProgress(progress));
-            }
-
-            @Override
-            public void updateMessage(String message) {
-                Platform.runLater(() -> statusLabel.setText(message));
-            }
+        // ✅ AGORA FUNCIONA
+        UpdateService.SimpleProgressCallback callback = (progress, message) -> {
+            Platform.runLater(() -> {
+                progressBar.setProgress(progress);
+                statusLabel.setText(message);
+            });
         };
 
         Task<Void> downloadTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 Path installer = service.downloadInstallerComBarra(
-                        info.getUrlInstaller(),
-                        info.getVersaoRemota(),
-                        callback
-                );
-
+                        info.getUrlInstaller(), info.getVersaoRemota(), callback);
                 Platform.runLater(() -> {
                     try {
                         service.runInstaller(installer);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        new Alert(Alert.AlertType.ERROR, "Erro: " + e.getMessage()).showAndWait();
                     }
-                    mostrarInfo("Sucesso", "Instalador executado!");
                 });
                 return null;
             }
         };
 
-        dialog.setOnCloseRequest(e -> downloadTask.cancel());
+        dialog.setOnCloseRequest(_ -> downloadTask.cancel());
         new Thread(downloadTask).start();
-
         dialog.showAndWait();
     }
 
