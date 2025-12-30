@@ -625,6 +625,11 @@ public class EstoqueController {
         servicoUpdater();
     }
 
+    @FXML
+    private void onNovidades(){
+        mostrarInfo("Novidades", AppInfo.novidades);
+    }
+
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);

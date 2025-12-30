@@ -10,6 +10,10 @@
             <MenuBar>
                 <Menu text="Ajuda">
                     <MenuItem onAction="#onSobre" text="Sobre" />
+
+                </Menu>
+                <Menu text="Versão">
+                    <MenuItem onAction="#onNovidades" text="Novidades"/>
                     <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
                 </Menu>
             </MenuBar>
