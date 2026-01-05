@@ -99,6 +99,8 @@
                         <argument>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</argument>
                         <argument>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</argument>
                         <argument>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</argument>
+                        <argument>--java-options</argument>
+                        <argument>-Dfile.encoding=UTF-8</argument>
                     </arguments>
                 </configuration>
             </plugin>

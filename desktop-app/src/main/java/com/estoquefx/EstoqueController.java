@@ -625,36 +625,7 @@ public class EstoqueController {
 
     @FXML
     private void onReportarBug() {
-        String titulo = uriEncode("[Bug] Descreva o problema aqui");
-        String corpo = """
-            **Descrição do problema:**
-            (Explique o que aconteceu)
-            "Não salva, da erro: erro ao salvar na tela"
-            
-            **Passos para reproduzir:**
-            1. Criar produto
-            2. Dar saída
-            3. Exportar CSV
-
-            **Resultado esperado:**
-            - Salvar
-
-            **Informações do sistema:**
-            - Versão do app: %s
-            - Sistema operacional: %s %s
-            """.formatted(
-                AppInfo.VERSAO,
-                System.getProperty("os.name"),
-                System.getProperty("os.version")
-        );
-
-        String url = "%s\\new?title=%s&body=%s".formatted(
-                AppInfo.ISSUE_URL,
-                titulo,
-                uriEncode(corpo)
-        );
-
-        EstoqueAppFX.getHostServicesStatic().showDocument(url);
+        EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);
     }
 
     private String uriEncode(String s) {

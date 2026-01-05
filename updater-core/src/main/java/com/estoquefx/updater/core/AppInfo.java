@@ -4,9 +4,9 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.1.4";
-    public static final String ISSUE_URL =
-            "https://github.com/Abysswalkerrr/estoque_releases/issues/";
+            "1.1.5";
+    public static final String BUG_REPORT_URL =
+            "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
     public static final String RELEASES_URL =
             "https://github.com/Abysswalkerrr/estoque_releases/releases";
     public static final String UPDATE_URL =
@@ -14,7 +14,7 @@ public class AppInfo {
 
     public static String novidades = """
             1.1.4
-            Mostra das mudanças no atualizador.
+            Mudanças agora aparecem no popup de atualização, função de relatar falhas adicionada e página para ver versões anteriores adicionada.
             
             1.1.3
             Correções da barra de download e instalador.
