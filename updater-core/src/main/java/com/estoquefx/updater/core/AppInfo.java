@@ -13,31 +13,34 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
+            1.1.5
+            Correção de formatação da aba novidades e reformulação do bug report.
+            
             1.1.4
             Mudanças agora aparecem no popup de atualização, função de relatar falhas adicionada e página para ver versões anteriores adicionada.
-            
+           
             1.1.3
             Correções da barra de download e instalador.
-            
+           
             1.1.2
             Aba de novidades de versão implementada.
-            
+           
             1.1.1
             Barra de progresso e lógica de atualização implementada.
-            
+           
             1.1.0
             Autocomplete lançado.
-            
+           
             1.0.4
             Formatação das tabelas aprimorada.
-            
+           
             1.0.3
             Correções ao atualizador.
-            
+           
             1.0.2
             Atualizador implementado.
-            
+           
             1.0.1
             Descrição implementada.
-            """;
+           """;
 }

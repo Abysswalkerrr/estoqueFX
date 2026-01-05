@@ -99,8 +99,10 @@
                         <argument>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</argument>
                         <argument>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</argument>
                         <argument>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</argument>
-                        <argument>--java-options</argument>
-                        <argument>-Dfile.encoding=UTF-8</argument>
+                        <JavaOptions>
+                            <option>-Dfile.encoding=UTF-8</option>
+                            <option>-Dsun.jnu.encoding=UTF-8</option>
+                        </JavaOptions>
                     </arguments>
                 </configuration>
             </plugin>
@@ -112,6 +114,12 @@
     <artifactId>desktop-app</artifactId>
 
     <properties>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
+        <maven.compiler.targetEncoding>UTF-8</maven.compiler.targetEncoding>
+
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

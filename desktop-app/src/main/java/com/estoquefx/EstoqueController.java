@@ -26,7 +26,6 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -628,15 +627,6 @@ public class EstoqueController {
         EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);
     }
 
-    private String uriEncode(String s) {
-        try {
-            return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20");
-        } catch (Exception e) {
-            return s;
-        }
-    }
-
-
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -669,8 +659,6 @@ public class EstoqueController {
         textArea.setMaxHeight(Double.MAX_VALUE);
 
         alert.getDialogPane().setContent(textArea);
-
-        alert.getDialogPane().getButtonTypes().setAll(ButtonType.OK);
         alert.showAndWait();
     }
 
