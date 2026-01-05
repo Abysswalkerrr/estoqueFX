@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.1.5";
+            "1.1.6";
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
     public static final String RELEASES_URL =
@@ -13,6 +13,9 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
+            1.1.6
+            A
+            
             1.1.5
             Correção de formatação da aba novidades e reformulação do bug report.
             
