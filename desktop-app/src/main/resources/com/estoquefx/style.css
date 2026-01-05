@@ -1,6 +1,6 @@
-/* Deixa o MenuBar mais fino */
+
 .menu-bar {
-    -fx-padding: 0 2 0 2;        /* top/right/bottom/left */
+    -fx-padding: 0 2 0 2;
 }
 
 .menu-bar .menu {
@@ -8,11 +8,10 @@
 }
 
 .menu-bar .label {
-    -fx-font-size: 7pt;         /* fonte menor */
+    -fx-font-size: 7pt;
     -fx-padding: 0 2 0 2;
 }
 
-/* Opcional: menu dropdown mais compacto */
 .context-menu {
     -fx-padding: 1 0 1 0;
 }

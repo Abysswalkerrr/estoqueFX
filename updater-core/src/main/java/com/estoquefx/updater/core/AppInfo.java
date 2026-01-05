@@ -9,6 +9,9 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
+            1.1.4
+            Mostra das mudanças no atualizador.
+            
             1.1.3
             Correções da barra de download e instalador.
             
@@ -32,8 +35,5 @@ public class AppInfo {
             
             1.0.1
             Descrição implementada.
-            
-            1.0.0
-            Lançamento.
             """;
 }

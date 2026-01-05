@@ -477,7 +477,6 @@ public class EstoqueController {
         dialog.showAndWait();
     }
 
-
     @FXML
     private void onCriarProduto() {
         String nome = "";
@@ -626,7 +625,7 @@ public class EstoqueController {
 
     @FXML
     private void onNovidades(){
-        mostrarInfo("Novidades", AppInfo.novidades);
+        mostrarChangelog(AppInfo.novidades);
     }
 
     public void mostrarInfo(String titulo, String msg) {
@@ -634,6 +633,26 @@ public class EstoqueController {
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    public void mostrarChangelog(String changelog) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Novidades");
+        alert.setHeaderText("Novidades desta versão");
+
+        TextArea textArea = new TextArea(changelog);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setPrefRowCount(15);
+        textArea.setPrefColumnCount(60);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        alert.getDialogPane().setContent(textArea);
+
+        alert.getDialogPane().getButtonTypes().setAll(ButtonType.OK);
         alert.showAndWait();
     }
 

@@ -3,8 +3,7 @@ package com.estoquefx;
 import java.util.HashSet;
 
 //todo nomes iguais
-//todo autocomplete
-
+//todo
 public class Misc {
     public static HashSet<String> categorias = new HashSet<>();
     public static HashSet<String> nomes = new HashSet<>();
