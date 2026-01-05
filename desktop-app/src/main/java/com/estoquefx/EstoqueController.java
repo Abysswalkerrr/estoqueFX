@@ -26,6 +26,8 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.function.LongConsumer;
@@ -252,7 +254,7 @@ public class EstoqueController {
         });
     }
 
-    //função depreciada por existir um com autocomplete
+    //substituída pela versão com autocomplete
     private String perguntarNomeProduto(String titulo) {
         Produto selecionado = tabela.getSelectionModel().getSelectedItem();
         String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
@@ -378,14 +380,6 @@ public class EstoqueController {
             p.setDescricao(novaDesc);
             tabela.refresh();
         });
-    }
-
-    public static void mostrarInfoStatic(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public static void verificarAtualizacaoSilenciosa() {
@@ -624,15 +618,68 @@ public class EstoqueController {
     }
 
     @FXML
-    private void onNovidades(){
-        mostrarChangelog(AppInfo.novidades);
+    private void onNovidades(){mostrarChangelog(AppInfo.novidades);}
+
+    @FXML
+    private void onVersoesAnteriores(){EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.RELEASES_URL);}
+
+    @FXML
+    private void onReportarBug() {
+        String titulo = uriEncode("[Bug] Descreva o problema aqui");
+        String corpo = """
+            **Descrição do problema:**
+            (Explique o que aconteceu)
+            "Não salva, da erro: erro ao salvar na tela"
+            
+            **Passos para reproduzir:**
+            1. Criar produto
+            2. Dar saída
+            3. Exportar CSV
+
+            **Resultado esperado:**
+            - Salvar
+
+            **Informações do sistema:**
+            - Versão do app: %s
+            - Sistema operacional: %s %s
+            """.formatted(
+                AppInfo.VERSAO,
+                System.getProperty("os.name"),
+                System.getProperty("os.version")
+        );
+
+        String url = "%s\\new?title=%s&body=%s".formatted(
+                AppInfo.ISSUE_URL,
+                titulo,
+                uriEncode(corpo)
+        );
+
+        EstoqueAppFX.getHostServicesStatic().showDocument(url);
     }
+
+    private String uriEncode(String s) {
+        try {
+            return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20");
+        } catch (Exception e) {
+            return s;
+        }
+    }
+
 
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    //A princípio não vai ser mais usado
+    public static void mostrarInfoStatic(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 

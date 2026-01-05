@@ -5,6 +5,10 @@ public class AppInfo {
             "SistemaEstoqueFX";
     public static final String VERSAO   =
             "1.1.4";
+    public static final String ISSUE_URL =
+            "https://github.com/Abysswalkerrr/estoque_releases/issues/";
+    public static final String RELEASES_URL =
+            "https://github.com/Abysswalkerrr/estoque_releases/releases";
     public static final String UPDATE_URL =
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 

@@ -1,6 +1,7 @@
 package com.estoquefx;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -12,8 +13,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class EstoqueAppFX extends Application {
+    private static HostServices hostServicesRef;
+
     @Override
     public void start(Stage stage) throws IOException {
+        hostServicesRef = getHostServices();
         Produto.preencher(Leitor.carregarEstoque());
         Misc.carregaCategorias();
         Misc.carregaNomes();
@@ -56,5 +60,7 @@ public class EstoqueAppFX extends Application {
         stage.show();
     }
 
-
+    public static HostServices getHostServicesStatic() {
+        return hostServicesRef;
+    }
 }
