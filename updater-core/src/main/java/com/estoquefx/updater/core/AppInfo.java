@@ -14,7 +14,7 @@ public class AppInfo {
 
     public static String novidades = """
             1.1.6
-            A
+            Correção da coloração na tabela e reestruturação dos arquivos.
             
             1.1.5
             Correção de formatação da aba novidades e reformulação do bug report.

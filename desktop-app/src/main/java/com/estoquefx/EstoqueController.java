@@ -5,7 +5,9 @@ import com.estoquefx.updater.core.*;
 
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -26,7 +29,6 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.function.LongConsumer;
@@ -184,10 +186,41 @@ public class EstoqueController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+                if (text.fillProperty().isBound()) {
+                    text.fillProperty().unbind();
+                }
                 if (empty || item == null) {
                     text.setText("");
+                    return;
+                }
+                text.setText(item);
+
+                TableRow<?> row = getTableRow();
+                if (row != null) {
+                    ChangeListener<String> styleListener = (obs, oldClass, newClass) -> {
+                        atualizarCor(row);
+                    };
+                    row.getStyleClass().addListener((ListChangeListener<String>) c -> {
+                        while (c.next()) {
+                            if (c.wasAdded() || c.wasRemoved()) {
+                                atualizarCor(row);
+                            }
+                        }
+                    });
+                    atualizarCor(row);
+                }
+            }
+            private void atualizarCor(TableRow<?> row) {
+                boolean isEstoqueBaixo = row.getStyleClass().contains("estoque-baixo");
+
+                if (isEstoqueBaixo) {
+                    text.setFill(Color.BLACK);
                 } else {
-                    text.setText(item);
+                    text.fillProperty().bind(
+                            row.selectedProperty().map(selected ->
+                                    selected ? Color.WHITE : Color.BLACK
+                            )
+                    );
                 }
             }
         });
@@ -245,7 +278,7 @@ public class EstoqueController {
                 if (empty || item == null) {
                     setStyle("");
                 } else if (item.getCompra()) {
-                    setStyle("-fx-background-color: yellow;");
+                    getStyleClass().add("estoque-baixo");
                 } else {
                     setStyle("");
                 }
@@ -307,7 +340,7 @@ public class EstoqueController {
         UpdateService service = new UpdateService();
 
         try {
-            UpdateInfo info = service.checkForUpdate();
+            UpdateInfo info = service.verificarUpdate();
 
             if (info.getVersaoRemota() == null || info.getUrlInstaller() == null) {
                 mostrarInfo("Atualização", "Não foi possível ler informações do release.");
@@ -385,7 +418,7 @@ public class EstoqueController {
         UpdateService service = new UpdateService();
 
         try {
-            UpdateInfo info = service.checkForUpdate();
+            UpdateInfo info = service.verificarUpdate();
 
             if (info.getVersaoRemota() == null || info.getUrlInstaller() == null || !info.hasUpdate()) {
                 return;
@@ -447,7 +480,7 @@ public class EstoqueController {
                     }
                 };
 
-                Path installer = UpdateService.downloadInstallerWithProgress(
+                Path installer = UpdateService.downloadComBarraDeProgresso(
                         info.getUrlInstaller(),
                         info.getVersaoRemota(),
                         progressBytes,
