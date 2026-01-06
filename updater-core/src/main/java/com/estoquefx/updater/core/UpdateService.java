@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UpdateService {
 
 
-    public UpdateInfo checkForUpdate() throws Exception {
+    public UpdateInfo verificarUpdate() throws Exception {
         URL url = new URL(AppInfo.UPDATE_URL);
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
@@ -37,7 +37,7 @@ public class UpdateService {
         }
     }
 
-    public Path downloadInstaller(String urlInstaller, String versao) throws Exception {
+    public Path downloadSilencioso(String urlInstaller, String versao) throws Exception {
         URL url = new URL(urlInstaller);
         Path temp = Files.createTempFile("SistemaEstoqueFX-" + versao + "-", ".msi");
 
@@ -48,8 +48,8 @@ public class UpdateService {
         return temp;
     }
 
-    public static Path downloadInstallerWithProgress(String urlInstaller, String versao,
-                                                     LongConsumer progressBytes, long totalBytes) throws Exception {
+    public static Path downloadComBarraDeProgresso(String urlInstaller, String versao,
+                                                   LongConsumer progressBytes, long totalBytes) throws Exception {
         URL url = new URL(urlInstaller);
         Path temp = Files.createTempFile("SistemaEstoqueFX-" + versao + "-", ".msi");
 
@@ -90,8 +90,8 @@ public class UpdateService {
         Matcher matcher = pattern.matcher(json);
 
         if (matcher.find()) {
-            String tag = matcher.group(1); // "v1.0.1"
-            return tag.replace("v", "");   // "1.0.1"
+            String tag = matcher.group(1); // v1.0.1
+            return tag.replace("v", "");   // 1.0.1
         }
         return null;
     }
@@ -113,8 +113,7 @@ public class UpdateService {
         Matcher matcher = pattern.matcher(json);
 
         if (matcher.find()) {
-            String changelog = matcher.group(1);
-            return changelog;
+            return matcher.group(1);
         }
         return null;
     }

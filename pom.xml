@@ -8,7 +8,6 @@
     <modules>
         <module>desktop-app</module>
         <module>updater-core</module>
-        <module>updater-app</module>
         <module>estoque-dist</module>
     </modules>
 </project>

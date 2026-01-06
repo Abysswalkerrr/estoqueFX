@@ -21,3 +21,41 @@
     -fx-padding: 1 3 1 3;
 }
 
+.table-view .table-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.table-row-cell:selected .table-cell,
+.table-row-cell:selected:focused .table-cell {
+    -fx-background-color: dodgerblue;
+    -fx-text-fill: white;
+}
+
+.table-row-cell.estoque-baixo .table-cell {
+    -fx-background-color: yellow;
+    -fx-text-fill: black;
+}
+
+.table-row-cell.estoque-baixo:selected .table-cell,
+.table-row-cell.estoque-baixo:selected:focused .table-cell {
+    -fx-background-color: orange;
+    -fx-text-fill: black !important;
+}
+
+.table-view .text {
+    -fx-fill: black;
+}
+
+.table-row-cell:selected .table-cell .text,
+.table-row-cell:selected:focused .table-cell .text {
+    -fx-fill: white;
+}
+
+.table-row-cell.estoque-baixo .table-cell .text {
+    -fx-fill: black !important;
+}
+.table-row-cell.estoque-baixo:selected .table-cell .text,
+.table-row-cell.estoque-baixo:selected:focused .table-cell .text {
+    -fx-fill: black !important;
+}
