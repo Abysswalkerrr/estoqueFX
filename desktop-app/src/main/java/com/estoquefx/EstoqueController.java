@@ -211,8 +211,10 @@ public class EstoqueController {
                 }
             }
             private void atualizarCor(TableRow<?> row) {
+                if (text.fillProperty().isBound()) {
+                    text.fillProperty().unbind();
+                }
                 boolean isEstoqueBaixo = row.getStyleClass().contains("estoque-baixo");
-
                 if (isEstoqueBaixo) {
                     text.setFill(Color.BLACK);
                 } else {
@@ -223,6 +225,7 @@ public class EstoqueController {
                     );
                 }
             }
+
         });
 
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -598,6 +601,7 @@ public class EstoqueController {
                 new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
                 return;
             }
+            r = 1;
         } while  (qtd < 0);
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria);
