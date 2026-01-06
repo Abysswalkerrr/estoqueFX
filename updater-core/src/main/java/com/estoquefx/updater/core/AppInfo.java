@@ -14,7 +14,7 @@ public class AppInfo {
 
     public static String novidades = """
             1.1.8
-            A
+            Correções minoritárias
             
             1.1.7
             Prevenção de falhas na criação de produtos.
