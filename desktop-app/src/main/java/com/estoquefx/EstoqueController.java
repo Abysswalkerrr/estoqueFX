@@ -515,6 +515,11 @@ public class EstoqueController {
             nome = dialogNome.showAndWait().orElse(null);
             if (nome == null) return;
             nome = nome.toUpperCase();
+            if (Misc.nomes.contains(nome)) {
+                String temp = "O produto " + nome + " já existe";
+                mostrarErro(temp);
+                return;
+            }
         }
 
         while (categoria.isBlank()) {
@@ -531,33 +536,73 @@ public class EstoqueController {
 
         int qtdMin, qtd;
         double vlrUnd;
+        int r = 0;
 
-        try {
-            TextInputDialog dMin = new TextInputDialog();
-            dMin.setTitle("Criar Produto");
-            dMin.setHeaderText(null);
-            dMin.setContentText("Quantidade mínima:");
-            qtdMin = Integer.parseInt(dMin.showAndWait().orElse("0").trim());
+        do {
+            try {
+                if (r == 1){
+                    mostrarInfo("Criar Produto", "Quantidade mínima deve ser maior que zero.");
+                }
+                TextInputDialog dMin = new TextInputDialog();
+                dMin.setTitle("Criar Produto");
+                dMin.setHeaderText(null);
+                dMin.setContentText("Quantidade mínima:");
+                String qtdMinStr;
+                qtdMinStr = dMin.showAndWait().orElse("").trim();
+                if (qtdMinStr.isEmpty()) return;
+                qtdMin = Integer.parseInt(qtdMinStr);
+                r = 1;
 
-            TextInputDialog dVlr = new TextInputDialog();
-            dVlr.setTitle("Criar Produto");
-            dVlr.setHeaderText(null);
-            dVlr.setContentText("Valor unitário:");
-            vlrUnd = Double.parseDouble(dVlr.showAndWait().orElse("0").replace(',', '.').trim());
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                return;
+            }
+        } while (qtdMin < 0);
 
-            TextInputDialog dQtd = new TextInputDialog();
-            dQtd.setTitle("Criar Produto");
-            dQtd.setHeaderText(null);
-            dQtd.setContentText("Quantidade em estoque:");
-            qtd = Integer.parseInt(dQtd.showAndWait().orElse("0").trim());
-        } catch (NumberFormatException ex) {
-            new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
-            return;
-        }
+        r = 0;
+
+        do {
+            try {
+                if (r == 1){
+                    mostrarInfo("Criar Produto", "Valor unitário não pode ser menor que zero.");
+                }
+                TextInputDialog dVlr = new TextInputDialog();
+                dVlr.setTitle("Criar Produto");
+                dVlr.setHeaderText(null);
+                dVlr.setContentText("Valor unitário:");
+                String vlrUndStr;
+                vlrUndStr = dVlr.showAndWait().orElse("").replace(',', '.').trim();
+                if (vlrUndStr.isEmpty()) return;
+                vlrUnd = Double.parseDouble(vlrUndStr);
+
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                return;
+            }
+            r = 1;
+        } while (vlrUnd <= 0);
+
+        r = 0;
+
+        do {
+            try {
+                if (r == 1){
+                    mostrarInfo("Criar Produto", "Estoque não pode ser menor que zero.");
+                }
+                TextInputDialog dQtd = new TextInputDialog();
+                dQtd.setTitle("Criar Produto");
+                dQtd.setHeaderText(null);
+                dQtd.setContentText("Quantidade em estoque:");
+                qtd = Integer.parseInt(dQtd.showAndWait().orElse("0").trim());
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                return;
+            }
+        } while  (qtd < 0);
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria);
         Produto.addEstoque(novo);
-        dados.setAll(Produto.estoque); // atualiza TableView
+        dados.setAll(Produto.estoque);
     }
 
     @FXML
@@ -645,9 +690,7 @@ public class EstoqueController {
     }
 
     @FXML
-    private void onVerificarAtualizacoes() {
-        servicoUpdater();
-    }
+    private void onVerificarAtualizacoes() {servicoUpdater();}
 
     @FXML
     private void onNovidades(){mostrarChangelog(AppInfo.novidades);}
@@ -656,9 +699,7 @@ public class EstoqueController {
     private void onVersoesAnteriores(){EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.RELEASES_URL);}
 
     @FXML
-    private void onReportarBug() {
-        EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);
-    }
+    private void onReportarBug() {EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);}
 
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
