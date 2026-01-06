@@ -2,6 +2,12 @@ package com.estoquefx;
 
 import java.util.HashSet;
 
+//todo ícones
+//todo revisar botões
+//todo abas?
+//todo decifrar import
+//todo copiar excel lol
+
 public class Misc {
     public static HashSet<String> categorias = new HashSet<>();
     public static HashSet<String> nomes = new HashSet<>();
@@ -32,6 +38,7 @@ public class Misc {
         nomes.remove(nome);
     }
 
+    //muito provavelmente não vai ser mais usado
     public static boolean isNumeric(String n) {
         try{
             Double.parseDouble(n);
