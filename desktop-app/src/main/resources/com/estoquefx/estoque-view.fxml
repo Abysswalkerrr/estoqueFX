@@ -29,6 +29,7 @@
                 <Button fx:id="btnSaida" onAction="#onSaida" text="Saída" />
                 <Button fx:id="btnSalvar" onAction="#onSalvar" text="Salvar" />
                 <Button fx:id="btnExportar" onAction="#onExportarCsv" text="Exportar CSV" />
+                <Button fx:id="btnImprimir" onAction="#onImprimir" text="Imprimir" />
 
                 <Region HBox.hgrow="ALWAYS" />
 

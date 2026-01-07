@@ -3,6 +3,8 @@ package com.estoquefx;
 import java.util.HashSet;
 
 //todo ícones
+//todo imprimir
+//todo salvar como
 //todo revisar botões
 //todo abas?
 //todo decifrar import
@@ -13,6 +15,7 @@ import java.util.HashSet;
 //todo README
 //todo tasks?
 //todo verificar POO? simplificar?
+//todo limpar arquivos/projetos
 //todo https://openjfx.io/ - olhar community
 //todo https://www.reddit.com/r/JavaFX/ - tirar ideias
 

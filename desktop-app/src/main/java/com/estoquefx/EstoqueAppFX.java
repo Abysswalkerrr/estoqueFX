@@ -23,12 +23,10 @@ public class EstoqueAppFX extends Application {
         Misc.carregaNomes();
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("estoque-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("Sistema de Estoque (JavaFX)");
+        stage.setTitle("Sistema de EstoqueFX");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> {
-            if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {
-                return;
-            }
+            if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {return;}
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Sair do Sistema");
@@ -47,7 +45,7 @@ public class EstoqueAppFX extends Application {
             } else if (result.get() == btnSalvar) {
                 try {
                     Leitor.salvarEstoque(Produto.estoque);
-                    Produto.setUltimaAcao("i"); // marcou como salvo
+                    Produto.setUltimaAcao("i"); // salvo
                 } catch (IOException e) {
                     new Alert(Alert.AlertType.ERROR,
                             "Erro ao salvar antes de sair: " + e.getMessage()).showAndWait();
@@ -60,7 +58,5 @@ public class EstoqueAppFX extends Application {
         stage.show();
     }
 
-    public static HostServices getHostServicesStatic() {
-        return hostServicesRef;
-    }
+    public static HostServices getHostServicesStatic() {return hostServicesRef;}
 }

@@ -4,6 +4,7 @@ package com.estoquefx;
 import com.estoquefx.updater.core.*;
 
 
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -12,15 +13,23 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.print.*;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.Scene;
+import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
 
 import org.controlsfx.control.textfield.*;
@@ -52,6 +61,7 @@ public class EstoqueController {
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
     @FXML private Button btnExportar;
+    @FXML private Button btnImprimir;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
@@ -705,6 +715,54 @@ public class EstoqueController {
     @FXML
     private void onReportarBug() {EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);}
 
+    @FXML
+    private void onImprimir() {
+        tabela.getSelectionModel().clearSelection();
+
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job == null || !job.showPrintDialog(tabela.getScene().getWindow())) {return;}
+
+        PageLayout pageLayout = job.getPrinter().createPageLayout(
+                Paper.A4,
+                PageOrientation.LANDSCAPE,
+                Printer.MarginType.HARDWARE_MINIMUM);
+
+        double alturaTabela = Math.min(tabela.getItems().size() * 50, pageLayout.getPrintableHeight());
+        tabela.setPrefHeight(alturaTabela);
+        tabela.setFixedCellSize(50);
+
+        double scaleX = pageLayout.getPrintableWidth() / tabela.getWidth();
+        double scaleY = pageLayout.getPrintableHeight() / tabela.getHeight();
+        double scale = Math.min(scaleX, scaleY);
+
+        tabela.getTransforms().add(new Scale(scale, scale));
+
+        boolean sucesso = job.printPage(pageLayout, tabela);
+        if (sucesso) {job.endJob();}
+
+        tabela.getTransforms().clear();
+        tabela.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        tabela.setFixedCellSize(Region.USE_COMPUTED_SIZE);    }
+
+    //outro imprimir é melhor
+    public void imprimir(Node node, Window owner) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job == null) {
+            mostrarErro("Erro ao imprimir");
+            return;
+        }
+
+        boolean ok = job.showPrintDialog(owner); // abre diálogo de impressão
+        if (!ok) {
+            return;
+        }
+
+        boolean sucesso = job.printPage(node);
+        if (sucesso) {
+            job.endJob();
+        }
+    }
+
     public void mostrarInfo(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -747,6 +805,5 @@ public class EstoqueController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
-
 
 }
