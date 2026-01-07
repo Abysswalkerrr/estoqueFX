@@ -23,7 +23,7 @@ public class EstoqueAppFX extends Application {
         Misc.carregaNomes();
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("estoque-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("Sistema de EstoqueFX");
+        stage.setTitle("EstoqueFX");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> {
             if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {return;}
