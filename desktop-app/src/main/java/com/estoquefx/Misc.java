@@ -2,10 +2,10 @@ package com.estoquefx;
 
 import java.util.HashSet;
 
+// imprimir
+// salvar como
+// bug pesquisa
 //todo ícones
-//todo bug pesquisa não altera tabela
-//todo imprimir
-//todo salvar como
 //todo revisar botões
 //todo abas?
 //todo decifrar import
@@ -15,7 +15,8 @@ import java.util.HashSet;
 //todo FAQ
 //todo README
 //todo tasks?
-//todo verificar POO? simplificar?
+//todo POO
+//todo simplificar?
 //todo limpar arquivos/projetos
 //todo https://openjfx.io/ - olhar community
 //todo https://www.reddit.com/r/JavaFX/ - tirar ideias

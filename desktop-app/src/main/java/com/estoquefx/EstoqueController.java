@@ -4,7 +4,6 @@ package com.estoquefx;
 import com.estoquefx.updater.core.*;
 
 
-import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -13,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.print.*;
@@ -26,9 +24,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.Scene;
 import javafx.scene.transform.Scale;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -61,7 +57,6 @@ public class EstoqueController {
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
     @FXML private Button btnExportar;
-    @FXML private Button btnImprimir;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
@@ -284,6 +279,7 @@ public class EstoqueController {
 
         tabela.setItems(ordenados);
 
+
         tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
             protected void updateItem(Produto item, boolean empty) {
@@ -294,6 +290,14 @@ public class EstoqueController {
                     getStyleClass().add("estoque-baixo");
                 } else {
                     setStyle("");
+                }
+            }
+        });
+
+        filtrados.addListener((ListChangeListener<Produto>) change -> {
+            while (change.next()) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    tabela.refresh();
                 }
             }
         });
