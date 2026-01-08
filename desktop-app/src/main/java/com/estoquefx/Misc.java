@@ -8,10 +8,10 @@ import java.util.HashSet;
 // salvar como
 // bug pesquisa
 // revisar botões
-//todo ícones
+//todo pensar ícones
 //todo abas?
-//todo decifrar import
-// todo calendário!?
+//todo import
+// todo calendário?
 //todo documentação talvez?
 //todo FAQ
 //todo README
@@ -19,6 +19,9 @@ import java.util.HashSet;
 //todo POO
 //todo simplificar?
 //todo limpar arquivos/projetos
+//todo relatórios
+//todo salvar na nuvem?
+//todo Multi-usuário
 //todo https://openjfx.io/ - olhar community
 //todo https://www.reddit.com/r/JavaFX/ - tirar ideias
 
