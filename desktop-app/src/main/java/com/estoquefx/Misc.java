@@ -1,16 +1,17 @@
 package com.estoquefx;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 // imprimir
 // salvar como
 // bug pesquisa
+// revisar botões
 //todo ícones
-//todo revisar botões
 //todo abas?
 //todo decifrar import
-//todo copiar excel lol
-//todo calendário!?
+// todo calendário!?
 //todo documentação talvez?
 //todo FAQ
 //todo README
@@ -25,6 +26,7 @@ import java.util.HashSet;
 public class Misc {
     public static HashSet<String> categorias = new HashSet<>();
     public static HashSet<String> nomes = new HashSet<>();
+    private static String ultimaAtualizacao = "";
 
     private static double total;
 
@@ -50,6 +52,18 @@ public class Misc {
 
     public static void removeNome(String nome){
         nomes.remove(nome);
+    }
+
+    public static void setUltimaAtualizacao(String ultimaAtualizacao) {
+        Misc.ultimaAtualizacao = ultimaAtualizacao;
+    }
+
+    public static String getUltimaAtualizacao(){return Misc.ultimaAtualizacao;}
+
+    public static void updateTime(){
+        LocalDateTime hora = LocalDateTime.now();
+        setUltimaAtualizacao(hora.format(DateTimeFormatter.ofPattern("dd/MM HH:mm")));
+
     }
 
     //muito provavelmente não vai ser mais usado
@@ -80,6 +94,8 @@ public class Misc {
     public static double getTotal(){
         return total;
     }
+
+
 
 }
 

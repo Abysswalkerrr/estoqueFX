@@ -19,7 +19,7 @@ public class Produto {
     private static int proximoCodigo = 1;
     private static Map<String, Produto> mapaCodigo = new HashMap<>();
 
-    // Construtor para novos produtos (gera código automaticamente)
+    // Construtor para novos produtos (gera código)
     public Produto(String nome, int vlrMin, double vlrUnd, int qtd, String categoria) {
         this.nome = nome;
         this.categoria = categoria;
@@ -148,9 +148,7 @@ public class Produto {
         setUltimaAcao("t");
     }
 
-    public static void setUltimaAcao(String lastAction) {
-        ultimaAcao = lastAction;
-    }
+    public static void setUltimaAcao(String lastAction) {ultimaAcao = lastAction;}
 
     public void setNome(String nome) {
         Misc.removeNome(this.nome);
@@ -256,6 +254,7 @@ public class Produto {
         }
     }
 
+    //depreciado com a versão de terminal
     public static void printAll() {
         if (estoque.isEmpty()) {
             System.out.println("Estoque vazio!");
@@ -269,6 +268,7 @@ public class Produto {
         }
     }
 
+    //depreciado com a versão de terminal
     public static void compras() {
         int c = 0;
         for (Produto produto : estoque) {
@@ -282,6 +282,7 @@ public class Produto {
         }
     }
 
+    //depreciado com a versão de terminal
     public static void listaCat(String cat) {
         int c = 0;
         for (Produto produto : estoque) {
@@ -298,8 +299,5 @@ public class Produto {
     public static void atualizaCompra(Produto p){
         p.compraUrgente = p.qtd < p.vlrMin;
     }
-
-
-
 
 }

@@ -5,6 +5,8 @@ import com.estoquefx.updater.core.*;
 
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -41,6 +43,9 @@ import java.util.function.LongConsumer;
 
 public class EstoqueController {
 
+    @FXML private Label lblUltimaAlteracao;
+    private final StringProperty ultimaAlteracao = new SimpleStringProperty("Última contagem: ");
+
     @FXML private TableView<Produto> tabela;
     @FXML private TableColumn<Produto, String> colCodigo;
     @FXML private TableColumn<Produto, String> colNome;
@@ -66,6 +71,9 @@ public class EstoqueController {
 
     @FXML
     public void initialize() {
+        lblUltimaAlteracao.textProperty().bind(ultimaAlteracao);
+        Platform.runLater(this::atualizarUltimaAlteracao);
+
         tabela.setEditable(true);
         // liga colunas aos getters de Produto
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
@@ -524,6 +532,12 @@ public class EstoqueController {
         dialog.showAndWait();
     }
 
+    public void atualizarUltimaAlteracao() {
+        Misc.updateTime();
+        String novaData = Misc.getUltimaAtualizacao();
+        ultimaAlteracao.set("Última contagem: " + novaData);
+    }
+
     @FXML
     private void onCriarProduto() {
         String nome = "";
@@ -669,6 +683,7 @@ public class EstoqueController {
     @FXML
     private void onSalvar() {
         try {
+            atualizarUltimaAlteracao();
             Leitor.salvarEstoque(Produto.estoque);
             Produto.setUltimaAcao("s");
             new Alert(Alert.AlertType.INFORMATION, "Estoque salvo com sucesso.").showAndWait();
@@ -683,11 +698,11 @@ public class EstoqueController {
             Leitor.exportarEstoqueCSV(Produto.estoque);
 
             new Alert(Alert.AlertType.INFORMATION,
-                    "CSV exportado com sucesso em:\nDocumentos/" + Leitor.nomePasta + "/estoque.csv")
+                    "CSV exportado com sucesso para:\nDocumentos/" + Leitor.nomePasta + "/estoqueCSV.csv")
                     .showAndWait();
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR,
-                    "Erro ao exportar CSV: " + e.getMessage())
+                    "Erro ao exportar: " + e.getMessage())
                     .showAndWait();
         }
     }

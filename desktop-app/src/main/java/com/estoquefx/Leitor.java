@@ -12,35 +12,44 @@ import javax.swing.filechooser.FileSystemView;
 public class Leitor {
     static String nomeArquivo = "estoque.txt";
     static String nomePasta = "Sistema estoque";
+    static String nomeMisc = "misc.txt";
     static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
 
     public static ArrayList<Produto> carregarEstoque() throws IOException {
         ArrayList<Produto> estoque = new ArrayList<>();
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo = new File(pastaApp, nomeArquivo);
+        File misc = new File(pastaApp, nomeMisc);
 
-        if (!arquivo.exists()) {
-            System.out.println("Arquivo não encontrado. Iniciando com estoque vazio.");
-            return estoque;
-        }
+        if (arquivo.exists()) {
+            Scanner sc = new Scanner(arquivo);
 
-        Scanner sc = new Scanner(arquivo);
+            while (sc.hasNextLine()) {
+                String linha = sc.nextLine().trim();
 
-        while (sc.hasNextLine()) {
-            String linha = sc.nextLine().trim();
+                if (linha.isEmpty()) continue;
 
-            if (linha.isEmpty()) continue;
+                String[] partes = linha.split("\\|");
+                if (partes.length >= 6) {
+                    Produto p = infoProduto(partes);
+                    estoque.add(p);
+                }
 
-            String[] partes = linha.split("\\|");
-            if (partes.length >= 6) {
-                Produto p = infoProduto(partes);
-                estoque.add(p);
             }
 
+            sc.close();
+            System.out.println("Estoque carregado: " + estoque.size() + " produtos.");
+        } else{
+            System.out.println("Nenhum estoque foi encontrado.");
         }
+        if (misc.exists()) {
+            Scanner scm = new Scanner(misc);
 
-        sc.close();
-        System.out.println("Estoque carregado: " + estoque.size() + " produtos.");
+                String linha2 = scm.nextLine();
+                Misc.setUltimaAtualizacao(linha2);
+        } else{
+            Misc.setUltimaAtualizacao("");
+        }
         return estoque;
     }
 
@@ -63,14 +72,26 @@ public class Leitor {
             pastaApp.mkdirs();
         }
         File arquivo = new File(pastaApp, nomeArquivo);
+        File misc = new File(pastaApp, nomeMisc);
+
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
+
 
         for (Produto p : estoque) {
             pw.println(p.toString());
         }
 
         pw.close();
+        fw.close();
+
+        FileWriter fwm = new FileWriter(misc);
+        PrintWriter pwm = new PrintWriter(fwm);
+
+        pwm.println(Misc.getUltimaAtualizacao());
+        pwm.close();
+        fwm.close();
+
     }
 
     public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
@@ -78,7 +99,7 @@ public class Leitor {
         if (!pastaApp.exists()) {
             pastaApp.mkdirs();
         }
-        File arquivoCSV = new File(pastaApp, "estoque.csv");
+        File arquivoCSV = new File(pastaApp, "estoqueCSV.csv");
 
         try (java.io.PrintWriter pw = new java.io.PrintWriter(
                 new java.io.OutputStreamWriter(

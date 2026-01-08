@@ -25,15 +25,15 @@
                     <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
                 </Menu>
                 <Menu text="Versão">
-                    <MenuItem onAction="#onNovidades" text="Novidades"/>
+                    <MenuItem onAction="#onNovidades" text="Novidades" />
                     <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
                     <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
                 </Menu>
             </MenuBar>
 
             <HBox spacing="8" style="-fx-padding: 8;">
+                <Label fx:id="lblUltimaAlteracao" />
                 <Region HBox.hgrow="ALWAYS" />
-
                 <TextField fx:id="txtBusca" maxWidth="300" prefWidth="250" promptText="Buscar" HBox.hgrow="SOMETIMES" />
             </HBox>
         </VBox>
