@@ -301,6 +301,10 @@ public class EstoqueController {
                 }
             }
         });
+
+        Platform.runLater(() -> {
+            tabela.getScene().getRoot().requestFocus();
+        });
     }
 
     //substituída pela versão com autocomplete

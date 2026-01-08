@@ -16,6 +16,11 @@
                     <MenuItem onAction="#onSalvar" text="Salvar" />
                     <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
                 </Menu>
+                <Menu text="Estoque">
+                    <MenuItem onAction="#onCriarProduto" text="Novo produto" />
+                    <MenuItem onAction="#onEntrada" text="Entrada" />
+                    <MenuItem onAction="#onSaida" text="Saída" />
+                </Menu>
                 <Menu text="Imprimir">
                     <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
                 </Menu>
@@ -27,12 +32,6 @@
             </MenuBar>
 
             <HBox spacing="8" style="-fx-padding: 8;">
-                <Button fx:id="btnCriar" onAction="#onCriarProduto" text="Criar Produto" />
-                <Button fx:id="btnEntrada" onAction="#onEntrada" text="Entrada" />
-                <Button fx:id="btnSaida" onAction="#onSaida" text="Saída" />
-                <Button fx:id="btnSalvar" onAction="#onSalvar" text="Salvar" />
-                <Button fx:id="btnExportar" onAction="#onExportarCsv" text="Exportar CSV" />
-
                 <Region HBox.hgrow="ALWAYS" />
 
                 <TextField fx:id="txtBusca" maxWidth="300" prefWidth="250" promptText="Buscar" HBox.hgrow="SOMETIMES" />
