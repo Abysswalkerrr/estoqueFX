@@ -3,6 +3,7 @@ package com.estoquefx;
 import java.util.HashSet;
 
 //todo ícones
+//todo bug pesquisa não altera tabela
 //todo imprimir
 //todo salvar como
 //todo revisar botões
