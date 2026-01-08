@@ -72,7 +72,7 @@ public class EstoqueController {
     @FXML
     public void initialize() {
         lblUltimaAlteracao.textProperty().bind(ultimaAlteracao);
-        Platform.runLater(this::atualizarUltimaAlteracao);
+        Platform.runLater(this::carregarUltimaAlteracao);
 
         tabela.setEditable(true);
         // liga colunas aos getters de Produto
@@ -534,8 +534,11 @@ public class EstoqueController {
 
     public void atualizarUltimaAlteracao() {
         Misc.updateTime();
-        String novaData = Misc.getUltimaAtualizacao();
-        ultimaAlteracao.set("Última contagem: " + novaData);
+        carregarUltimaAlteracao();
+    }
+
+    public void carregarUltimaAlteracao(){
+        ultimaAlteracao.set("Última contagem: " + Misc.getUltimaAtualizacao());
     }
 
     @FXML
