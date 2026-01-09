@@ -82,7 +82,6 @@ public class Produto {
         }
         p.qtd += a;
         atualizaCompra(p);
-        Misc.atualizaTotal();
         setUltimaAcao("e");
     }
 
@@ -100,7 +99,6 @@ public class Produto {
         if (p.qtd >= a) {
             p.qtd -= a;
             atualizaCompra(p);
-            Misc.atualizaTotal();
             setUltimaAcao("e");
         } else {
             System.out.println("Estoque insuficiente! Último estoque: " + p.qtd);
@@ -110,7 +108,6 @@ public class Produto {
     public static void addEstoque(Produto prod) {
         estoque.add(prod);
         mapaCodigo.put(prod.codigo, prod);
-        Misc.atualizaTotal();
         setUltimaAcao("c");
     }
 

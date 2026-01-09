@@ -21,6 +21,7 @@ public class EstoqueAppFX extends Application {
         Produto.preencher(Leitor.carregarEstoque());
         Misc.carregaCategorias();
         Misc.carregaNomes();
+        Misc.atualizaTotal();
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("estoque-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("EstoqueFX");

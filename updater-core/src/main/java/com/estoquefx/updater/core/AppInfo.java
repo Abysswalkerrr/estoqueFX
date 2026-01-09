@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.3.3";
+            "1.4.0";
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
     public static final String RELEASES_URL =
@@ -13,8 +13,11 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
-            1.3.3
+            1.4.0
+            Saldo total implementado.
             
+            1.3.3
+            Adicionada a opção de ignorar o pedido de atualizar.
             
             1.3.2
             Correção de erros.

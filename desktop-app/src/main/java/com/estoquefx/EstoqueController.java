@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.print.*;
@@ -46,6 +47,10 @@ public class EstoqueController {
     @FXML private Label lblUltimaAlteracao;
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Última contagem: ");
 
+    @FXML private Label lblSaldoTotal;
+    private String saldo = String.format("%.2f", Misc.getTotal());
+    private StringProperty saldoTotal = new SimpleStringProperty("Saldo total: " + "R$ " + saldo);
+
     @FXML private TableView<Produto> tabela;
     @FXML private TableColumn<Produto, String> colCodigo;
     @FXML private TableColumn<Produto, String> colNome;
@@ -73,6 +78,8 @@ public class EstoqueController {
     public void initialize() {
         lblUltimaAlteracao.textProperty().bind(ultimaAlteracao);
         Platform.runLater(this::carregarUltimaAlteracao);
+
+        lblSaldoTotal.textProperty().bind(saldoTotal);
 
         tabela.setEditable(true);
         // liga colunas aos getters de Produto
@@ -145,7 +152,7 @@ public class EstoqueController {
                 int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setQtd(novaQtd);
                 Produto.atualizaCompra(p);
-                Misc.atualizaTotal();
+                atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
                 // erro inválido
@@ -170,7 +177,7 @@ public class EstoqueController {
             try {
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
-                Misc.atualizaTotal();
+                atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
                 // erro inválido
@@ -468,8 +475,11 @@ public class EstoqueController {
                     if (result == BT_ATUALIZAR) {
                         new EstoqueController().mostrarDialogDownloadComProgresso(info);
                     } else if (result ==  BT_IGNORAR) {
+                        mostrarInfoStatic("Ignorar atualização", "O programa não irá mais avisar de novas versões. " +
+                                "\nAinda será disponível atualizar em Versão -> Verificar atualizações. " +
+                                "\nPara reverter essa mudança, vá em Versão -> Avisar atualizações.");
                         try {
-                            Leitor.salvarNA();
+                            Misc.setNegouAtualizacao(true);
                         } catch (Exception _) {
                         }
                     }
@@ -545,8 +555,13 @@ public class EstoqueController {
         carregarUltimaAlteracao();
     }
 
-    public void carregarUltimaAlteracao(){
-        ultimaAlteracao.set("Última contagem: " + Misc.getUltimaAtualizacao());
+    public void carregarUltimaAlteracao(){ultimaAlteracao.set("Última contagem: " + Misc.getUltimaAtualizacao());}
+
+    public void atualizarTotal(){
+        Misc.atualizaTotal();
+        String saldo = String.format("%.2f", Misc.getTotal());
+        saldoTotal.set("Saldo total: " + "R$ " + saldo);
+
     }
 
     @FXML
@@ -650,6 +665,7 @@ public class EstoqueController {
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria);
         Produto.addEstoque(novo);
         dados.setAll(Produto.estoque);
+        atualizarTotal();
     }
 
     @FXML
@@ -665,7 +681,8 @@ public class EstoqueController {
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
             Produto.entrada(qtd, nome);
-            dados.setAll(Produto.estoque); // atualiza TableView
+            dados.setAll(Produto.estoque);
+            atualizarTotal();
         } catch (NumberFormatException ex) {
             new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
         }
@@ -685,7 +702,8 @@ public class EstoqueController {
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
             Produto.saida(qtd, nome);
-            dados.setAll(Produto.estoque); // atualiza TableView
+            dados.setAll(Produto.estoque);
+            atualizarTotal();
         } catch (NumberFormatException ex) {
             new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
         }
@@ -778,7 +796,13 @@ public class EstoqueController {
         tabela.setPrefHeight(Region.USE_COMPUTED_SIZE);
         tabela.setFixedCellSize(Region.USE_COMPUTED_SIZE);    }
 
-    //outro imprimir é melhor
+    public void onAvisarAtualizacoes(ActionEvent actionEvent) {
+        try {
+            Misc.setNegouAtualizacao(false);
+        } catch (IOException _) {}
+    }
+
+    // onImprimir é melhor
     public void imprimir(Node node, Window owner) {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job == null) {

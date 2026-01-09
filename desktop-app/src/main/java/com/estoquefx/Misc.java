@@ -1,5 +1,6 @@
 package com.estoquefx;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -64,8 +65,9 @@ public class Misc {
 
     public static String getUltimaAtualizacao(){return Misc.ultimaAtualizacao;}
 
-    public static void setNegouAtualizacao(boolean negouAtualizacao) {
+    public static void setNegouAtualizacao(boolean negouAtualizacao) throws IOException {
         Misc.negouAtualizacao = negouAtualizacao;
+        Leitor.salvarNA(negouAtualizacao);
     }
 
     public static boolean getNegouAtualizacao(){return negouAtualizacao;}

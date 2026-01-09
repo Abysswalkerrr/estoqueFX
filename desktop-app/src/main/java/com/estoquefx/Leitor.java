@@ -113,17 +113,15 @@ public class Leitor {
         }
     }
 
-    public static void salvarNA() throws IOException{
+    public static void salvarNA(boolean set) throws IOException{
         String temp = lerUltimaAtt();
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo =  new File(pastaApp, nomeMisc);
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
         pw.println(temp);
-        pw.println(true);
+        pw.println(set);
         pw.close();
-        Misc.setNegouAtualizacao(true);
-
     }
 
     public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
