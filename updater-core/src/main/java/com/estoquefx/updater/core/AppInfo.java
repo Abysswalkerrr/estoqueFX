@@ -13,6 +13,9 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
+            1.3.3
+            
+            
             1.3.2
             Correção de erros.
             
