@@ -85,7 +85,7 @@ public class EstoqueController {
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 
         colOrientacao.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
+                new SimpleStringProperty(
                         Misc.isUrgente(cellData.getValue())
                 )
         );
@@ -93,14 +93,14 @@ public class EstoqueController {
             Produto p = cellData.getValue();
             double saldo = p.getVlrUnd() * p.getQtd();
             String saldoStr = String.format("%.2f", saldo);
-            return new javafx.beans.property.SimpleStringProperty("R$ " + saldoStr);
+            return new SimpleStringProperty("R$ " + saldoStr);
         });
 
         colValorUnd.setCellValueFactory(cellData -> {
             Produto p = cellData.getValue();
             double vlrUnd = p.getVlrUnd();
             String vlrUndStr = String.format("%.2f", vlrUnd);
-            return new javafx.beans.property.SimpleStringProperty("R$ " + vlrUndStr);
+            return new SimpleStringProperty("R$ " + vlrUndStr);
         });
 
         colNome.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -459,12 +459,15 @@ public class EstoqueController {
                 confirm.setHeaderText("Versão atual: " + info.getVersaoAtual() + "\nNova versão: " + info.getVersaoRemota());
                 confirm.setContentText("Novidades: " + info.getChangeLog()
                                         + "\nDeseja baixar agora?");
-                confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                ButtonType BT_ATUALIZAR = new ButtonType("Atualizar agora", ButtonBar.ButtonData.YES);
+                ButtonType BT_DEPOIS   = new ButtonType("Lembrar depois", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType BT_IGNORAR  = new ButtonType("Não perguntar nesta versão", ButtonBar.ButtonData.NO);
+                confirm.getButtonTypes().setAll(BT_ATUALIZAR, BT_DEPOIS, BT_IGNORAR);
 
                 confirm.showAndWait().ifPresent(result -> {
-                    if (result == ButtonType.YES) {
+                    if (result == BT_ATUALIZAR) {
                         new EstoqueController().mostrarDialogDownloadComProgresso(info);
-                    } else {
+                    } else if (result ==  BT_IGNORAR) {
                         try {
                             Leitor.salvarNA();
                         } catch (Exception _) {
@@ -725,7 +728,7 @@ public class EstoqueController {
 
             Pasta de dados:
             %s
-            """.formatted(com.estoquefx.updater.core.AppInfo.NOME_APP, com.estoquefx.updater.core.AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
+            """.formatted(AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sobre SistemaEstoqueFX");
