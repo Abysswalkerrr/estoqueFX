@@ -63,12 +63,21 @@
                     <mainClass>com.estoquefx.Launcher</mainClass>
                     <destination>${project.build.directory}/installer</destination>
                     <vendor>Valube</vendor>
-                    <copyright>© 2025 Valube</copyright>
                     <type>MSI</type>
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                        <option>-Dsun.jnu.encoding=UTF-8</option>
+                    </javaOptions>
+                    <addModules>
+                        <addModule>java.base</addModule>
+                        <addModule>javafx.controls</addModule>
+                        <addModule>javafx.fxml</addModule>
+                    </addModules>
                 </configuration>
             </plugin>
+
 
 
 

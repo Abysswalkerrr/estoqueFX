@@ -103,31 +103,6 @@
                     <mainClass>com.estoquefx.Launcher</mainClass>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.panteleyev</groupId>
-                <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.6.6</version>
-                <configuration>
-                    <name>SistemaEstoqueFX</name>
-                    <mainJar>desktop-app-1.0.0.jar</mainJar>
-                    <mainClass>com.estoquefx.Launcher</mainClass>
-                    <destination>${project.build.directory}/installer</destination>
-                    <type>msi</type>
-                    <winShortcut>true</winShortcut>
-                    <winMenu>true</winMenu>
-                    <arguments>
-                        <argument>--add-exports</argument>
-                        <argument>javafx.base/com.sun.javafx.event=ALL-UNNAMED</argument>
-                        <argument>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</argument>
-                        <argument>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</argument>
-                        <argument>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</argument>
-                        <JavaOptions>
-                            <option>-Dfile.encoding=UTF-8</option>
-                            <option>-Dsun.jnu.encoding=UTF-8</option>
-                        </JavaOptions>
-                    </arguments>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
