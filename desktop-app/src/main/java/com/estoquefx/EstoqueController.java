@@ -384,7 +384,7 @@ public class EstoqueController {
             }
 
             if (!info.hasUpdate()) {
-                mostrarInfo("Atualização", "Você já está na última versão (" + info.getVersaoAtual() + ").");
+                mostrarInfo("Atualização", "Você já está na versão mais recente(" + info.getVersaoAtual() + ").");
                 return;
             }
 
@@ -800,6 +800,15 @@ public class EstoqueController {
         try {
             Misc.setNegouAtualizacao(false);
         } catch (IOException _) {}
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Avisar atualizações");
+        alert.setContentText("Você será avisado de novas atualizações. Deseja verificar se há uma versão mais nova?");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                onVerificarAtualizacoes();
+            }
+        });
     }
 
     // onImprimir é melhor

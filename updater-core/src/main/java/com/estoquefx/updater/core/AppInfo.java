@@ -13,6 +13,9 @@ public class AppInfo {
             "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
 
     public static String novidades = """
+            1.4.1
+            Melhoria da função de avisar atualizações.
+            
             1.4.0
             Saldo total implementado.
             
