@@ -30,6 +30,7 @@ public class Misc {
     public static HashSet<String> categorias = new HashSet<>();
     public static HashSet<String> nomes = new HashSet<>();
     private static String ultimaAtualizacao = "";
+    private static boolean negouAtualizacao = false;
 
     private static double total;
 
@@ -62,6 +63,12 @@ public class Misc {
     }
 
     public static String getUltimaAtualizacao(){return Misc.ultimaAtualizacao;}
+
+    public static void setNegouAtualizacao(boolean negouAtualizacao) {
+        Misc.negouAtualizacao = negouAtualizacao;
+    }
+
+    public static boolean getNegouAtualizacao(){return negouAtualizacao;}
 
     public static void updateTime(){
         LocalDateTime hora = LocalDateTime.now();

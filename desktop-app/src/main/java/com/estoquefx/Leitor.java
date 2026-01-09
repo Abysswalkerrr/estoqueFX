@@ -44,11 +44,18 @@ public class Leitor {
         }
         if (misc.exists()) {
             Scanner scm = new Scanner(misc);
-
+            if (scm.hasNextLine()) {
                 String linha2 = scm.nextLine();
                 Misc.setUltimaAtualizacao(linha2);
+            }
+            if (scm.hasNextLine()) {
+                if (scm.nextLine().equals("true")) {
+                    Misc.setNegouAtualizacao(true);
+                }
+            }
         } else{
             Misc.setUltimaAtualizacao("");
+            Misc.setNegouAtualizacao(false);
         }
         return estoque;
     }
@@ -89,8 +96,33 @@ public class Leitor {
         PrintWriter pwm = new PrintWriter(fwm);
 
         pwm.println(Misc.getUltimaAtualizacao());
+        pwm.println(Misc.getNegouAtualizacao());
         pwm.close();
         fwm.close();
+
+    }
+
+    public static String lerUltimaAtt() throws IOException {
+        File pastaApp = new File(pastaDocs, nomePasta);
+        File arquivo = new File(pastaApp, nomeMisc);
+        Scanner sc = new Scanner(arquivo);
+        if (sc.hasNextLine()) {
+            return sc.nextLine();
+        } else {
+            return "";
+        }
+    }
+
+    public static void salvarNA() throws IOException{
+        String temp = lerUltimaAtt();
+        File pastaApp = new File(pastaDocs, nomePasta);
+        File arquivo =  new File(pastaApp, nomeMisc);
+        FileWriter fw = new FileWriter(arquivo);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.println(temp);
+        pw.println(true);
+        pw.close();
+        Misc.setNegouAtualizacao(true);
 
     }
 

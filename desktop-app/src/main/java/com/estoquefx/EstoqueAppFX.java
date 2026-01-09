@@ -55,7 +55,9 @@ public class EstoqueAppFX extends Application {
             }
             //else não salva
         });
-        EstoqueController.verificarAtualizacaoSilenciosa();
+        if (!Misc.getNegouAtualizacao()) {
+            EstoqueController.verificarAtualizacaoSilenciosa();
+        }
         stage.show();
     }
 

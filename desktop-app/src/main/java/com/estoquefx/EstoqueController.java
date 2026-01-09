@@ -464,6 +464,11 @@ public class EstoqueController {
                 confirm.showAndWait().ifPresent(result -> {
                     if (result == ButtonType.YES) {
                         new EstoqueController().mostrarDialogDownloadComProgresso(info);
+                    } else {
+                        try {
+                            Leitor.salvarNA();
+                        } catch (Exception _) {
+                        }
                     }
                 });
             });
