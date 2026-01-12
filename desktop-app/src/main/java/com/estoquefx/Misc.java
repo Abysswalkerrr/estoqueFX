@@ -65,6 +65,17 @@ public class Misc {
 
     public static String getUltimaAtualizacao(){return Misc.ultimaAtualizacao;}
 
+    // Versão sem salvar, usada apenas na inicialização
+    public static void setUltimaAtualizacaoSemSalvar(String ultimaAtualizacao) {
+        Misc.ultimaAtualizacao = ultimaAtualizacao;
+    }
+
+    // Versão sem salvar, usada apenas na inicialização
+    public static void setNegouAtualizacaoSemSalvar(boolean negouAtualizacao) {
+        Misc.negouAtualizacao = negouAtualizacao;
+    }
+
+
     public static void setNegouAtualizacao(boolean negouAtualizacao) throws IOException {
         Misc.negouAtualizacao = negouAtualizacao;
         Leitor.salvarNA(negouAtualizacao);

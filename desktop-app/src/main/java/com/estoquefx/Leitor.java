@@ -21,6 +21,12 @@ public class Leitor {
         File arquivo = new File(pastaApp, nomeArquivo);
         File misc = new File(pastaApp, nomeMisc);
 
+        // Criar pasta se não existir
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+            System.out.println("Pasta criada: " + pastaApp.getAbsolutePath());
+        }
+
         if (arquivo.exists()) {
             Scanner sc = new Scanner(arquivo);
 
@@ -34,30 +40,46 @@ public class Leitor {
                     Produto p = infoProduto(partes);
                     estoque.add(p);
                 }
-
             }
 
             sc.close();
             System.out.println("Estoque carregado: " + estoque.size() + " produtos.");
-        } else{
-            System.out.println("Nenhum estoque foi encontrado.");
+        } else {
+            System.out.println("Nenhum estoque foi encontrado. Criando novo...");
         }
+
+        // Carregar configurações do misc.txt
         if (misc.exists()) {
             Scanner scm = new Scanner(misc);
             if (scm.hasNextLine()) {
                 String linha2 = scm.nextLine();
-                Misc.setUltimaAtualizacao(linha2);
+                Misc.setUltimaAtualizacaoSemSalvar(linha2);
             }
             if (scm.hasNextLine()) {
-                if (scm.nextLine().equals("true")) {
-                    Misc.setNegouAtualizacao(true);
+                String negou = scm.nextLine();
+                if ("true".equals(negou)) {
+                    Misc.setNegouAtualizacaoSemSalvar(true);
                 }
             }
-        } else{
-            Misc.setUltimaAtualizacao("");
-            Misc.setNegouAtualizacao(false);
+            scm.close();
+        } else {
+            // Criar arquivo misc.txt com valores padrão
+            System.out.println("Arquivo misc.txt não encontrado. Criando com valores padrão...");
+            Misc.setUltimaAtualizacaoSemSalvar("");
+            Misc.setNegouAtualizacaoSemSalvar(false);
+            criarArquivoMiscPadrao(misc);
         }
+
         return estoque;
+    }
+
+    private static void criarArquivoMiscPadrao(File misc) throws IOException {
+        FileWriter fw = new FileWriter(misc);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.println(""); // Última atualização vazia
+        pw.println("false"); // Não negou atualização
+        pw.close();
+        fw.close();
     }
 
     private static Produto infoProduto(String[] partes) {
@@ -84,7 +106,6 @@ public class Leitor {
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
 
-
         for (Produto p : estoque) {
             pw.println(p.toString());
         }
@@ -99,29 +120,40 @@ public class Leitor {
         pwm.println(Misc.getNegouAtualizacao());
         pwm.close();
         fwm.close();
-
     }
 
     public static String lerUltimaAtt() throws IOException {
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo = new File(pastaApp, nomeMisc);
-        Scanner sc = new Scanner(arquivo);
-        if (sc.hasNextLine()) {
-            return sc.nextLine();
-        } else {
+
+        if (!arquivo.exists()) {
             return "";
         }
+
+        Scanner sc = new Scanner(arquivo);
+        String resultado = "";
+        if (sc.hasNextLine()) {
+            resultado = sc.nextLine();
+        }
+        sc.close();
+        return resultado;
     }
 
-    public static void salvarNA(boolean set) throws IOException{
+    public static void salvarNA(boolean set) throws IOException {
         String temp = lerUltimaAtt();
         File pastaApp = new File(pastaDocs, nomePasta);
-        File arquivo =  new File(pastaApp, nomeMisc);
+
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+        }
+
+        File arquivo = new File(pastaApp, nomeMisc);
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
         pw.println(temp);
         pw.println(set);
         pw.close();
+        fw.close();
     }
 
     public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
@@ -154,7 +186,7 @@ public class Leitor {
                 totalSaldo += saldo;
 
                 pw.println(
-                                codigo + ";" +
+                        codigo + ";" +
                                 nome + ";" +
                                 categoria + ";" +
                                 qtdMin + ";" +
@@ -172,11 +204,8 @@ public class Leitor {
         }
     }
 
-    public static String getPath(){
+    public static String getPath() {
         File pastaApp = new File(pastaDocs, nomePasta);
         return pastaApp.getAbsolutePath();
     }
-
-
-
 }
