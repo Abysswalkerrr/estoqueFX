@@ -21,11 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.estoquefx</groupId>
-            <artifactId>updater-app</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.estoquefx</groupId>
             <artifactId>updater-core</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -33,55 +28,65 @@
 
     <build>
         <plugins>
+            <!-- Copiar JAR do desktop-app e todas as dependências -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.6.1</version>
                 <executions>
                     <execution>
-                        <id>copy-app-jars</id>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>desktop-app,updater-app,updater-core</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}/app</outputDirectory>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <includeScope>runtime</includeScope>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- jpackage -->
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
                 <version>1.6.6</version>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
-                    <appVersion>1.4.1</appVersion>
-                    <input>${project.build.directory}/app</input>
+                    <appVersion>1.4.2</appVersion>
+                    <vendor>Valube</vendor>
+                    <copyright>© 2025 Valube</copyright>
+                    <description>Sistema de Estoque FX</description>
+
+                    <type>MSI</type>
+                    <destination>${project.build.directory}/installer</destination>
+
+                    <!-- Pasta com todos os JARs -->
+                    <input>${project.build.directory}/libs</input>
+
+                    <!-- JAR principal (o shaded jar do desktop-app) -->
                     <mainJar>desktop-app-1.0.0.jar</mainJar>
                     <mainClass>com.estoquefx.Launcher</mainClass>
-                    <destination>${project.build.directory}/installer</destination>
-                    <vendor>Valube</vendor>
-                    <type>MSI</type>
+
+                    <!-- Opções do Windows -->
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>
+                    <winDirChooser>true</winDirChooser>
+                    <winPerUserInstall>false</winPerUserInstall>
+
+                    <!-- Opções da JVM -->
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                         <option>-Dsun.jnu.encoding=UTF-8</option>
+                        <option>--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED</option>
+                        <option>--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</option>
+                        <option>--add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</option>
+                        <option>--add-exports=javafx.base/com.sun.javafx.binding=ALL-UNNAMED</option>
                     </javaOptions>
-                    <addModules>
-                        <addModule>java.base</addModule>
-                        <addModule>javafx.controls</addModule>
-                        <addModule>javafx.fxml</addModule>
-                    </addModules>
                 </configuration>
-            </plugin>
-
-
-
-
-        </plugins>
+            </plugin>        </plugins>
     </build>
 
     <properties>
@@ -89,7 +94,6 @@
         <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
         <maven.compiler.targetEncoding>UTF-8</maven.compiler.targetEncoding>
 
-        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

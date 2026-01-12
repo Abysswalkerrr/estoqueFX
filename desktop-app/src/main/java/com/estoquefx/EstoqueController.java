@@ -376,7 +376,8 @@ public class EstoqueController {
         UpdateService service = new UpdateService();
 
         try {
-            UpdateInfo info = service.verificarUpdate();
+            UpdateInfo info;
+            info = service.verificarUpdate();
 
             if (info.getVersaoRemota() == null || info.getUrlInstaller() == null) {
                 mostrarInfo("Atualização", "Não foi possível ler informações do release.");
