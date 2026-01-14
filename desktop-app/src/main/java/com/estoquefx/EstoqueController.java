@@ -45,7 +45,7 @@ import java.util.function.LongConsumer;
 public class EstoqueController {
 
     @FXML private Label lblUltimaAlteracao;
-    private final StringProperty ultimaAlteracao = new SimpleStringProperty("Última contagem: ");
+    private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo às: ");
 
     @FXML private Label lblSaldoTotal;
     private String saldo = String.format("%.2f", Misc.getTotal());
@@ -61,6 +61,7 @@ public class EstoqueController {
     @FXML private TableColumn<Produto, String> colOrientacao;
     @FXML private TableColumn<Produto, String> colSaldo;
     @FXML private TableColumn<Produto, String> colDescricao;
+    @FXML private TableColumn<Produto, String> colHora;
 
     @FXML private Button btnCriar;
     @FXML private Button btnEntrada;
@@ -90,6 +91,7 @@ public class EstoqueController {
         colValorUnd.setCellValueFactory(new PropertyValueFactory<>("vlrUnd"));
         colQtd.setCellValueFactory(new PropertyValueFactory<>("qtd"));
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
+        colHora.setCellValueFactory(new PropertyValueFactory<>("alterHora"));
 
         colOrientacao.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
@@ -138,6 +140,7 @@ public class EstoqueController {
             try {
                 int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setVlrMin(novoMin);
+                p.setAlterHora(Misc.getTime());
                 Produto.atualizaCompra(p);
                 tabela.refresh();
             } catch (NumberFormatException ex) {
@@ -152,6 +155,7 @@ public class EstoqueController {
                 int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setQtd(novaQtd);
                 Produto.atualizaCompra(p);
+                p.setAlterHora(Misc.getTime());
                 atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
@@ -177,6 +181,7 @@ public class EstoqueController {
             try {
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
+                p.setAlterHora(Misc.getTime());
                 atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
@@ -184,11 +189,13 @@ public class EstoqueController {
             }
         });
 
+        colHora.setCellFactory(TextFieldTableCell.forTableColumn());
+
+
 
 
         colDescricao.setCellFactory(col -> new TableCell<>() {
             private final Text text = new Text();
-
             {
                 setGraphic(text);
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -202,7 +209,6 @@ public class EstoqueController {
                     }
                 });
             }
-
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -230,6 +236,7 @@ public class EstoqueController {
                     atualizarCor(row);
                 }
             }
+
             private void atualizarCor(TableRow<?> row) {
                 if (text.fillProperty().isBound()) {
                     text.fillProperty().unbind();
@@ -245,8 +252,9 @@ public class EstoqueController {
                     );
                 }
             }
-
         });
+
+
 
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -264,11 +272,10 @@ public class EstoqueController {
         colSaldo.setMaxWidth(150);
         colOrientacao.setMinWidth(105);
         colOrientacao.setMaxWidth(105);
+        colHora.setMinWidth(75);
+        colHora.setMaxWidth(95);
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
-
-
-
 
         dados = FXCollections.observableArrayList(Produto.estoque);
         filtrados = new FilteredList<>(dados, _ -> true);
@@ -556,7 +563,7 @@ public class EstoqueController {
         carregarUltimaAlteracao();
     }
 
-    public void carregarUltimaAlteracao(){ultimaAlteracao.set("Última contagem: " + Misc.getUltimaAtualizacao());}
+    public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo às: " + Misc.getUltimaAtualizacao());}
 
     public void atualizarTotal(){
         Misc.atualizaTotal();
@@ -663,7 +670,9 @@ public class EstoqueController {
             r = 1;
         } while  (qtd < 0);
 
-        Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria);
+        String tempo = Misc.getTime();
+
+        Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
         Produto.addEstoque(novo);
         dados.setAll(Produto.estoque);
         atualizarTotal();
@@ -682,6 +691,12 @@ public class EstoqueController {
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
             Produto.entrada(qtd, nome);
+            String codigo = Produto.getCodigoPorNome(nome);
+            Produto p = Produto.getProdutoPorCodigo(codigo);
+            if (p != null) {
+                p.setAlterHora(Misc.getTime());
+            }
+
             dados.setAll(Produto.estoque);
             atualizarTotal();
         } catch (NumberFormatException ex) {
@@ -703,6 +718,11 @@ public class EstoqueController {
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
             Produto.saida(qtd, nome);
+            String codigo = Produto.getCodigoPorNome(nome);
+            Produto p = Produto.getProdutoPorCodigo(codigo);
+            if (p != null) {
+                p.setAlterHora(Misc.getTime());
+            }
             dados.setAll(Produto.estoque);
             atualizarTotal();
         } catch (NumberFormatException ex) {
@@ -739,15 +759,21 @@ public class EstoqueController {
 
     @FXML
     private void onSobre(){
+        String canal;
+        if (AppInfo.VERSAO_CHANNEL.equalsIgnoreCase("stable")) {
+            canal = "";
+        } else{
+            canal = "BETA";
+        }
         String msg = """
-            %s
-            Versão: %s
+        %s
+        Versão: %s %s
 
-            Autor: Arthur
+        Autor: Arthur
 
-            Pasta de dados:
-            %s
-            """.formatted(AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath()); // ou texto fixo
+        Pasta de dados:
+        %s
+        """.formatted(AppInfo.NOME_APP, AppInfo.VERSAO, canal, Leitor.getPath());
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sobre SistemaEstoqueFX");
@@ -812,6 +838,47 @@ public class EstoqueController {
         });
     }
 
+    @FXML
+    private void onAlterarVersao(){
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Alterar versão");
+        confirm.setContentText("Para qual versão você deseja alterar?");
+        ButtonType BT_ESTAVEL = new ButtonType("Estável", ButtonBar.ButtonData.YES);
+        ButtonType BT_BETA  = new ButtonType("BETA", ButtonBar.ButtonData.NO);
+        confirm.getButtonTypes().setAll(BT_ESTAVEL, BT_BETA);
+        confirm.showAndWait().ifPresent(result -> {
+            if (result == BT_ESTAVEL) {
+                if (AppInfo.UPDATE_CHANNEL.equalsIgnoreCase("stable")) {
+                    mostrarInfo("Alterar versão", "Você já está na versão estável.");
+                } else{
+                    AppInfo.setUpdateChannel("stable");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Alterar Versão");
+                    alert.setContentText("Novas atualizações buscarão a verão estável." +
+                            "\nDeseja verificar atualizações?");
+                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.YES){onVerificarAtualizacoes();}
+                    });
+                }
+            } else if (AppInfo.UPDATE_CHANNEL.equalsIgnoreCase("beta")) {
+                mostrarInfo("Alterar versão", "Você já está na versão BETA.");
+            } else{
+                AppInfo.setUpdateChannel("beta");
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Alterar Versão");
+                alert.setContentText("Novas atualizações buscarão a verão beta." +
+                        "\nDeseja verificar atualizações");
+                alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.YES){
+                        onVerificarAtualizacoes();
+                    }
+                });
+            }
+        });
+    }
+
     // onImprimir é melhor
     public void imprimir(Node node, Window owner) {
         PrinterJob job = PrinterJob.createPrinterJob();
@@ -839,7 +906,7 @@ public class EstoqueController {
         alert.showAndWait();
     }
 
-    //A princípio não vai ser mais usado
+    //Não entendo porque tem que ser static por vezes, mas é útil.
     public static void mostrarInfoStatic(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

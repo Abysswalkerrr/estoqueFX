@@ -14,13 +14,14 @@ public class Produto {
     private boolean compraUrgente;
     private static String ultimaAcao = "i";
     private String descricao;
+    private String alterHora;
 
     static ArrayList<Produto> estoque = new ArrayList<>();
     private static int proximoCodigo = 1;
     private static Map<String, Produto> mapaCodigo = new HashMap<>();
 
     // Construtor para novos produtos (gera código)
-    public Produto(String nome, int vlrMin, double vlrUnd, int qtd, String categoria) {
+    public Produto(String nome, int vlrMin, double vlrUnd, int qtd, String categoria, String alterHora) {
         this.nome = nome;
         this.categoria = categoria;
         this.codigo = String.valueOf(proximoCodigo++);
@@ -29,10 +30,11 @@ public class Produto {
         this.vlrUnd = vlrUnd;
         compraUrgente = vlrMin > qtd;
         descricao = "";
+        this.alterHora = alterHora;
     }
 
     // Construtor para produtos carregados do arquivo (código já existe)
-    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String descricao) {
+    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String descricao, String alterHora) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
@@ -41,7 +43,7 @@ public class Produto {
         this.vlrUnd = vlrUnd;
         compraUrgente = vlrMin > qtd;
         this.descricao = descricao;
-
+        this.alterHora = alterHora;
 
         // Atualiza o próximo código se necessário
         int codigoNum = Integer.parseInt(codigo);
@@ -50,7 +52,7 @@ public class Produto {
         }
     }
 
-    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd) {
+    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String alterHora) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
@@ -59,6 +61,7 @@ public class Produto {
         this.vlrUnd = vlrUnd;
         compraUrgente = vlrMin > qtd;
         this.descricao = "";
+        this.alterHora = alterHora;
 
 
         // Atualiza o próximo código se necessário
@@ -179,41 +182,29 @@ public class Produto {
         setUltimaAcao("t");
     }
 
-    public static String getUltimaAcao(){
-        return  ultimaAcao;
+    public void setAlterHora(String alterHora) {
+        this.alterHora = alterHora;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    public String getAlterHora() {return alterHora;}
 
-    public String getNome() {
-        return nome;
-    }
+    public static String getUltimaAcao(){return  ultimaAcao;}
 
-    public String getCategoria() {
-        return categoria;
-    }
+    public String getCodigo() {return codigo;}
 
-    public int getVlrMin() {
-        return vlrMin;
-    }
+    public String getNome() {return nome;}
 
-    public double getVlrUnd() {
-        return vlrUnd;
-    }
+    public String getCategoria() {return categoria;}
 
-    public int getQtd() {
-        return qtd;
-    }
+    public int getVlrMin() {return vlrMin;}
 
-    public boolean getCompra(){
-        return compraUrgente;
-    }
+    public double getVlrUnd() {return vlrUnd;}
 
-    public String getDescricao() {
-        return  descricao;
-    }
+    public int getQtd() {return qtd;}
+
+    public boolean getCompra(){return compraUrgente;}
+
+    public String getDescricao() {return  descricao;}
 
     public static Produto getProdutoPorCodigo(String codigo) {
         for (Produto p : Produto.estoque) {
@@ -226,7 +217,7 @@ public class Produto {
 
     @Override
     public String toString() {
-        return codigo + "|" + nome + "|" + categoria + "|" + vlrMin + "|" + vlrUnd + "|" + qtd + "|" + descricao;
+        return codigo + "|" + nome + "|" + categoria + "|" + vlrMin + "|" + vlrUnd + "|" + qtd + "|" + descricao + "|" + alterHora;
     }
 
     public static String getCodigoPorNome(String n) {

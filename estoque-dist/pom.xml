@@ -28,7 +28,6 @@
 
     <build>
         <plugins>
-            <!-- Copiar JAR do desktop-app e todas as dependências -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -55,28 +54,23 @@
                 <version>1.6.6</version>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
-                    <appVersion>1.4.2</appVersion>
+                    <appVersion>1.5.1</appVersion>
                     <vendor>Valube</vendor>
                     <copyright>© 2025 Valube</copyright>
                     <description>Sistema de Estoque FX</description>
-
                     <type>MSI</type>
                     <destination>${project.build.directory}/installer</destination>
-
-                    <!-- Pasta com todos os JARs -->
                     <input>${project.build.directory}/libs</input>
-
-                    <!-- JAR principal (o shaded jar do desktop-app) -->
                     <mainJar>desktop-app-1.0.0.jar</mainJar>
                     <mainClass>com.estoquefx.Launcher</mainClass>
 
-                    <!-- Opções do Windows -->
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>
                     <winDirChooser>true</winDirChooser>
                     <winPerUserInstall>false</winPerUserInstall>
 
-                    <!-- Opções da JVM -->
+                    <winShortcutPrompt>true</winShortcutPrompt>
+
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                         <option>-Dsun.jnu.encoding=UTF-8</option>

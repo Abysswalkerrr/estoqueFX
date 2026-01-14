@@ -4,15 +4,44 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.4.2";
+            "1.5.1";
+    public static final String VERSAO_CHANNEL =
+            "stable";
+    public static String UPDATE_CHANNEL = "stable";
+
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
+
+    public static final String UPDATE_URL = getUpdateUrl();
+
     public static final String RELEASES_URL =
-            "https://github.com/Abysswalkerrr/estoque_releases/releases";
-    public static final String UPDATE_URL =
-            "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases/latest";
+            "https://api.github.com/repos/Abysswalkerrr/estoque_releases/releases";
+
+    public static final String LATEST_RELEASES_URL =
+            "https://api.github.com/repos/abysswalkerrr/estoque_releases/releases/latest";
+
+    private static String getUpdateUrl() {
+        if (isBeta()) {
+            return RELEASES_URL;
+        } else {
+            return LATEST_RELEASES_URL;
+        }
+    }
+
+    public static boolean isBeta() {return "beta".equalsIgnoreCase(UPDATE_CHANNEL);}
+
+    public static void setUpdateChannel(String updateChannel) {
+        if (updateChannel.equalsIgnoreCase("beta") || updateChannel.equalsIgnoreCase("stable")) {
+            UPDATE_CHANNEL = updateChannel;
+        }
+    }
 
     public static String novidades = """
+            1.5.1
+            Correções minoritárias.
+            1.5.0
+            Coluna de última alteração adicionada e uso de versões experimentais permitido.
+            
             1.4.2
             Correção de falhas relacionadas a ausência de arquivos.
             

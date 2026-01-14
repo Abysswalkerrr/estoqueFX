@@ -86,7 +86,11 @@ public class Misc {
     public static void updateTime(){
         LocalDateTime hora = LocalDateTime.now();
         setUltimaAtualizacao(hora.format(DateTimeFormatter.ofPattern("dd/MM HH:mm")));
+    }
 
+    public static String getTime(){
+        LocalDateTime tempo = LocalDateTime.now();
+        return tempo.format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
     }
 
     //muito provavelmente não vai ser mais usado

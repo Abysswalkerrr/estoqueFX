@@ -1,7 +1,9 @@
 package com.estoquefx;
 
+import com.estoquefx.updater.core.*;
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,14 +20,17 @@ public class EstoqueAppFX extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         hostServicesRef = getHostServices();
+
         Produto.preencher(Leitor.carregarEstoque());
         Misc.carregaCategorias();
         Misc.carregaNomes();
         Misc.atualizaTotal();
+
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("estoque-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("EstoqueFX");
         stage.setScene(scene);
+
         stage.setOnCloseRequest(event -> {
             if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {return;}
 
@@ -56,9 +61,22 @@ public class EstoqueAppFX extends Application {
             }
             //else não salva
         });
+
         if (!Misc.getNegouAtualizacao()) {
             EstoqueController.verificarAtualizacaoSilenciosa();
         }
+
+        if (UpdateService.deveReabrir()) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Atualização Concluída");
+                alert.setHeaderText("Sistema atualizado com sucesso!");
+                alert.setContentText("O SistemaEstoqueFX foi atualizado para a versão " + AppInfo.VERSAO);
+                alert.showAndWait();
+            });
+        }
+
+
         stage.show();
     }
 

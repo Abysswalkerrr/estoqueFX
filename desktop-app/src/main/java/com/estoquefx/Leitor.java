@@ -92,7 +92,9 @@ public class Leitor {
 
         String desc = (partes.length >= 7) ? partes[6] : ""; // compatível com versões antigas
 
-        return new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc);
+        String tempo = (partes.length >= 8) ? partes[7] : "";
+
+        return new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc,  tempo);
     }
 
     public static void salvarEstoque(ArrayList<Produto> estoque) throws IOException {

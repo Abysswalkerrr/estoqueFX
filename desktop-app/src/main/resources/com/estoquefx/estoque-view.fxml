@@ -29,6 +29,7 @@
                     <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
                     <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
                     <MenuItem onAction="#onAvisarAtualizacoes" text="Avisar atualizações" />
+                    <MenuItem onAction="#onAlterarVersao" text="Versão Estável/Beta" />
                 </Menu>
             </MenuBar>
 
@@ -56,6 +57,7 @@
                 <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd" />
                 <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação" />
                 <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo" />
+                <TableColumn fx:id="colHora" prefWidth="75" text="últ. Alter" />
                 <TableColumn fx:id="colDescricao" text="Descrição" />
             </columns>
         </TableView>
