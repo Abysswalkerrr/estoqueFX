@@ -28,12 +28,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
+import javafx.stage.DirectoryChooser;
 
 import org.controlsfx.control.textfield.*;
 
 import javafx.util.StringConverter;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -73,6 +78,8 @@ public class EstoqueController {
     private FilteredList<Produto> filtrados;
 
     @FXML private TextField txtBusca;
+
+    private static Stage stage;
 
 
     @FXML
@@ -289,6 +296,12 @@ public class EstoqueController {
                 String nome = produto.getNome() == null ? "" : produto.getNome().toUpperCase();
                 String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
                 String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
+
+                if (filtro.equalsIgnoreCase("urgente")){
+                    return produto.getCompra()
+                            || cat.contains(filtro)
+                            || nome.contains(filtro);
+                }
 
                 return nome.contains(filtro)
                         || cat.contains(filtro)
@@ -745,16 +758,66 @@ public class EstoqueController {
     @FXML
     private void onExportarCsv() {
         try {
-            Leitor.exportarEstoqueCSV(Produto.estoque);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Salvar");
+            fileChooser.setInitialFileName("EstoqueCSV.csv");
+            FileChooser.ExtensionFilter extFilter =
+                    new FileChooser.ExtensionFilter("Arquivos CSV (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extFilter);
 
-            new Alert(Alert.AlertType.INFORMATION,
-                    "CSV exportado com sucesso para:\nDocumentos/" + Leitor.nomePasta + "/estoqueCSV.csv")
-                    .showAndWait();
+            File pastaInicial = new File(Leitor.pastaDocs, Leitor.nomePasta);
+            if (pastaInicial.exists()) {
+                fileChooser.setInitialDirectory(pastaInicial);
+            }
+            Window stage = tabela.getScene().getWindow();
+            File arquivo = fileChooser.showSaveDialog(stage);
+
+            if (arquivo == null) {return;}
+
+            if (!arquivo.getName().toLowerCase().endsWith(".csv")) {
+                arquivo = new File(arquivo.getAbsolutePath() + ".csv");
+            }
+
+            Leitor.exportarEstoqueParaArquivo(Produto.estoque, arquivo);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Exportação Concluída");
+            alert.setHeaderText("CSV exportado com sucesso!");
+            alert.setContentText("Arquivo salvo em:\n" + arquivo.getAbsolutePath());
+
+            ButtonType btnAbrirPasta = new ButtonType("Abrir Pasta", ButtonBar.ButtonData.OK_DONE);
+            ButtonType btnFechar = new ButtonType("Fechar", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(btnAbrirPasta, btnFechar);
+
+            File finalArquivo = arquivo;
+            alert.showAndWait().ifPresent(response -> {
+                if (response == btnAbrirPasta) {
+                    try {
+                        java.awt.Desktop.getDesktop().open(finalArquivo.getParentFile());
+                    } catch (Exception e) {
+                        System.err.println("Erro ao abrir pasta: " + e.getMessage());
+                    }
+                }
+            });
+
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Erro ao exportar: " + e.getMessage())
-                    .showAndWait();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro na Exportação");
+            alert.setHeaderText("Falha ao exportar");
+            alert.setContentText("Erro " + e.getMessage());
+            alert.showAndWait();
         }
+    }
+
+    @FXML
+    private void onAbrirArquivo() throws IOException {
+        try {
+            File pastaApp = new File(Leitor.pastaDocs, Leitor.nomePasta);
+            java.awt.Desktop.getDesktop().open(pastaApp);
+        } catch (IOException e) {
+            mostrarErro("Erro: " + e.getMessage());
+        }
+
     }
 
     @FXML
@@ -939,6 +1002,13 @@ public class EstoqueController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    public static void setStage(Stage stage) {
+        EstoqueController.stage = stage;
+    }
+    public static Stage getStage() {
+        return stage;
     }
 
 }

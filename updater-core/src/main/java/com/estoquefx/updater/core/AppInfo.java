@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.5.1";
+            "1.6.0";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,12 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            1.6.0
+            Melhoria no exportarCSV e opção de abrir pasta de dados.
+            
+            1.5.2
+            Agora é possível pesquisar "urgente"(indiferente se for maiúsculo ou minúsculo) para filtrar os produtos com estoque baixo.
+            
             1.5.1
             Correções minoritárias.
             1.5.0

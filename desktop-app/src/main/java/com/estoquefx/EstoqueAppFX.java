@@ -76,9 +76,12 @@ public class EstoqueAppFX extends Application {
             });
         }
 
+        EstoqueController.setStage(stage);
 
         stage.show();
+
     }
 
     public static HostServices getHostServicesStatic() {return hostServicesRef;}
+
 }

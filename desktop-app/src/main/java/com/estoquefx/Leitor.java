@@ -158,6 +158,7 @@ public class Leitor {
         fw.close();
     }
 
+    // legado/compatibilidade
     public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
         File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
@@ -165,6 +166,11 @@ public class Leitor {
         }
         File arquivoCSV = new File(pastaApp, "estoqueCSV.csv");
 
+        exportarEstoqueParaArquivo(estoque, arquivoCSV);
+    }
+
+    // arquivo é escolhido antes
+    public static void exportarEstoqueParaArquivo(List<Produto> estoque, File arquivoCSV) throws IOException {
         try (java.io.PrintWriter pw = new java.io.PrintWriter(
                 new java.io.OutputStreamWriter(
                         new java.io.FileOutputStream(arquivoCSV),
