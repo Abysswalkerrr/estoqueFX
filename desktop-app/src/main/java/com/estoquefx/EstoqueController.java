@@ -810,14 +810,29 @@ public class EstoqueController {
     }
 
     @FXML
-    private void onAbrirArquivo() throws IOException {
+    private void onAbrirArquivo() {
         try {
             File pastaApp = new File(Leitor.pastaDocs, Leitor.nomePasta);
-            java.awt.Desktop.getDesktop().open(pastaApp);
-        } catch (IOException e) {
-            mostrarErro("Erro: " + e.getMessage());
-        }
 
+            if (!pastaApp.exists()) {
+                pastaApp.mkdirs();
+            }
+
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop.getDesktop().open(pastaApp);
+            } else {
+                mostrarInfo("Pasta de Dados",
+                        "Caminho da pasta:\n" + pastaApp.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Não foi possível abrir a pasta");
+            alert.setContentText("Caminho: " + Leitor.getPath() +
+                    "\n\nErro: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML
