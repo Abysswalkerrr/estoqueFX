@@ -50,7 +50,7 @@ import java.util.function.LongConsumer;
 public class EstoqueController {
 
     @FXML private Label lblUltimaAlteracao;
-    private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo às: ");
+    private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
 
     @FXML private Label lblSaldoTotal;
     private String saldo = String.format("%.2f", Misc.getTotal());
@@ -576,7 +576,7 @@ public class EstoqueController {
         carregarUltimaAlteracao();
     }
 
-    public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo às: " + Misc.getUltimaAtualizacao());}
+    public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo em: " + Misc.getUltimaAtualizacao());}
 
     public void atualizarTotal(){
         Misc.atualizaTotal();
