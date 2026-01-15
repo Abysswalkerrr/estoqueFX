@@ -83,7 +83,7 @@ public class Leitor {
     }
 
     private static Produto infoProduto(String[] partes) {
-        String codigo    = partes[0];
+        String codigo    = String.valueOf(Produto.getProximoCodigo());
         String nome      = partes[1];
         String categoria = partes[2];
         int vlrMin       = Integer.parseInt(partes[3]);
@@ -122,6 +122,58 @@ public class Leitor {
         pwm.println(Misc.getNegouAtualizacao());
         pwm.close();
         fwm.close();
+    }
+
+    public static void importarCSV(File arquivo) throws IOException {
+        Scanner sc = new Scanner(arquivo);
+        while (sc.hasNextLine()) {
+            try {
+                String linha = sc.nextLine().trim();
+                if (linha.isEmpty()) {
+                    continue;
+                }
+                String[] partes = linha.split(";");
+
+                if (partes.length >= 6) {
+                    //com codigo
+                    if (Misc.isNumeric(partes[0])) {
+                        //codigo -> nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc opt -> tempo opt
+                        if (!partes[1].isEmpty() && !partes[2].isEmpty() &&
+                                Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4]) && Misc.isNumeric(partes[5])) {
+                            Produto temp = infoProduto(partes);
+                            Produto.addEstoque(temp);
+                        } else {
+                            continue;
+                        }
+                    }
+                    //sem codigo
+                    if (!partes[0].isEmpty() && !partes[1].isEmpty() && Misc.isNumeric(partes[2]) &&
+                            Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
+                        if (partes.length >= 7) {
+                            if (partes[6].isEmpty()) {
+                                partes[6] = Misc.getTime();
+                            }
+                        }
+                        Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0],
+                                partes[1], Integer.parseInt(partes[2]), Double.parseDouble(partes[3]),
+                                Integer.parseInt(partes[4]), partes[5], partes[6]);
+                        Produto.addEstoque(temp);
+                    }
+                    // nome -> categoria -> vlrMin -> vlrUnd -> qtd
+                } else if (partes.length == 5) {
+                    if (!partes[0].isEmpty() && !partes[1].isEmpty() && Misc.isNumeric(partes[2]) &&
+                            Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
+                        Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0], partes[1],
+                                Integer.parseInt(partes[2]), Double.parseDouble(partes[3]),
+                                Integer.parseInt(partes[4]), "", Misc.getTime());
+                        Produto.addEstoque(temp);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+        }
     }
 
     public static String lerUltimaAtt() throws IOException {
@@ -177,7 +229,7 @@ public class Leitor {
                         java.nio.charset.StandardCharsets.UTF_8))) {
 
             // Cabeçalho
-            pw.println("Código;Nome;Categoria;Qtd Mínima;Valor Und;Qtd;Urgência;Saldo;Descrição");
+            pw.println("Código;Nome;Categoria;Qtd Min;Valor Und;Qtd;Descrição;Últ alt;Urgência;Saldo");
 
             double totalSaldo = 0.0;
 
@@ -189,8 +241,9 @@ public class Leitor {
                 double vlrUnd    = p.getVlrUnd();
                 int qtd          = p.getQtd();
                 String urgencia  = p.getCompra() ? "Compra urgente" : "Estoque suficiente";
-                double saldo     = vlrUnd * qtd;
+                String tempo = p.getAlterHora();
                 String descricao = p.getDescricao();
+                double saldo     = vlrUnd * qtd;
                 totalSaldo += saldo;
 
                 pw.println(
@@ -200,12 +253,12 @@ public class Leitor {
                                 qtdMin + ";" +
                                 vlrUnd + ";" +
                                 qtd + ";" +
+                                descricao + ";" +
+                                tempo + ";" +
                                 urgencia + ";" +
-                                saldo + ";" +
-                                descricao
+                                saldo
                 );
             }
-
             pw.println();
             pw.println(";;;;;;;;");
             pw.println(";;;;;;;Saldo total;" + totalSaldo);

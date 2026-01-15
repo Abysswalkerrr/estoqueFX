@@ -34,7 +34,8 @@ public class Produto {
     }
 
     // Construtor para produtos carregados do arquivo (código já existe)
-    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String descricao, String alterHora) {
+    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd,
+                   String descricao, String alterHora) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
@@ -52,7 +53,8 @@ public class Produto {
         }
     }
 
-    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd, String alterHora) {
+    public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd,
+                   String alterHora) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
@@ -109,9 +111,30 @@ public class Produto {
     }
 
     public static void addEstoque(Produto prod) {
-        estoque.add(prod);
-        mapaCodigo.put(prod.codigo, prod);
-        setUltimaAcao("c");
+        if (verificarUnico(prod)) {
+
+            estoque.add(prod);
+            mapaCodigo.put(prod.codigo, prod);
+            setUltimaAcao("c");
+        } else{
+            try {
+                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setQtd(prod.qtd);
+                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrMin(prod.qtd);
+                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrUnd(prod.qtd);
+            } catch (Exception ex) {
+                EstoqueController.mostrarInfoStatic("Erro", "Erro importar " + prod.nome + ": " + ex.getMessage());
+            }
+            setUltimaAcao("c");
+        }
+    }
+
+    public static boolean verificarUnico(Produto p){
+        for (Produto produto : estoque){
+            if (produto.nome.equals(p.nome)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void setVlrMin(int a, String codigo) {
@@ -215,6 +238,10 @@ public class Produto {
         return null;
     }
 
+    public static int getProximoCodigo(){
+        return proximoCodigo++;
+    }
+
     @Override
     public String toString() {
         return codigo + "|" + nome + "|" + categoria + "|" + vlrMin + "|" + vlrUnd + "|" + qtd + "|" + descricao + "|" + alterHora;
@@ -270,7 +297,7 @@ public class Produto {
         }
     }
 
-    //depreciado com a versão de terminal
+    //depreciado junto a versão de terminal
     public static void listaCat(String cat) {
         int c = 0;
         for (Produto produto : estoque) {

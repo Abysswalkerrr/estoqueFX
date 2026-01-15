@@ -37,6 +37,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            1.7.0
+            Importação de arquivos .csv(excel) implementada.
+            
             1.6.1
             Correção de falhas em potencial.
             
@@ -48,6 +51,7 @@ public class AppInfo {
             
             1.5.1
             Correções minoritárias.
+            
             1.5.0
             Coluna de última alteração adicionada e uso de versões experimentais permitido.
             
@@ -66,7 +70,6 @@ public class AppInfo {
             1.3.2
             Correção de erros.
             
-           
             1.3.1
             Correção da lógica de última atualização.
             

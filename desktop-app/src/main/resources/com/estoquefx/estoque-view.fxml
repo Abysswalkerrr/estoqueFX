@@ -16,6 +16,7 @@
                     <MenuItem onAction="#onSalvar" text="Salvar" />
                     <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
                     <MenuItem onAction="#onAbrirArquivo" text="Abrir pasta de dados" />
+                    <MenuItem onAction="#onImportarCSV" text="Importar CSV" />
                 </Menu>
                 <Menu text="Estoque">
                     <MenuItem onAction="#onCriarProduto" text="Novo produto" />

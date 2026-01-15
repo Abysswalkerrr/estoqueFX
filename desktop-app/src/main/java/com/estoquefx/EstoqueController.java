@@ -810,6 +810,42 @@ public class EstoqueController {
     }
 
     @FXML
+    private void onImportarCSV(){
+        try {
+            Alert alert  = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Importar");
+            alert.setHeaderText("ATENÇÃO");
+            alert.getDialogPane().setContent( new Label("O arquivo precisa estar em uma das seguintes" +
+                    "\nordens para que as informações sejam interpretadas como esperado:" +
+                    "\n\n codigo -> nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..." +
+                    "\n\n nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..."
+            ));
+            alert.showAndWait();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Importar arquivo");
+
+            FileChooser.ExtensionFilter extFilter =
+                    new FileChooser.ExtensionFilter("Arquivos CSV (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extFilter);
+
+            File pastaInicial = new File(Leitor.pastaDocs, Leitor.nomePasta);
+            if (pastaInicial.exists()) {
+                fileChooser.setInitialDirectory(pastaInicial);
+            }
+
+            Window stage = tabela.getScene().getWindow();
+            File arquivo = fileChooser.showOpenDialog(stage);
+
+            if (arquivo == null) {return;}
+
+            Leitor.importarCSV(arquivo);
+
+        } catch (Exception e){
+            mostrarErro(e.getMessage());
+        }
+    }
+
+    @FXML
     private void onAbrirArquivo() {
         try {
             File pastaApp = new File(Leitor.pastaDocs, Leitor.nomePasta);
