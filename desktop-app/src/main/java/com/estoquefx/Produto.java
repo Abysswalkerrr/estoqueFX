@@ -122,7 +122,7 @@ public class Produto {
                 getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrMin(prod.vlrMin);
                 getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrUnd(prod.vlrUnd);
 
-                atualizaCompra(prod);
+                atualizaCompra(getProdutoPorCodigo(getCodigoPorNome(prod.nome)));
 
             } catch (Exception ex) {
                 EstoqueController.mostrarInfoStatic("Erro", "Erro importar " + prod.nome + ": " + ex.getMessage());
