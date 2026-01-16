@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.7.0";
+            "1.7.1";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,8 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            1.7.1
+            Correções na lógica de importação dos arquivos CSV.
             1.7.0
             Importação de arquivos .csv(excel) implementada.
             
