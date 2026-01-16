@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
@@ -142,12 +143,10 @@ public class Leitor {
                                 Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4]) && Misc.isNumeric(partes[5])) {
                             Produto temp = infoProduto(partes);
                             Produto.addEstoque(temp);
-                        } else {
-                            continue;
                         }
                     }
                     //sem codigo
-                    if (!partes[0].isEmpty() && !partes[1].isEmpty() && Misc.isNumeric(partes[2]) &&
+                    else if (!partes[0].isEmpty() && !partes[1].isEmpty() && Misc.isNumeric(partes[2]) &&
                             Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
                         if (partes.length >= 7) {
                             if (partes[6].isEmpty()) {
@@ -159,7 +158,7 @@ public class Leitor {
                                 Integer.parseInt(partes[4]), partes[5], partes[6]);
                         Produto.addEstoque(temp);
                     }
-                    // nome -> categoria -> vlrMin -> vlrUnd -> qtd
+                // nome -> categoria -> vlrMin -> vlrUnd -> qtd
                 } else if (partes.length == 5) {
                     if (!partes[0].isEmpty() && !partes[1].isEmpty() && Misc.isNumeric(partes[2]) &&
                             Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
@@ -171,7 +170,6 @@ public class Leitor {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                continue;
             }
         }
     }

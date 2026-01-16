@@ -186,6 +186,7 @@ public class EstoqueController {
             Produto p = event.getRowValue();
             String texto = event.getNewValue();
             try {
+                texto = texto.replace("R$", "");
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
                 p.setAlterHora(Misc.getTime());
@@ -576,6 +577,8 @@ public class EstoqueController {
         carregarUltimaAlteracao();
     }
 
+    public void atualizarTabela(){dados.setAll(Produto.estoque);}
+
     public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo em: " + Misc.getUltimaAtualizacao());}
 
     public void atualizarTotal(){
@@ -839,6 +842,9 @@ public class EstoqueController {
             if (arquivo == null) {return;}
 
             Leitor.importarCSV(arquivo);
+
+            dados.setAll(Produto.estoque);
+            tabela.refresh();
 
         } catch (Exception e){
             mostrarErro(e.getMessage());

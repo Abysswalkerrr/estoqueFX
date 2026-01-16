@@ -119,8 +119,11 @@ public class Produto {
         } else{
             try {
                 getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setQtd(prod.qtd);
-                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrMin(prod.qtd);
-                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrUnd(prod.qtd);
+                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrMin(prod.vlrMin);
+                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrUnd(prod.vlrUnd);
+
+                atualizaCompra(prod);
+
             } catch (Exception ex) {
                 EstoqueController.mostrarInfoStatic("Erro", "Erro importar " + prod.nome + ": " + ex.getMessage());
             }
@@ -269,7 +272,7 @@ public class Produto {
         }
     }
 
-    //depreciado com a versão de terminal
+    //depreciado junto a versão de terminal
     public static void printAll() {
         if (estoque.isEmpty()) {
             System.out.println("Estoque vazio!");
@@ -283,7 +286,7 @@ public class Produto {
         }
     }
 
-    //depreciado com a versão de terminal
+    //depreciado junto a versão de terminal
     public static void compras() {
         int c = 0;
         for (Produto produto : estoque) {
