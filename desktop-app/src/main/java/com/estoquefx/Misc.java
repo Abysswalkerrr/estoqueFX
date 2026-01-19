@@ -1,7 +1,5 @@
 package com.estoquefx;
 
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,8 +11,8 @@ import java.util.HashSet;
 // revisar botões
 //todo pensar ícones
 //todo abas
-//todo import
-// todo calendário?
+//import
+//todo calendário?
 //todo documentação talvez?
 //todo FAQ
 //todo README

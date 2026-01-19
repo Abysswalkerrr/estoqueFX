@@ -59,3 +59,16 @@
 .table-row-cell.estoque-baixo:selected:focused .table-cell .text {
     -fx-fill: black !important;
 }
+
+.status-bar {
+}
+
+.status-bar .label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #555;
+}
+
+.separator {
+    -fx-background-color: #ccc;
+}
+

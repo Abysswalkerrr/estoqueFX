@@ -18,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.print.*;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,7 +31,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
-import javafx.stage.DirectoryChooser;
 
 import org.controlsfx.control.textfield.*;
 
@@ -49,12 +47,17 @@ import java.util.function.LongConsumer;
 
 public class EstoqueController {
 
+    @FXML private CheckBox boxApenasUrgente;
+
     @FXML private Label lblUltimaAlteracao;
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
 
     @FXML private Label lblSaldoTotal;
     private String saldo = String.format("%.2f", Misc.getTotal());
     private StringProperty saldoTotal = new SimpleStringProperty("Saldo total: " + "R$ " + saldo);
+
+    @FXML private Label lblResultados;
+    private StringProperty resultado = new SimpleStringProperty();
 
     @FXML private TableView<Produto> tabela;
     @FXML private TableColumn<Produto, String> colCodigo;
@@ -81,6 +84,9 @@ public class EstoqueController {
 
     private static Stage stage;
 
+    private boolean urgente = false;
+    private String busca = "";
+
 
     @FXML
     public void initialize() {
@@ -88,8 +94,11 @@ public class EstoqueController {
         Platform.runLater(this::carregarUltimaAlteracao);
 
         lblSaldoTotal.textProperty().bind(saldoTotal);
+        lblResultados.textProperty().bind(resultado);
+        Platform.runLater(this::atualizarResultado);
 
         tabela.setEditable(true);
+
         // liga colunas aos getters de Produto
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -231,7 +240,7 @@ public class EstoqueController {
 
                 TableRow<?> row = getTableRow();
                 if (row != null) {
-                    ChangeListener<String> styleListener = (obs, oldClass, newClass) -> {
+                    ChangeListener<String> styleListener = (_, _, _) -> {
                         atualizarCor(row);
                     };
                     row.getStyleClass().addListener((ListChangeListener<String>) c -> {
@@ -288,26 +297,17 @@ public class EstoqueController {
         dados = FXCollections.observableArrayList(Produto.estoque);
         filtrados = new FilteredList<>(dados, _ -> true);
 
+        boxApenasUrgente.selectedProperty().addListener((_, _, _) -> {
+            urgente = boxApenasUrgente.isSelected();
+            atualizarFiltro();
+            atualizarResultado();
+        });
+
+
         txtBusca.textProperty().addListener((_, _, newValue) -> {
-            String filtro = (newValue == null) ? "" : newValue.trim().toUpperCase();
-
-            filtrados.setPredicate(produto -> {
-                if (filtro.isEmpty()) return true;
-
-                String nome = produto.getNome() == null ? "" : produto.getNome().toUpperCase();
-                String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
-                String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
-
-                if (filtro.equalsIgnoreCase("urgente")){
-                    return produto.getCompra()
-                            || cat.contains(filtro)
-                            || nome.contains(filtro);
-                }
-
-                return nome.contains(filtro)
-                        || cat.contains(filtro)
-                        || cod.contains(filtro);
-            });
+            busca = newValue.toUpperCase();
+            atualizarFiltro();
+            atualizarResultado();
         });
 
         SortedList<Produto> ordenados = new SortedList<>(filtrados);
@@ -341,6 +341,27 @@ public class EstoqueController {
         Platform.runLater(() -> {
             tabela.getScene().getRoot().requestFocus();
         });
+    }
+
+    private void atualizarFiltro(){
+            filtrados.setPredicate(produto -> {
+                if (urgente && !produto.getCompra()){return false;}
+                if (busca.isEmpty()) return true;
+
+                String nome = produto.getNome() == null ? "" : produto.getNome().toUpperCase();
+                String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
+                String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
+
+                if (busca.equalsIgnoreCase("urgente")){
+                    return produto.getCompra()
+                            || cat.contains(busca)
+                            || nome.contains(busca);
+                }
+
+                return nome.contains(busca)
+                        || cat.contains(busca)
+                        || cod.contains(busca);
+            });
     }
 
     //substituída pela versão com autocomplete
@@ -566,7 +587,7 @@ public class EstoqueController {
         progressBar.progressProperty().bind(task.progressProperty());
         statusLabel.textProperty().bind(task.messageProperty());
 
-        dialog.setOnCloseRequest(e -> task.cancel());
+        dialog.setOnCloseRequest(_ -> task.cancel());
 
         new Thread(task).start();
         dialog.showAndWait();
@@ -577,8 +598,6 @@ public class EstoqueController {
         carregarUltimaAlteracao();
     }
 
-    public void atualizarTabela(){dados.setAll(Produto.estoque);}
-
     public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo em: " + Misc.getUltimaAtualizacao());}
 
     public void atualizarTotal(){
@@ -586,6 +605,10 @@ public class EstoqueController {
         String saldo = String.format("%.2f", Misc.getTotal());
         saldoTotal.set("Saldo total: " + "R$ " + saldo);
 
+    }
+
+    public void atualizarResultado(){
+        resultado.set("Mostrando " + filtrados.size() + " de " + dados.size() + " produtos");
     }
 
     @FXML
@@ -692,6 +715,8 @@ public class EstoqueController {
         Produto.addEstoque(novo);
         dados.setAll(Produto.estoque);
         atualizarTotal();
+        atualizarResultado();
+
     }
 
     @FXML
@@ -1001,23 +1026,9 @@ public class EstoqueController {
         });
     }
 
-    // onImprimir é melhor
-    public void imprimir(Node node, Window owner) {
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null) {
-            mostrarErro("Erro ao imprimir");
-            return;
-        }
-
-        boolean ok = job.showPrintDialog(owner); // abre diálogo de impressão
-        if (!ok) {
-            return;
-        }
-
-        boolean sucesso = job.printPage(node);
-        if (sucesso) {
-            job.endJob();
-        }
+    @FXML
+    private void onApenasUrgente(){
+        txtBusca.setText("urgente");
     }
 
     public void mostrarInfo(String titulo, String msg) {
@@ -1028,7 +1039,7 @@ public class EstoqueController {
         alert.showAndWait();
     }
 
-    //Não entendo porque tem que ser static por vezes, mas é útil.
+    //Não entendo porque funciona por vezes, mas é útil.
     public static void mostrarInfoStatic(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -1066,6 +1077,7 @@ public class EstoqueController {
     public static void setStage(Stage stage) {
         EstoqueController.stage = stage;
     }
+
     public static Stage getStage() {
         return stage;
     }
