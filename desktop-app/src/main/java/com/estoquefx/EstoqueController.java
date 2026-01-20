@@ -53,7 +53,11 @@ public class EstoqueController {
     private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
 
     @FXML private Label lblQtdProdutosR;
+    private final StringProperty qtdProdutos = new SimpleStringProperty();
+
     @FXML private Label lblQtdCategoriasR;
+    private StringProperty qtdCategorias = new SimpleStringProperty();
+
     @FXML private Label lblQtdUrgentesR;
     @FXML private PieChart pieCategoriasR;
     @FXML private TableView tabelaCategoriasR;
@@ -113,7 +117,10 @@ public class EstoqueController {
         lblSaldoTotal.textProperty().bind(saldoTotal);
         lblValorTotalR.textProperty().bind(vlrTotal);
         lblResultados.textProperty().bind(resultado);
+        lblQtdProdutosR.textProperty().bind(qtdProdutos);
         Platform.runLater(this::atualizarResultado);
+
+        lblQtdCategoriasR.textProperty().bind(qtdCategorias);
 
         tabela.setEditable(true);
 
@@ -375,8 +382,8 @@ public class EstoqueController {
         ObservableList<String> categorias = FXCollections.observableArrayList();
         categorias.addAll(Misc.categorias);
         boxCategorias.setItems(categorias);
+        qtdCategorias.set(String.valueOf(categorias.size()));
     }
-
 
     private void atualizarFiltro(){
         String categoria = boxCategorias.getValue().toString();
@@ -650,6 +657,7 @@ public class EstoqueController {
 
     public void atualizarResultado(){
         resultado.set("Mostrando " + filtrados.size() + " de " + dados.size() + " produtos");
+        qtdProdutos.set(String.valueOf(dados.size()));
     }
 
     @FXML
