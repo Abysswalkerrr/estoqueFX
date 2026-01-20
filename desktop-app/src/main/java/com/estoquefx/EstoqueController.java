@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.print.*;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -46,6 +47,16 @@ import java.util.function.LongConsumer;
 
 
 public class EstoqueController {
+
+    @FXML private Label lblValorTotalR;
+    @FXML private Label lblQtdProdutosR;
+    @FXML private Label lblQtdCategoriasR;
+    @FXML private Label lblQtdUrgentesR;
+    @FXML private PieChart pieCategoriasR;
+    @FXML private TableView tabelaCategoriasR;
+    @FXML private TableColumn colCategoriaR;
+    @FXML private TableColumn colValorR;
+
 
     @FXML private CheckBox boxApenasUrgente;
     @FXML private ComboBox boxCategorias;
@@ -99,7 +110,6 @@ public class EstoqueController {
         lblSaldoTotal.textProperty().bind(saldoTotal);
         lblResultados.textProperty().bind(resultado);
         Platform.runLater(this::atualizarResultado);
-
 
         tabela.setEditable(true);
 

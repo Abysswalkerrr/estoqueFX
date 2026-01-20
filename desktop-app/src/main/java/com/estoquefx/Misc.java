@@ -9,22 +9,18 @@ import java.util.HashSet;
 // salvar como
 // bug pesquisa
 // revisar botões
-//todo pensar ícones
-//todo abas
+//todo ícones
 //import
 //todo calendário?
-//todo documentação talvez?
+//todo documentação
 //todo FAQ
 //todo README
-//todo tarefas
 //todo POO
-//todo simplificar
 //todo limpar arquivos/projetos
 //todo relatórios
-//todo nuvem
+//todo sync via drive
 //todo Multi-usuário
 //todo https://openjfx.io/ - olhar community
-//todo https://www.reddit.com/r/JavaFX/ - tirar ideias
 
 
 public class Misc {
