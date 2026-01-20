@@ -48,6 +48,8 @@ import java.util.function.LongConsumer;
 public class EstoqueController {
 
     @FXML private CheckBox boxApenasUrgente;
+    @FXML private ComboBox boxCategorias;
+
 
     @FXML private Label lblUltimaAlteracao;
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
@@ -58,6 +60,7 @@ public class EstoqueController {
 
     @FXML private Label lblResultados;
     private StringProperty resultado = new SimpleStringProperty();
+
 
     @FXML private TableView<Produto> tabela;
     @FXML private TableColumn<Produto, String> colCodigo;
@@ -96,6 +99,7 @@ public class EstoqueController {
         lblSaldoTotal.textProperty().bind(saldoTotal);
         lblResultados.textProperty().bind(resultado);
         Platform.runLater(this::atualizarResultado);
+
 
         tabela.setEditable(true);
 
@@ -147,6 +151,7 @@ public class EstoqueController {
             novaCat = novaCat.trim().toUpperCase();
             p.setCategoria(novaCat);
             Misc.addCategoria(novaCat);
+            carregarCategorias();
             tabela.refresh();
         });
 
@@ -297,6 +302,15 @@ public class EstoqueController {
         dados = FXCollections.observableArrayList(Produto.estoque);
         filtrados = new FilteredList<>(dados, _ -> true);
 
+        carregarCategorias();
+
+        boxCategorias.valueProperty().addListener((observable, _, newValue) -> {
+
+            atualizarFiltro();
+            atualizarResultado();
+        });
+
+
         boxApenasUrgente.selectedProperty().addListener((_, _, _) -> {
             urgente = boxApenasUrgente.isSelected();
             atualizarFiltro();
@@ -343,8 +357,20 @@ public class EstoqueController {
         });
     }
 
+    private void carregarCategorias() {
+        ObservableList<String> categorias = FXCollections.observableArrayList();
+        categorias.addAll(Misc.categorias);
+        boxCategorias.setItems(categorias);
+    }
+
+
     private void atualizarFiltro(){
-            filtrados.setPredicate(produto -> {
+        String categoria = boxCategorias.getValue().toString();
+        if (categoria == null || categoria.isEmpty()) {categoria = "";}
+        //pq isso seria final?
+        String finalCategoria = categoria;
+
+        filtrados.setPredicate(produto -> {
                 if (urgente && !produto.getCompra()){return false;}
                 if (busca.isEmpty()) return true;
 
@@ -353,14 +379,14 @@ public class EstoqueController {
                 String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
 
                 if (busca.equalsIgnoreCase("urgente")){
-                    return produto.getCompra()
-                            || cat.contains(busca)
-                            || nome.contains(busca);
+                    return (finalCategoria.isEmpty() || cat.contains(finalCategoria))
+                            && produto.getCompra()
+                            && nome.contains(busca);
                 }
 
-                return nome.contains(busca)
-                        || cat.contains(busca)
-                        || cod.contains(busca);
+                return  (finalCategoria.isEmpty() || cat.contains(finalCategoria))
+                        &&
+                        (nome.contains(busca) || cod.contains(busca));
             });
     }
 
@@ -716,6 +742,7 @@ public class EstoqueController {
         dados.setAll(Produto.estoque);
         atualizarTotal();
         atualizarResultado();
+        carregarCategorias();
 
     }
 
