@@ -49,6 +49,9 @@ import java.util.function.LongConsumer;
 public class EstoqueController {
 
     @FXML private Label lblValorTotalR;
+    private String vlr = String.format("%.2f", Misc.getTotal());
+    private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
+
     @FXML private Label lblQtdProdutosR;
     @FXML private Label lblQtdCategoriasR;
     @FXML private Label lblQtdUrgentesR;
@@ -108,6 +111,7 @@ public class EstoqueController {
         Platform.runLater(this::carregarUltimaAlteracao);
 
         lblSaldoTotal.textProperty().bind(saldoTotal);
+        lblValorTotalR.textProperty().bind(vlrTotal);
         lblResultados.textProperty().bind(resultado);
         Platform.runLater(this::atualizarResultado);
 
@@ -639,6 +643,8 @@ public class EstoqueController {
         Misc.atualizaTotal();
         String saldo = String.format("%.2f", Misc.getTotal());
         saldoTotal.set("Saldo total: " + "R$ " + saldo);
+        vlrTotal.set("R$ " + saldo);
+
 
     }
 
