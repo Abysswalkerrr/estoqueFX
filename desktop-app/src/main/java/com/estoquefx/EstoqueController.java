@@ -368,11 +368,11 @@ public class EstoqueController {
         String categoria = boxCategorias.getValue().toString();
         if (categoria == null || categoria.isEmpty()) {categoria = "";}
         //pq isso seria final?
-        String finalCategoria = categoria;
+        String finalCategoria = categoria.toUpperCase();
 
         filtrados.setPredicate(produto -> {
                 if (urgente && !produto.getCompra()){return false;}
-                if (busca.isEmpty()) return true;
+                if (busca.isEmpty() && finalCategoria.isEmpty()) return true;
 
                 String nome = produto.getNome() == null ? "" : produto.getNome().toUpperCase();
                 String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
@@ -380,7 +380,6 @@ public class EstoqueController {
 
                 if (busca.equalsIgnoreCase("urgente")){
                     return (finalCategoria.isEmpty() || cat.contains(finalCategoria))
-                            && produto.getCompra()
                             && nome.contains(busca);
                 }
 

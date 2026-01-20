@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.8.0";
+            "1.8.1";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            1.8.1
+            Adição de um buscador exclusivo para categorias.
+            \s
             1.8.0
             Adição de abas(não implementadas) e novas opções de filtragem.
             \s
