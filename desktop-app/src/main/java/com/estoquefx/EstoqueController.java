@@ -59,6 +59,8 @@ public class EstoqueController {
     private StringProperty qtdCategorias = new SimpleStringProperty();
 
     @FXML private Label lblQtdUrgentesR;
+    private StringProperty qtdUrgentes = new SimpleStringProperty();
+
     @FXML private PieChart pieCategoriasR;
     @FXML private TableView tabelaCategoriasR;
     @FXML private TableColumn colCategoriaR;
@@ -108,6 +110,7 @@ public class EstoqueController {
     private boolean urgente = false;
     private String busca = "";
 
+    private HashSet<Produto> urgentes = new HashSet<>();
 
     @FXML
     public void initialize() {
@@ -118,6 +121,8 @@ public class EstoqueController {
         lblValorTotalR.textProperty().bind(vlrTotal);
         lblResultados.textProperty().bind(resultado);
         lblQtdProdutosR.textProperty().bind(qtdProdutos);
+        lblQtdUrgentesR.textProperty().bind(qtdUrgentes);
+        Platform.runLater(this::contaUrgentes);
         Platform.runLater(this::atualizarResultado);
 
         lblQtdCategoriasR.textProperty().bind(qtdCategorias);
@@ -183,7 +188,12 @@ public class EstoqueController {
                 int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setVlrMin(novoMin);
                 p.setAlterHora(Misc.getTime());
+                boolean a = p.getCompra();
                 Produto.atualizaCompra(p);
+                if (a != p.getCompra()) {
+                    atualizaUrgentes(p);
+                }
+
                 tabela.refresh();
             } catch (NumberFormatException ex) {
                 // erro inválido
@@ -196,7 +206,11 @@ public class EstoqueController {
             try {
                 int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setQtd(novaQtd);
+                boolean a = p.getCompra();
                 Produto.atualizaCompra(p);
+                if (a != p.getCompra()) {
+                    atualizaUrgentes(p);
+                }
                 p.setAlterHora(Misc.getTime());
                 atualizarTotal();
                 tabela.refresh();
@@ -325,8 +339,7 @@ public class EstoqueController {
 
         carregarCategorias();
 
-        boxCategorias.valueProperty().addListener((observable, _, newValue) -> {
-
+        boxCategorias.valueProperty().addListener((_, _, _) -> {
             atualizarFiltro();
             atualizarResultado();
         });
@@ -383,6 +396,15 @@ public class EstoqueController {
         categorias.addAll(Misc.categorias);
         boxCategorias.setItems(categorias);
         qtdCategorias.set(String.valueOf(categorias.size()));
+    }
+
+    public void contaUrgentes(){
+        for (Produto produto : Produto.estoque) {
+            if (produto.getCompra()){
+                urgentes.add(produto);
+            }
+        }
+        qtdUrgentes.set(String.valueOf(urgentes.size()));
     }
 
     private void atualizarFiltro(){
@@ -660,6 +682,15 @@ public class EstoqueController {
         qtdProdutos.set(String.valueOf(dados.size()));
     }
 
+    public void atualizaUrgentes(Produto produto) {
+        if (produto.getCompra()){
+            urgentes.add(produto);
+        } else{
+            urgentes.remove(produto);
+        }
+        qtdUrgentes.set(String.valueOf(urgentes.size()));
+    }
+
     @FXML
     private void onCriarProduto() {
         String nome = "";
@@ -761,6 +792,9 @@ public class EstoqueController {
         String tempo = Misc.getTime();
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
+        if (novo.getCompra()){
+            urgentes.add(novo);
+        }
         Produto.addEstoque(novo);
         dados.setAll(Produto.estoque);
         atualizarTotal();
@@ -784,8 +818,15 @@ public class EstoqueController {
             Produto.entrada(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
+
+
             if (p != null) {
                 p.setAlterHora(Misc.getTime());
+                boolean a = p.getCompra();
+                Produto.atualizaCompra(p);
+                if (a == p.getCompra()) {
+                    atualizaUrgentes(p);
+                }
             }
 
             dados.setAll(Produto.estoque);
@@ -811,9 +852,17 @@ public class EstoqueController {
             Produto.saida(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
+
             if (p != null) {
                 p.setAlterHora(Misc.getTime());
+
+                boolean a = p.getCompra();
+                Produto.atualizaCompra(p);
+                if (a == p.getCompra()) {
+                    atualizaUrgentes(p);
+                }
             }
+
             dados.setAll(Produto.estoque);
             atualizarTotal();
         } catch (NumberFormatException ex) {

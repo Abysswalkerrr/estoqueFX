@@ -12,6 +12,7 @@ import java.util.HashSet;
 //todo ícones
 //import
 //todo calendário?
+//todo classe categoria
 //todo documentação
 //todo FAQ
 //todo README
@@ -28,6 +29,7 @@ public class Misc {
     public static HashSet<String> nomes = new HashSet<>();
     private static String ultimaAtualizacao = "";
     private static boolean negouAtualizacao = false;
+    private static int qtdUrgentes;
 
     private static double total;
 
@@ -39,6 +41,16 @@ public class Misc {
         for (Produto p : Produto.estoque) {
             addCategoria(p.getCategoria());
         }
+    }
+
+    public static void contaUrgentes(){
+        int c = 0;
+        for  (Produto p : Produto.estoque) {
+            if (p.getCompra()){
+                c++;
+            }
+        }
+        qtdUrgentes = c;
     }
 
     public static void carregaNomes(){
