@@ -51,7 +51,7 @@ public class EstoqueAppFX extends Application {
             } else if (result.get() == btnSalvar) {
                 try {
                     Misc.updateTime();
-                    Leitor.salvarEstoque(Produto.estoque);
+                    Leitor.salvarEstoque(Estoque.getProdutos());
                     Produto.setUltimaAcao("i"); // salvo
                 } catch (IOException e) {
                     new Alert(Alert.AlertType.ERROR,

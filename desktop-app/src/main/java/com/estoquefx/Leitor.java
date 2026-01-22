@@ -3,8 +3,7 @@ package com.estoquefx;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.io.IOException;
 import javax.swing.filechooser.FileSystemView;
@@ -15,8 +14,8 @@ public class Leitor {
     static String nomeMisc = "misc.txt";
     static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
 
-    public static ArrayList<Produto> carregarEstoque() throws IOException {
-        ArrayList<Produto> estoque = new ArrayList<>();
+    public static LinkedHashSet<Produto> carregarEstoque() throws IOException {
+        LinkedHashSet<Produto> estoque = new LinkedHashSet<>();
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo = new File(pastaApp, nomeArquivo);
         File misc = new File(pastaApp, nomeMisc);
@@ -97,7 +96,7 @@ public class Leitor {
         return new Produto(codigo, nome, categoria, vlrMin, vlrUnd, qtd, desc,  tempo);
     }
 
-    public static void salvarEstoque(ArrayList<Produto> estoque) throws IOException {
+    public static void salvarEstoque(LinkedHashSet<Produto> estoque) throws IOException {
         File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
             pastaApp.mkdirs();
@@ -207,19 +206,8 @@ public class Leitor {
         fw.close();
     }
 
-    // legado/compatibilidade
-    public static void exportarEstoqueCSV(List<Produto> estoque) throws IOException {
-        File pastaApp = new File(pastaDocs, nomePasta);
-        if (!pastaApp.exists()) {
-            pastaApp.mkdirs();
-        }
-        File arquivoCSV = new File(pastaApp, "estoqueCSV.csv");
-
-        exportarEstoqueParaArquivo(estoque, arquivoCSV);
-    }
-
     // arquivo é escolhido antes
-    public static void exportarEstoqueParaArquivo(List<Produto> estoque, File arquivoCSV) throws IOException {
+    public static void exportarEstoqueParaArquivo(LinkedHashSet<Produto> estoque, File arquivoCSV) throws IOException {
         try (java.io.PrintWriter pw = new java.io.PrintWriter(
                 new java.io.OutputStreamWriter(
                         new java.io.FileOutputStream(arquivoCSV),

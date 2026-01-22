@@ -99,6 +99,7 @@ public class EstoqueController {
     @FXML private Button btnSaida;
     @FXML private Button btnSalvar;
     @FXML private Button btnExportar;
+    @FXML private Button btnListar;
 
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
@@ -174,9 +175,15 @@ public class EstoqueController {
             Produto p = event.getRowValue();
             String novaCat = event.getNewValue();
             if (novaCat == null || novaCat.isBlank()) return;
+            String c = p.getCategoria();
+            Categoria categoria = Categoria.getCategoria(c);
+            if (categoria.getProdutos().size() > 1){
+                categoria.removeProduto(p);
+            }
             novaCat = novaCat.trim().toUpperCase();
             p.setCategoria(novaCat);
-            Misc.addCategoria(novaCat);
+            Categoria.addCategoria(novaCat);
+            Categoria.addProduto(novaCat, p);
             carregarCategorias();
             tabela.refresh();
         });
@@ -334,7 +341,7 @@ public class EstoqueController {
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
 
-        dados = FXCollections.observableArrayList(Produto.estoque);
+        dados = FXCollections.observableArrayList(Estoque.getProdutos());
         filtrados = new FilteredList<>(dados, _ -> true);
 
         carregarCategorias();
@@ -393,13 +400,15 @@ public class EstoqueController {
 
     private void carregarCategorias() {
         ObservableList<String> categorias = FXCollections.observableArrayList();
-        categorias.addAll(Misc.categorias);
+        for (String categoria : categorias) {
+            Categoria.addCategoria(categoria);
+        }
         boxCategorias.setItems(categorias);
         qtdCategorias.set(String.valueOf(categorias.size()));
     }
 
     public void contaUrgentes(){
-        for (Produto produto : Produto.estoque) {
+        for (Produto produto : Estoque.getProdutos()) {
             if (produto.getCompra()){
                 urgentes.add(produto);
             }
@@ -718,7 +727,6 @@ public class EstoqueController {
             categoria = dialogCategoria.showAndWait().orElse(null);
             if (categoria == null) return;
             categoria = categoria.toUpperCase();
-            Misc.addCategoria(categoria);
         }
 
 
@@ -795,8 +803,10 @@ public class EstoqueController {
         if (novo.getCompra()){
             urgentes.add(novo);
         }
+        Categoria c = Categoria.getCategoria(categoria);
+        c.addProduto(novo);
         Produto.addEstoque(novo);
-        dados.setAll(Produto.estoque);
+        dados.setAll(Estoque.getProdutos());
         atualizarTotal();
         atualizarResultado();
         carregarCategorias();
@@ -829,11 +839,16 @@ public class EstoqueController {
                 }
             }
 
-            dados.setAll(Produto.estoque);
+            dados.setAll(Estoque.getProdutos());
             atualizarTotal();
         } catch (NumberFormatException ex) {
             new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
         }
+    }
+
+    @FXML
+    private void teste(){
+        mostrarInfo("teste", Estoque.getProdutos().toString());
     }
 
     @FXML
@@ -863,7 +878,7 @@ public class EstoqueController {
                 }
             }
 
-            dados.setAll(Produto.estoque);
+            dados.setAll(Estoque.getProdutos());
             atualizarTotal();
         } catch (NumberFormatException ex) {
             new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
@@ -874,7 +889,7 @@ public class EstoqueController {
     private void onSalvar() {
         try {
             atualizarUltimaAlteracao();
-            Leitor.salvarEstoque(Produto.estoque);
+            Leitor.salvarEstoque(Estoque.getProdutos());
             Produto.setUltimaAcao("s");
             new Alert(Alert.AlertType.INFORMATION, "Estoque salvo com sucesso.").showAndWait();
         } catch (IOException e) {
@@ -905,7 +920,7 @@ public class EstoqueController {
                 arquivo = new File(arquivo.getAbsolutePath() + ".csv");
             }
 
-            Leitor.exportarEstoqueParaArquivo(Produto.estoque, arquivo);
+            Leitor.exportarEstoqueParaArquivo(Estoque.getProdutos(), arquivo);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Exportação Concluída");
@@ -967,7 +982,7 @@ public class EstoqueController {
 
             Leitor.importarCSV(arquivo);
 
-            dados.setAll(Produto.estoque);
+            dados.setAll(Estoque.getProdutos());
             tabela.refresh();
 
             mostrarInfo("Importar", "Importado com sucesso!");

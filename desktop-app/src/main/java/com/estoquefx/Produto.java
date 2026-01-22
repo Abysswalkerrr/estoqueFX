@@ -2,6 +2,7 @@ package com.estoquefx;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class Produto {
@@ -16,7 +17,6 @@ public class Produto {
     private String descricao;
     private String alterHora;
 
-    static ArrayList<Produto> estoque = new ArrayList<>();
     private static int proximoCodigo = 1;
     private static Map<String, Produto> mapaCodigo = new HashMap<>();
 
@@ -112,8 +112,7 @@ public class Produto {
 
     public static void addEstoque(Produto prod) {
         if (verificarUnico(prod)) {
-
-            estoque.add(prod);
+            Estoque.addProduto(prod);
             mapaCodigo.put(prod.codigo, prod);
             setUltimaAcao("c");
         } else{
@@ -132,7 +131,7 @@ public class Produto {
     }
 
     public static boolean verificarUnico(Produto p){
-        for (Produto produto : estoque){
+        for (Produto produto : Estoque.getProdutos()) {
             if (produto.nome.equals(p.nome)){
                 return false;
             }
@@ -233,7 +232,7 @@ public class Produto {
     public String getDescricao() {return  descricao;}
 
     public static Produto getProdutoPorCodigo(String codigo) {
-        for (Produto p : Produto.estoque) {
+        for (Produto p : Estoque.getProdutos()) {
             if (p.getCodigo().equals(codigo)) {
                 return p;
             }
@@ -254,7 +253,7 @@ public class Produto {
         if (n == null) return null;
         String buscado = n.trim().toUpperCase();
 
-        for (Produto produto : estoque) {
+        for (Produto produto : Estoque.getProdutos()) {
             String nomeProd = produto.getNome();
             if (nomeProd != null && nomeProd.trim().toUpperCase().equals(buscado)) {
                 return produto.codigo;
@@ -263,54 +262,12 @@ public class Produto {
         return null;
     }
 
-    public static void preencher(ArrayList<Produto> lista) {
+    public static void preencher(LinkedHashSet<Produto> lista) {
         if (!lista.isEmpty()) {
             for (Produto p : lista) {
-                estoque.add(p);
+                Estoque.addProduto(p);
                 mapaCodigo.put(p.codigo, p);
             }
-        }
-    }
-
-    //depreciado junto a versão de terminal
-    public static void printAll() {
-        if (estoque.isEmpty()) {
-            System.out.println("Estoque vazio!");
-        } else {
-            System.out.println("\n=== ESTOQUE ===");
-            System.out.println("CÓDIGO|NOME|CATEGORIA|QTD MIN|VLR UND|QTD");
-            for (Produto produto : estoque) {
-                System.out.println(produto.toString());
-            }
-            System.out.println("===============\n");
-        }
-    }
-
-    //depreciado junto a versão de terminal
-    public static void compras() {
-        int c = 0;
-        for (Produto produto : estoque) {
-            if (produto.qtd < produto.vlrMin) {
-                System.out.println(produto);
-                c++;
-            }
-        }
-        if (c == 0) {
-            System.out.println("Nenhum estoque baixo!");
-        }
-    }
-
-    //depreciado junto a versão de terminal
-    public static void listaCat(String cat) {
-        int c = 0;
-        for (Produto produto : estoque) {
-            if (produto.categoria.equals(cat)) {
-                System.out.println(produto);
-                c++;
-            }
-        }
-        if (c == 0) {
-            System.out.println("Categoria não encontrada.");
         }
     }
 

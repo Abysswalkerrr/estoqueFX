@@ -43,13 +43,13 @@
                             <Label fx:id="lblUltimaAlteracao" text="salvo as" />
                             <Label fx:id="lblSaldoTotal" text="saldo total" />
                         </VBox>
+                        <Button fx:id="btnListar" onAction="#onListar" text="teste" />
                         <Region HBox.hgrow="ALWAYS" />
-                  <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
-                     <children>
-                         <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0" promptText="Escolher categoria" />
-                         <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
-                     </children>
-                  </VBox>
+                        <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
+                            <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0"
+                                      promptText="Escolher categoria"/>
+                            <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes"/>
+                        </VBox>
                         <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0" promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
                     </HBox>
                 </VBox>

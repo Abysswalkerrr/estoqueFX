@@ -25,7 +25,6 @@ import java.util.HashSet;
 
 
 public class Misc {
-    public static HashSet<String> categorias = new HashSet<>();
     public static HashSet<String> nomes = new HashSet<>();
     private static String ultimaAtualizacao = "";
     private static boolean negouAtualizacao = false;
@@ -33,19 +32,15 @@ public class Misc {
 
     private static double total;
 
-    public static void addCategoria(String categoria) {
-        categorias.add(categoria);
-    }
-
     public static void carregaCategorias(){
-        for (Produto p : Produto.estoque) {
-            addCategoria(p.getCategoria());
+        for (Produto p : Estoque.getProdutos()) {
+            Categoria.addCategoria(p.getCategoria());
         }
     }
 
     public static void contaUrgentes(){
         int c = 0;
-        for  (Produto p : Produto.estoque) {
+        for  (Produto p : Estoque.getProdutos()) {
             if (p.getCompra()){
                 c++;
             }
@@ -54,7 +49,7 @@ public class Misc {
     }
 
     public static void carregaNomes(){
-        for (Produto p : Produto.estoque) {
+        for (Produto p : Estoque.getProdutos()) {
             addNome(p.getNome());
         }
     }
@@ -121,7 +116,7 @@ public class Misc {
 
     public static void atualizaTotal() {
         total = 0;
-        for (Produto p : Produto.estoque) {
+        for (Produto p : Estoque.getProdutos()) {
             total += p.getQtd() * p.getVlrUnd();
         }
     }
