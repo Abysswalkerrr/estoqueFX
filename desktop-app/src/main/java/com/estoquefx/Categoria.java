@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Categoria {
     public static Map<String, Categoria> categorias =  new HashMap<>();
-    private HashSet<Produto> produtos;
+    private HashSet<Produto> produtos = new  HashSet<>();
     private String nome;
     public Categoria(String nome) {
         this.nome = nome;
@@ -38,7 +38,7 @@ public class Categoria {
 
     public static Categoria getCategoria(String nome){
         try{
-             Categoria c = categorias.get(nome);
+             categorias.get(nome);
         } catch(Exception e){
             addCategoria(nome);
         }
