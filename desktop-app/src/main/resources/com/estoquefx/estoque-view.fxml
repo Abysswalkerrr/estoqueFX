@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.EstoqueController">
     <Tab closable="false" text="Tabela">
         <BorderPane stylesheets="@style.css">
@@ -43,7 +44,6 @@
                             <Label fx:id="lblUltimaAlteracao" text="salvo as" />
                             <Label fx:id="lblSaldoTotal" text="saldo total" />
                         </VBox>
-                        <Button fx:id="btnListar" onAction="#onListar" text="teste" />
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
                             <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0"
@@ -120,9 +120,16 @@
                         <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (tabela)" />
                         <TableView fx:id="tabelaCategoriasR" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colCategoriaR" prefWidth="150" text="Categoria" />
-                                <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque" />
-                            </columns>
+                                <TableColumn fx:id="colCategoriaR" text="Categoria" prefWidth="150">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="key" />
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn fx:id="colValorR" text="Valor" prefWidth="150">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="value" />
+                                    </cellValueFactory>
+                                </TableColumn>                            </columns>
                         </TableView>
                     </VBox>
                 </HBox>

@@ -5,8 +5,7 @@ import com.estoquefx.updater.core.*;
 
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -42,7 +41,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.*;
 import java.util.function.LongConsumer;
 
 
@@ -62,9 +61,12 @@ public class EstoqueController {
     private StringProperty qtdUrgentes = new SimpleStringProperty();
 
     @FXML private PieChart pieCategoriasR;
-    @FXML private TableView tabelaCategoriasR;
-    @FXML private TableColumn colCategoriaR;
-    @FXML private TableColumn colValorR;
+
+    @FXML private TableView<Categoria> tabelaCategoriasR;
+
+    @FXML private TableColumn<Categoria, String> colCategoriaR;
+    @FXML private TableColumn<Categoria, Double> colValorR;
+    ObservableList<Categoria> dadosRelatorio;
 
 
     @FXML private CheckBox boxApenasUrgente;
@@ -116,17 +118,23 @@ public class EstoqueController {
     @FXML
     public void initialize() {
         lblUltimaAlteracao.textProperty().bind(ultimaAlteracao);
-        Platform.runLater(this::carregarUltimaAlteracao);
 
         lblSaldoTotal.textProperty().bind(saldoTotal);
         lblValorTotalR.textProperty().bind(vlrTotal);
         lblResultados.textProperty().bind(resultado);
         lblQtdProdutosR.textProperty().bind(qtdProdutos);
         lblQtdUrgentesR.textProperty().bind(qtdUrgentes);
-        Platform.runLater(this::contaUrgentes);
-        Platform.runLater(this::atualizarResultado);
 
         lblQtdCategoriasR.textProperty().bind(qtdCategorias);
+
+        Platform.runLater(() -> {
+            atualizarRelatorio();
+            atualizarDashboard();
+            carregarUltimaAlteracao();
+            atualizarResultado();
+            contaUrgentes();
+        });
+
 
         tabela.setEditable(true);
 
@@ -139,6 +147,7 @@ public class EstoqueController {
         colQtd.setCellValueFactory(new PropertyValueFactory<>("qtd"));
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colHora.setCellValueFactory(new PropertyValueFactory<>("alterHora"));
+
 
         colOrientacao.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
@@ -341,6 +350,13 @@ public class EstoqueController {
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
 
+        colCategoriaR.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colValorR.setCellValueFactory(new PropertyValueFactory<>("valor"));
+
+        dadosRelatorio = FXCollections.observableArrayList(Categoria.getCategorias());
+
+        tabelaCategoriasR.setItems(dadosRelatorio);
+
         dados = FXCollections.observableArrayList(Estoque.getProdutos());
         filtrados = new FilteredList<>(dados, _ -> true);
 
@@ -349,6 +365,7 @@ public class EstoqueController {
         boxCategorias.valueProperty().addListener((_, _, _) -> {
             atualizarFiltro();
             atualizarResultado();
+
         });
 
 
@@ -369,6 +386,14 @@ public class EstoqueController {
         ordenados.comparatorProperty().bind(tabela.comparatorProperty());
 
         tabela.setItems(ordenados);
+
+        dados.addListener((ListChangeListener<Produto>) change -> {
+            while (change.next()) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    atualizarRelatorio();
+                }
+            }
+        });
 
 
         tabela.setRowFactory(_ -> new TableRow<>() {
@@ -400,11 +425,29 @@ public class EstoqueController {
 
     private void carregarCategorias() {
         ObservableList<String> categorias = FXCollections.observableArrayList();
-        for (String categoria : categorias) {
-            Categoria.addCategoria(categoria);
+        for  (Categoria categoria : Categoria.getCategorias()) {
+            categorias.add(categoria.getNome());
         }
         boxCategorias.setItems(categorias);
         qtdCategorias.set(String.valueOf(categorias.size()));
+
+    }
+
+    private void atualizarRelatorio() {
+        dadosRelatorio.setAll(Categoria.getCategorias());
+        tabelaCategoriasR.refresh();
+
+        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
+        for (Categoria cat : Categoria.getCategorias()) {
+            dadosChart.add(new PieChart.Data(
+                    cat.getNome() + " (R$ " + String.format("%.2f", cat.getValor()) + ")",
+                    cat.getValor()
+            ));
+        }
+        pieCategoriasR.setData(dadosChart);
+        pieCategoriasR.setTitle("Valor por Categoria");
+
+        mostrarInfo("", Categoria.getCategorias().size() + "categorias");
     }
 
     public void contaUrgentes(){
@@ -439,34 +482,6 @@ public class EstoqueController {
                         &&
                         (nome.contains(busca) || cod.contains(busca));
             });
-    }
-
-    //substituída pela versão com autocomplete
-    private String perguntarNomeProduto(String titulo) {
-        Produto selecionado = tabela.getSelectionModel().getSelectedItem();
-        String sugestaoNome = selecionado != null ? selecionado.getNome() : "";
-
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle(titulo);
-        dialog.setHeaderText("Informe o produto:");
-
-        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-        TextField txtNome = new TextField(sugestaoNome);
-        txtNome.setPromptText("Nome do produto");
-
-        dialog.getDialogPane().setContent(txtNome);
-
-        dialog.setResultConverter(button -> {
-            if (button == okButtonType) {
-                String n = txtNome.getText();
-                return (n == null || n.isBlank()) ? null : n;
-            }
-            return null;
-        });
-
-        return dialog.showAndWait().orElse(null);
     }
 
     public String pedirProduto(HashSet<String> produtos, String title) {
@@ -682,8 +697,7 @@ public class EstoqueController {
         String saldo = String.format("%.2f", Misc.getTotal());
         saldoTotal.set("Saldo total: " + "R$ " + saldo);
         vlrTotal.set("R$ " + saldo);
-
-
+        atualizarRelatorio();
     }
 
     public void atualizarResultado(){
@@ -844,11 +858,6 @@ public class EstoqueController {
         } catch (NumberFormatException ex) {
             new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
         }
-    }
-
-    @FXML
-    private void teste(){
-        mostrarInfo("teste", Estoque.getProdutos().toString());
     }
 
     @FXML
@@ -1083,6 +1092,35 @@ public class EstoqueController {
         tabela.getTransforms().clear();
         tabela.setPrefHeight(Region.USE_COMPUTED_SIZE);
         tabela.setFixedCellSize(Region.USE_COMPUTED_SIZE);    }
+
+    @FXML
+    private void atualizarDashboard() {
+        atualizarTotal();
+        double total = Misc.getTotal();
+        qtdProdutos.set(String.valueOf(Estoque.getProdutos().size()));
+
+        Map<String, Double> mapa = calcularValorPorCategoria();
+
+
+        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
+        for (Map.Entry<String, Double> e : mapa.entrySet()) {
+            dadosChart.add(new PieChart.Data(
+                    e.getKey() + " (R$ " + String.format("%.2f", e.getValue()) + ")",
+                    e.getValue()
+            ));
+        }
+        pieCategoriasR.setData(dadosChart);
+        pieCategoriasR.setTitle("Valor por Categoria");
+    }
+
+    public Map<String, Double> calcularValorPorCategoria(){
+        Map<String, Double> result = new HashMap<>();
+        for (Map.Entry<String, Categoria> entry : Categoria.categorias.entrySet()) {
+                Categoria categoria = entry.getValue();
+                result.put(categoria.getNome(), categoria.getValor());
+        }
+        return result;
+    }
 
     public void onAvisarAtualizacoes(ActionEvent actionEvent) {
         try {

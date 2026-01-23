@@ -1,13 +1,12 @@
 package com.estoquefx;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class Categoria {
     public static Map<String, Categoria> categorias =  new HashMap<>();
     private HashSet<Produto> produtos = new  HashSet<>();
     private String nome;
+    double  valor;
     public Categoria(String nome) {
         this.nome = nome;
     }
@@ -45,6 +44,14 @@ public class Categoria {
         return categorias.get(nome);
     }
 
+    public static ArrayList<Categoria> getCategorias(){
+        ArrayList<Categoria> cat = new ArrayList<>();
+        for (Map.Entry<String, Categoria> entry : categorias.entrySet()){
+            cat.add(entry.getValue());
+        }
+        return cat;
+    }
+
     public void setNome(String nome){
         String oldNome = this.nome;
         this.nome = nome;
@@ -52,6 +59,21 @@ public class Categoria {
 
     }
     public String getNome(){return nome;}
+
+    private void setValor() {
+        valor = 0;
+        for (Produto produto : produtos) {
+            valor += produto.getQtd() * produto.getVlrUnd();
+        }
+    }
+
+    public double getValor(){
+        setValor();
+        return valor;
+    }
+    public static double getValor(String categoria){
+        return getCategoria(categoria).getValor();
+    }
 
 
 }
