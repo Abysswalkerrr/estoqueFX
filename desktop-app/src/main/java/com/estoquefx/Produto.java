@@ -114,6 +114,7 @@ public class Produto {
         if (verificarUnico(prod)) {
             Estoque.addProduto(prod);
             mapaCodigo.put(prod.codigo, prod);
+            Misc.addNome(prod.nome);
             setUltimaAcao("c");
         } else{
             try {
