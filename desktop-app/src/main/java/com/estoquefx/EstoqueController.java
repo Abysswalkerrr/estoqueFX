@@ -65,7 +65,7 @@ public class EstoqueController {
     @FXML private TableView<Categoria> tabelaCategoriasR;
 
     @FXML private TableColumn<Categoria, String> colCategoriaR;
-    @FXML private TableColumn<Categoria, Double> colValorR;
+    @FXML private TableColumn<Categoria, String> colValorR;
     ObservableList<Categoria> dadosRelatorio;
 
 
@@ -351,8 +351,12 @@ public class EstoqueController {
         colDescricao.setPrefWidth(300);
 
         colCategoriaR.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colValorR.setCellValueFactory(new PropertyValueFactory<>("valor"));
 
+        colValorR.setCellValueFactory(cellData -> {
+            Categoria cat = cellData.getValue();
+            String valorFormatado = String.format("R$ %.2f", cat.getValor());
+            return new SimpleStringProperty(valorFormatado);
+        });
         dadosRelatorio = FXCollections.observableArrayList(Categoria.getCategorias());
 
         tabelaCategoriasR.setItems(dadosRelatorio);
@@ -447,7 +451,7 @@ public class EstoqueController {
         pieCategoriasR.setData(dadosChart);
         pieCategoriasR.setTitle("Valor por Categoria");
 
-        mostrarInfo("", Categoria.getCategorias().size() + "categorias");
+        qtdCategorias.set(String.valueOf(Categoria.getCategorias().size()));
     }
 
     public void contaUrgentes(){

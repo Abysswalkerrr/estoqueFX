@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "1.8.1";
+            "2.0.0";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            2.0.0
+            Aba de relatórios implementada, sendo composta de estatísticas, gráficos e tabelas a respeito do estoque.
+            \s
             1.8.1
             Adição de um buscador exclusivo para categorias.
             \s

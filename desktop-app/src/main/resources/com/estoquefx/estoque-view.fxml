@@ -125,11 +125,12 @@
                                         <PropertyValueFactory property="key" />
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn fx:id="colValorR" text="Valor" prefWidth="150">
+                                <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque" >
                                     <cellValueFactory>
                                         <PropertyValueFactory property="value" />
                                     </cellValueFactory>
-                                </TableColumn>                            </columns>
+                                </TableColumn>
+                            </columns>
                         </TableView>
                     </VBox>
                 </HBox>

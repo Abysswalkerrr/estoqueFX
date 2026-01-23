@@ -267,7 +267,12 @@ public class Produto {
             for (Produto p : lista) {
                 Estoque.addProduto(p);
                 mapaCodigo.put(p.codigo, p);
+
+                String cat = p.getCategoria();
+                Categoria.addCategoria(cat);
+                Categoria.addProduto(cat, p);
             }
+
         }
     }
 
