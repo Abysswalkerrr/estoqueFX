@@ -12,7 +12,8 @@ import java.util.HashSet;
 //todo ícones
 //import
 //todo calendário?
-//todo classe categoria
+//todo apenas urgente só funciona depois de pesquisar
+//classe categoria
 //todo documentação
 //todo FAQ
 //todo README

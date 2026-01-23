@@ -815,7 +815,6 @@ public class EstoqueController {
         String tempo = Misc.getTime();
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
-        System.out.println("DEBUG onCriarProduto: Produto criado - " + novo.getNome() + " codigo: " + novo.getCodigo());
         if (novo.getCompra()){
             urgentes.add(novo);
         }
@@ -823,8 +822,6 @@ public class EstoqueController {
         c.addProduto(novo);
         Produto.addEstoque(novo);
         dados.setAll(Estoque.getProdutos());
-        System.out.println("DEBUG: dados.setAll chamado, tamanho do Estoque: " + Estoque.getProdutos().size());
-        System.out.println("DEBUG: tamanho do dados Observable: " + dados.size());
         atualizarTotal();
         atualizarResultado();
         carregarCategorias();
