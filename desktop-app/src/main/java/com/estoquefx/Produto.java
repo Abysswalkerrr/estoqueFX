@@ -111,20 +111,32 @@ public class Produto {
     }
 
     public static void addEstoque(Produto prod) {
+        System.out.println("DEBUG: addEstoque chamado para: " + prod.nome);
+        System.out.println("DEBUG: verificarUnico retornou: " + verificarUnico(prod));
+
         if (verificarUnico(prod)) {
+            System.out.println("DEBUG: Produto é único, adicionando...");
             Estoque.addProduto(prod);
+            System.out.println("DEBUG: Adicionado ao Estoque");
             mapaCodigo.put(prod.codigo, prod);
+            System.out.println("DEBUG: Adicionado ao mapaCodigo");
             Misc.addNome(prod.nome);
+            System.out.println("DEBUG: Nome adicionado: " + prod.nome);
             setUltimaAcao("c");
-        } else{
+        } else {
+            System.out.println("DEBUG: Produto não é único, atualizando existente");
             try {
-                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setQtd(prod.qtd);
-                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrMin(prod.vlrMin);
-                getProdutoPorCodigo(getCodigoPorNome(prod.nome)).setVlrUnd(prod.vlrUnd);
-
-                atualizaCompra(getProdutoPorCodigo(getCodigoPorNome(prod.nome)));
-
+                Produto existente = getProdutoPorCodigo(getCodigoPorNome(prod.nome));
+                if (existente == null) {
+                    System.out.println("DEBUG: ERRO - produto existente é NULL!");
+                } else {
+                    existente.setQtd(prod.qtd);
+                    existente.setVlrMin(prod.vlrMin);
+                    existente.setVlrUnd(prod.vlrUnd);
+                    atualizaCompra(existente);
+                }
             } catch (Exception ex) {
+                System.out.println("DEBUG: Exceção: " + ex.getMessage());
                 EstoqueController.mostrarInfoStatic("Erro", "Erro importar " + prod.nome + ": " + ex.getMessage());
             }
             setUltimaAcao("c");

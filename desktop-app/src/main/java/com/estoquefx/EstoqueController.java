@@ -720,32 +720,29 @@ public class EstoqueController {
 
     @FXML
     private void onCriarProduto() {
-        String nome = "";
-        String categoria = "";
-        while (nome.isBlank()) {
-            TextInputDialog dialogNome = new TextInputDialog();
-            dialogNome.setTitle("Criar Produto");
-            dialogNome.setHeaderText(null);
-            dialogNome.setContentText("Nome do produto:");
-            nome = dialogNome.showAndWait().orElse(null);
-            if (nome == null) return;
-            nome = nome.toUpperCase();
-            if (Misc.nomes.contains(nome)) {
-                String temp = "O produto " + nome + " já existe";
-                mostrarErro(temp);
-                return;
-            }
+        String nome;
+        String categoria;
+
+        TextInputDialog dialogNome = new TextInputDialog();
+        dialogNome.setTitle("Criar Produto");
+        dialogNome.setHeaderText(null);
+        dialogNome.setContentText("Nome do produto:");
+        nome = dialogNome.showAndWait().orElse(null);
+        if (nome == null || nome.isBlank()) return;
+        nome = nome.toUpperCase();
+        if (Misc.nomes.contains(nome)) {
+            String temp = "O produto " + nome + " já existe";
+            mostrarErro(temp);
+            return;
         }
 
-        while (categoria.isBlank()) {
-            TextInputDialog dialogCategoria = new TextInputDialog();
-            dialogCategoria.setTitle("Criar Produto");
-            dialogCategoria.setHeaderText(null);
-            dialogCategoria.setContentText("Categoria:");
-            categoria = dialogCategoria.showAndWait().orElse(null);
-            if (categoria == null) return;
-            categoria = categoria.toUpperCase();
-        }
+        TextInputDialog dialogCategoria = new TextInputDialog();
+        dialogCategoria.setTitle("Criar Produto");
+        dialogCategoria.setHeaderText(null);
+        dialogCategoria.setContentText("Categoria:");
+        categoria = dialogCategoria.showAndWait().orElse(null);
+        if (categoria == null || categoria.isBlank()) return;
+        categoria = categoria.toUpperCase();
 
 
         int qtdMin, qtd;
@@ -818,6 +815,7 @@ public class EstoqueController {
         String tempo = Misc.getTime();
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
+        System.out.println("DEBUG onCriarProduto: Produto criado - " + novo.getNome() + " codigo: " + novo.getCodigo());
         if (novo.getCompra()){
             urgentes.add(novo);
         }
@@ -825,6 +823,8 @@ public class EstoqueController {
         c.addProduto(novo);
         Produto.addEstoque(novo);
         dados.setAll(Estoque.getProdutos());
+        System.out.println("DEBUG: dados.setAll chamado, tamanho do Estoque: " + Estoque.getProdutos().size());
+        System.out.println("DEBUG: tamanho do dados Observable: " + dados.size());
         atualizarTotal();
         atualizarResultado();
         carregarCategorias();

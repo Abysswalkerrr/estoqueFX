@@ -36,12 +36,12 @@ public class Categoria {
     }
 
     public static Categoria getCategoria(String nome){
-        try{
-             categorias.get(nome);
-        } catch(Exception e){
+        Categoria cat = categorias.get(nome);
+        if (cat == null) {
             addCategoria(nome);
+            cat = categorias.get(nome);
         }
-        return categorias.get(nome);
+        return cat;
     }
 
     public static ArrayList<Categoria> getCategorias(){
