@@ -37,4 +37,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/desktop-app/src/main/java/com/estoquefx/SupabaseConfig.java
+/desktop-app/src/main/resources/config.properties

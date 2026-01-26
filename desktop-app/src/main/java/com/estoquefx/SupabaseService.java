@@ -13,8 +13,8 @@ public class SupabaseService {
 
     public SupabaseService() {
         this.client = new OkHttpClient();
-        this.baseUrl = SupabaseConfig.SUPABASE_URL;
-        this.apiKey = SupabaseConfig.SUPABASE_KEY;
+        this.baseUrl = SupabaseConfig.getSupabaseUrl();
+        this.apiKey = SupabaseConfig.getSupabaseKey();
     }
 
     // LOGIN
@@ -74,7 +74,6 @@ public class SupabaseService {
 
         JsonObject json = new JsonObject();
         json.addProperty("nome", nomeEstoque);
-        // NÃO adicione usuario_id aqui - o trigger faz automaticamente
 
         RequestBody body = RequestBody.create(
                 json.toString(),
