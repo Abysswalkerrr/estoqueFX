@@ -15,8 +15,10 @@ import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.print.*;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -444,8 +446,7 @@ public class EstoqueController {
         ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
         for (Categoria cat : Categoria.getCategorias()) {
             dadosChart.add(new PieChart.Data(
-                    cat.getNome() + " (R$ " + String.format("%.2f", cat.getValor()) + ")",
-                    cat.getValor()
+                    cat.getNome() + " (R$ " + String.format("%.2f", cat.getValor()) + ")", cat.getValor()
             ));
         }
         pieCategoriasR.setData(dadosChart);
@@ -453,6 +454,16 @@ public class EstoqueController {
 
         qtdCategorias.set(String.valueOf(Categoria.getCategorias().size()));
     }
+
+    private SupabaseService supabaseService;
+    private String estoqueId;
+
+    public void setEstoqueAtual(String estoqueId, String estoqueNome, SupabaseService service) {
+        this.estoqueId = estoqueId;
+        this.supabaseService = service;
+        // Atualizar título ou label se quiser mostrar qual estoque está aberto
+    }
+
 
     public void contaUrgentes(){
         for (Produto produto : Estoque.getProdutos()) {
@@ -898,14 +909,116 @@ public class EstoqueController {
     @FXML
     private void onSalvar() {
         try {
+            // Salvar localmente primeiro (backup)
             atualizarUltimaAlteracao();
             Leitor.salvarEstoque(Estoque.getProdutos());
-            Produto.setUltimaAcao("s");
-            new Alert(Alert.AlertType.INFORMATION, "Estoque salvo com sucesso.").showAndWait();
+
+            // Salvar no Supabase se estiver conectado
+            if (supabaseService != null && estoqueId != null) {
+                salvarNoSupabase();
+            } else {
+                new Alert(Alert.AlertType.INFORMATION, "Estoque salvo localmente.").showAndWait();
+                Produto.setUltimaAcao("s");
+            }
+
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Erro ao salvar: " + e.getMessage()).showAndWait();
         }
     }
+
+    private void salvarNoSupabase() {
+        Alert progresso = new Alert(Alert.AlertType.INFORMATION);
+        progresso.setTitle("Salvando");
+        progresso.setHeaderText("Sincronizando com servidor...");
+        progresso.setContentText("Aguarde...");
+        progresso.show();
+
+        new Thread(() -> {
+            try {
+                // 1. Deletar produtos antigos do estoque no servidor
+                supabaseService.deletarProdutosEstoque(estoqueId);
+
+                // 2. Inserir todos os produtos atuais
+                for (Produto p : Estoque.getProdutos()) {
+                    supabaseService.salvarProduto(p, estoqueId);
+                }
+
+                Platform.runLater(() -> {
+                    progresso.close();
+                    new Alert(Alert.AlertType.INFORMATION,
+                            "Estoque salvo localmente e sincronizado com servidor!").showAndWait();
+                    Produto.setUltimaAcao("s");
+                });
+
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    progresso.close();
+                    Alert erro = new Alert(Alert.AlertType.WARNING);
+                    erro.setTitle("Erro na sincronização");
+                    erro.setHeaderText("Salvo localmente, mas falha no servidor");
+                    erro.setContentText("Erro: " + e.getMessage() +
+                            "\n\nSeus dados estão salvos localmente.");
+                    erro.showAndWait();
+                });
+            }
+        }).start();
+    }
+
+    @FXML
+    private void onTrocarEstoque() {
+        if (!"s".equals(Produto.getUltimaAcao()) && !"i".equals(Produto.getUltimaAcao())) {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Trocar de Estoque");
+            confirm.setHeaderText("Existem alterações não salvas");
+            confirm.setContentText("Deseja salvar antes de trocar?");
+            confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    onSalvar();
+                    voltarParaSelecao();
+                } else if (response == ButtonType.NO) {
+                    voltarParaSelecao();
+                }
+                // CANCEL = não faz nada
+            });
+        } else {
+            voltarParaSelecao();
+        }
+    }
+
+    @FXML
+    private void onSair() {
+        Stage stage = (Stage) tabela.getScene().getWindow();
+        stage.close();
+    }
+
+    private void voltarParaSelecao() {
+        try {
+            // Limpar dados locais
+            Estoque.getProdutos().clear();
+            Categoria.categorias.clear();
+            Misc.nomes.clear();
+
+            // Voltar para tela de seleção
+            Stage stage = (Stage) tabela.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(
+                    EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
+            );
+            Scene scene = new Scene(loader.load(), 500, 400);
+
+            SelecaoEstoqueController controller = loader.getController();
+            controller.setSupabaseService(supabaseService);
+
+            stage.setScene(scene);
+            stage.setTitle("Selecionar Estoque");
+
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Erro ao voltar: " + e.getMessage()).showAndWait();
+        }
+    }
+
 
     @FXML
     private void onExportarCsv() {

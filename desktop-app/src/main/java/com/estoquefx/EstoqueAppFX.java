@@ -21,14 +21,15 @@ public class EstoqueAppFX extends Application {
     public void start(Stage stage) throws IOException {
         hostServicesRef = getHostServices();
 
-        Produto.preencher(Leitor.carregarEstoque());
+        /*Produto.preencher(Leitor.carregarEstoque());
         Misc.carregaCategorias();
         Misc.carregaNomes();
         Misc.atualizaTotal();
+         */
 
-        FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("estoque-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("EstoqueFX");
+        stage.setTitle("EstoqueFX-login");
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {

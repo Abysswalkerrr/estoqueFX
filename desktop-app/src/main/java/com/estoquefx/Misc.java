@@ -14,6 +14,7 @@ import java.util.HashSet;
 //todo calendário?
 //todo apenas urgente só funciona depois de pesquisar
 //classe categoria
+//todo supabase
 //todo documentação
 //todo FAQ
 //todo README

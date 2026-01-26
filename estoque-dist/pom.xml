@@ -54,7 +54,7 @@
                 <version>1.6.6</version>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
-                    <appVersion>2.0.0</appVersion>
+                    <appVersion>3.0.0</appVersion>
                     <vendor>Valube</vendor>
                     <copyright>© 2026 Valube</copyright>
                     <description>Sistema de Estoque FX</description>
