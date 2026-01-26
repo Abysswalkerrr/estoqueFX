@@ -1,5 +1,7 @@
 package com.estoquefx;
 
+import com.estoquefx.service.SupabaseService;
+
 public class TesteSupabase {
     public static void main(String[] args) {
         try {

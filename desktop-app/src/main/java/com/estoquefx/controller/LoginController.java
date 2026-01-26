@@ -1,5 +1,7 @@
-package com.estoquefx;
+package com.estoquefx.controller;
 
+import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.service.SupabaseService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

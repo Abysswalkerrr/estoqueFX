@@ -7,7 +7,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.estoquefx.SelecaoEstoqueController"
+      fx:controller="com.estoquefx.controller.SelecaoEstoqueController"
       alignment="CENTER" spacing="20" prefWidth="500" prefHeight="400"
       style="-fx-background-color: #f5f5f5;">
 

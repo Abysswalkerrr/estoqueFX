@@ -7,7 +7,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.estoquefx.LoginController"
+      fx:controller="com.estoquefx.controller.LoginController"
       alignment="CENTER" spacing="20" prefWidth="400" prefHeight="500"
       style="-fx-background-color: #f5f5f5;">
 

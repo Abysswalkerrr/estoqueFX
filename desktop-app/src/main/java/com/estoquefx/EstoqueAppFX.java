@@ -1,6 +1,12 @@
 package com.estoquefx;
 
+import com.estoquefx.controller.EstoqueController;
+import com.estoquefx.model.Estoque;
+import com.estoquefx.model.Produto;
+import com.estoquefx.service.Leitor;
 import com.estoquefx.updater.core.*;
+
+import com.estoquefx.util.Misc;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -21,10 +27,10 @@ public class EstoqueAppFX extends Application {
     public void start(Stage stage) throws IOException {
         hostServicesRef = getHostServices();
 
-        /*Produto.preencher(Leitor.carregarEstoque());
-        Misc.carregaCategorias();
-        Misc.carregaNomes();
-        Misc.atualizaTotal();
+        /*ProdutoService.preencher(Leitor.carregarEstoque());
+        EstoqueService.carregaCategorias();
+        EstoqueService.carregaNomes();
+        EstoqueService.atualizaTotal();
          */
 
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"));

@@ -1,4 +1,4 @@
-package com.estoquefx;
+package com.estoquefx.util;
 
 import java.io.IOException;
 import java.io.InputStream;

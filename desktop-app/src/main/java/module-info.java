@@ -11,7 +11,16 @@ module com.estoquefx {
     requires java.desktop;
     requires okhttp3;
     requires com.google.gson;
+    requires resend.java;
 
     opens com.estoquefx to javafx.fxml;
     exports com.estoquefx;
+    exports com.estoquefx.model;
+    opens com.estoquefx.model to javafx.fxml;
+    exports com.estoquefx.controller;
+    opens com.estoquefx.controller to javafx.fxml;
+    exports com.estoquefx.service;
+    opens com.estoquefx.service to javafx.fxml;
+    exports com.estoquefx.util;
+    opens com.estoquefx.util to javafx.fxml;
 }

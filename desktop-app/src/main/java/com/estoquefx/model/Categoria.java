@@ -1,4 +1,4 @@
-package com.estoquefx;
+package com.estoquefx.model;
 
 import java.util.*;
 
@@ -43,7 +43,6 @@ public class Categoria {
         }
         return cat;
     }
-
     public static ArrayList<Categoria> getCategorias(){
         ArrayList<Categoria> cat = new ArrayList<>();
         for (Map.Entry<String, Categoria> entry : categorias.entrySet()){

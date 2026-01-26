@@ -1,5 +1,13 @@
-package com.estoquefx;
+package com.estoquefx.controller;
 
+import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.service.EstoqueService;
+import com.estoquefx.service.ProdutoService;
+import com.estoquefx.util.Misc;
+import com.estoquefx.service.SupabaseService;
+import com.estoquefx.model.Categoria;
+import com.estoquefx.model.Estoque;
+import com.estoquefx.model.Produto;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -155,12 +163,12 @@ public class SelecaoEstoqueController {
         // Preencher dados locais
         Estoque.getProdutos().clear();
         produtos.forEach(p -> {
-            Produto.addEstoque(p);
+            ProdutoService.addEstoque(p);
             Categoria.addCategoria(p.getCategoria());
             Categoria.addProduto(p.getCategoria(), p);
         });
-        Misc.carregaNomes();
-        Misc.atualizaTotal();
+        EstoqueService.carregaNomes();
+        EstoqueService.atualizaTotal();
 
         // Abrir tela principal
         Stage stage = (Stage) btnAbrir.getScene().getWindow();

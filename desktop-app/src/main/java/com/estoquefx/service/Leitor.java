@@ -1,4 +1,8 @@
-package com.estoquefx;
+package com.estoquefx.service;
+
+import com.estoquefx.controller.EstoqueController;
+import com.estoquefx.model.Produto;
+import com.estoquefx.util.Misc;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -140,7 +144,7 @@ public class Leitor {
                         if (!partes[1].isEmpty() && !partes[2].isEmpty() &&
                                 Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4]) && Misc.isNumeric(partes[5])) {
                             Produto temp = infoProduto(partes);
-                            Produto.addEstoque(temp);
+                            ProdutoService.addEstoque(temp);
                         }
                     }
                     //sem codigo
@@ -154,7 +158,7 @@ public class Leitor {
                         Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0],
                                 partes[1], Integer.parseInt(partes[2]), Double.parseDouble(partes[3]),
                                 Integer.parseInt(partes[4]), partes[5], partes[6]);
-                        Produto.addEstoque(temp);
+                        ProdutoService.addEstoque(temp);
                     }
                 // nome -> categoria -> vlrMin -> vlrUnd -> qtd
                 } else if (partes.length == 5) {
@@ -163,7 +167,7 @@ public class Leitor {
                         Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0], partes[1],
                                 Integer.parseInt(partes[2]), Double.parseDouble(partes[3]),
                                 Integer.parseInt(partes[4]), "", Misc.getTime());
-                        Produto.addEstoque(temp);
+                        ProdutoService.addEstoque(temp);
                     }
                 }
             } catch (Exception e) {

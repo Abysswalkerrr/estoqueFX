@@ -1,9 +1,18 @@
-package com.estoquefx;
+package com.estoquefx.controller;
 
 
+import com.estoquefx.*;
+import com.estoquefx.model.Categoria;
+import com.estoquefx.model.Estoque;
+import com.estoquefx.model.Produto;
+import com.estoquefx.service.EstoqueService;
+import com.estoquefx.service.Leitor;
+import com.estoquefx.service.ProdutoService;
+import com.estoquefx.service.SupabaseService;
 import com.estoquefx.updater.core.*;
 
 
+import com.estoquefx.util.Misc;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -50,7 +59,7 @@ import java.util.function.LongConsumer;
 public class EstoqueController {
 
     @FXML private Label lblValorTotalR;
-    private String vlr = String.format("%.2f", Misc.getTotal());
+    private String vlr = String.format("%.2f", Estoque.getSaldo());
     private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
 
     @FXML private Label lblQtdProdutosR;
@@ -79,7 +88,7 @@ public class EstoqueController {
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
 
     @FXML private Label lblSaldoTotal;
-    private String saldo = String.format("%.2f", Misc.getTotal());
+    private String saldo = String.format("%.2f", Estoque.getSaldo());
     private StringProperty saldoTotal = new SimpleStringProperty("Saldo total: " + "R$ " + saldo);
 
     @FXML private Label lblResultados;
@@ -151,11 +160,11 @@ public class EstoqueController {
         colHora.setCellValueFactory(new PropertyValueFactory<>("alterHora"));
 
 
-        colOrientacao.setCellValueFactory(cellData ->
-                new SimpleStringProperty(
-                        Misc.isUrgente(cellData.getValue())
-                )
-        );
+        colOrientacao.setCellValueFactory(cellData -> {
+            Produto p = cellData.getValue();
+            return new SimpleStringProperty(p.getCompra() ? "Compra urgente" : "Estoque suficiente");
+        });
+
         colSaldo.setCellValueFactory(cellData -> {
             Produto p = cellData.getValue();
             double saldo = p.getVlrUnd() * p.getQtd();
@@ -207,7 +216,7 @@ public class EstoqueController {
                 p.setVlrMin(novoMin);
                 p.setAlterHora(Misc.getTime());
                 boolean a = p.getCompra();
-                Produto.atualizaCompra(p);
+                p.atualizaCompra();
                 if (a != p.getCompra()) {
                     atualizaUrgentes(p);
                 }
@@ -225,7 +234,7 @@ public class EstoqueController {
                 int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setQtd(novaQtd);
                 boolean a = p.getCompra();
-                Produto.atualizaCompra(p);
+                p.atualizaCompra();
                 if (a != p.getCompra()) {
                     atualizaUrgentes(p);
                 }
@@ -708,8 +717,8 @@ public class EstoqueController {
     public void carregarUltimaAlteracao(){ultimaAlteracao.set("Salvo em: " + Misc.getUltimaAtualizacao());}
 
     public void atualizarTotal(){
-        Misc.atualizaTotal();
-        String saldo = String.format("%.2f", Misc.getTotal());
+        EstoqueService.atualizaTotal();
+        String saldo = String.format("%.2f", Estoque.getSaldo());
         saldoTotal.set("Saldo total: " + "R$ " + saldo);
         vlrTotal.set("R$ " + saldo);
         atualizarRelatorio();
@@ -831,7 +840,7 @@ public class EstoqueController {
         }
         Categoria c = Categoria.getCategoria(categoria);
         c.addProduto(novo);
-        Produto.addEstoque(novo);
+        ProdutoService.addEstoque(novo);
         dados.setAll(Estoque.getProdutos());
         atualizarTotal();
         atualizarResultado();
@@ -851,7 +860,7 @@ public class EstoqueController {
         dialogQtd.setContentText("Quantidade a entrar:");
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
-            Produto.entrada(qtd, nome);
+            ProdutoService.entrada(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
 
@@ -859,7 +868,7 @@ public class EstoqueController {
             if (p != null) {
                 p.setAlterHora(Misc.getTime());
                 boolean a = p.getCompra();
-                Produto.atualizaCompra(p);
+                p.atualizaCompra();
                 if (a == p.getCompra()) {
                     atualizaUrgentes(p);
                 }
@@ -885,7 +894,7 @@ public class EstoqueController {
         dialogQtd.setContentText("Quantidade a retirar:");
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
-            Produto.saida(qtd, nome);
+            ProdutoService.saida(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
 
@@ -893,7 +902,7 @@ public class EstoqueController {
                 p.setAlterHora(Misc.getTime());
 
                 boolean a = p.getCompra();
-                Produto.atualizaCompra(p);
+                p.atualizaCompra();
                 if (a == p.getCompra()) {
                     atualizaUrgentes(p);
                 }
@@ -1210,7 +1219,7 @@ public class EstoqueController {
     @FXML
     private void atualizarDashboard() {
         atualizarTotal();
-        double total = Misc.getTotal();
+        double total = Estoque.getSaldo();
         qtdProdutos.set(String.valueOf(Estoque.getProdutos().size()));
 
         Map<String, Double> mapa = calcularValorPorCategoria();
