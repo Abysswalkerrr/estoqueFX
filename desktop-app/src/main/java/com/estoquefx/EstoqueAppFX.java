@@ -7,6 +7,7 @@ import com.estoquefx.service.Leitor;
 import com.estoquefx.updater.core.*;
 
 import com.estoquefx.util.Misc;
+import com.estoquefx.util.Time;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -57,7 +58,7 @@ public class EstoqueAppFX extends Application {
                 event.consume(); // não fecha
             } else if (result.get() == btnSalvar) {
                 try {
-                    Misc.updateTime();
+                    Time.updateTime();
                     Leitor.salvarEstoque(Estoque.getProdutos());
                     Produto.setUltimaAcao("i"); // salvo
                 } catch (IOException e) {

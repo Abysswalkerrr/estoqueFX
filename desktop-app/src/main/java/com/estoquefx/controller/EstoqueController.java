@@ -1,21 +1,16 @@
 package com.estoquefx.controller;
 
 
-import com.estoquefx.*;
-import com.estoquefx.model.Categoria;
-import com.estoquefx.model.Estoque;
-import com.estoquefx.model.Produto;
-import com.estoquefx.service.EstoqueService;
-import com.estoquefx.service.Leitor;
-import com.estoquefx.service.ProdutoService;
-import com.estoquefx.service.SupabaseService;
+import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.model.*;
+import com.estoquefx.service.*;
 import com.estoquefx.updater.core.*;
 
 
 import com.estoquefx.util.Misc;
+import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -46,7 +41,6 @@ import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.control.textfield.*;
 
 import javafx.util.StringConverter;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -81,7 +75,7 @@ public class EstoqueController {
 
 
     @FXML private CheckBox boxApenasUrgente;
-    @FXML private ComboBox boxCategorias;
+    @FXML private ComboBox<String> boxCategorias;
 
 
     @FXML private Label lblUltimaAlteracao;
@@ -214,7 +208,7 @@ public class EstoqueController {
             try {
                 int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
                 p.setVlrMin(novoMin);
-                p.setAlterHora(Misc.getTime());
+                p.setAlterHora(Time.getTime());
                 boolean a = p.getCompra();
                 p.atualizaCompra();
                 if (a != p.getCompra()) {
@@ -238,7 +232,7 @@ public class EstoqueController {
                 if (a != p.getCompra()) {
                     atualizaUrgentes(p);
                 }
-                p.setAlterHora(Misc.getTime());
+                p.setAlterHora(Time.getTime());
                 atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
@@ -265,7 +259,7 @@ public class EstoqueController {
                 texto = texto.replace("R$", "");
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
-                p.setAlterHora(Misc.getTime());
+                p.setAlterHora(Time.getTime());
                 atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {
@@ -307,9 +301,6 @@ public class EstoqueController {
 
                 TableRow<?> row = getTableRow();
                 if (row != null) {
-                    ChangeListener<String> styleListener = (_, _, _) -> {
-                        atualizarCor(row);
-                    };
                     row.getStyleClass().addListener((ListChangeListener<String>) c -> {
                         while (c.next()) {
                             if (c.wasAdded() || c.wasRemoved()) {
@@ -484,8 +475,8 @@ public class EstoqueController {
     }
 
     private void atualizarFiltro(){
-        String categoria = boxCategorias.getValue().toString();
-        if (categoria == null || categoria.isEmpty()) {categoria = "";}
+        String categoria = boxCategorias.getValue();
+        if (categoria.isEmpty()) {categoria = "";}
         //pq isso seria final?
         String finalCategoria = categoria.toUpperCase();
 
@@ -497,12 +488,13 @@ public class EstoqueController {
                 String cat  = produto.getCategoria() == null ? "" : produto.getCategoria().toUpperCase();
                 String cod  = produto.getCodigo() == null ? "" : produto.getCodigo().toUpperCase();
 
-                if (busca.equalsIgnoreCase("urgente")){
-                    return (finalCategoria.isEmpty() || cat.contains(finalCategoria))
+            boolean categoriaVazia = finalCategoria.isEmpty() || cat.contains(finalCategoria);
+            if (busca.equalsIgnoreCase("urgente")){
+                    return categoriaVazia
                             && nome.contains(busca);
                 }
 
-                return  (finalCategoria.isEmpty() || cat.contains(finalCategoria))
+                return  categoriaVazia
                         &&
                         (nome.contains(busca) || cod.contains(busca));
             });
@@ -710,7 +702,7 @@ public class EstoqueController {
     }
 
     public void atualizarUltimaAlteracao() {
-        Misc.updateTime();
+        Time.updateTime();
         carregarUltimaAlteracao();
     }
 
@@ -750,7 +742,7 @@ public class EstoqueController {
         nome = dialogNome.showAndWait().orElse(null);
         if (nome == null || nome.isBlank()) return;
         nome = nome.toUpperCase();
-        if (Misc.nomes.contains(nome)) {
+        if (Estoque.getNomes().contains(nome)) {
             String temp = "O produto " + nome + " já existe";
             mostrarErro(temp);
             return;
@@ -832,7 +824,7 @@ public class EstoqueController {
             r = 1;
         } while  (qtd < 0);
 
-        String tempo = Misc.getTime();
+        String tempo = Time.getTime();
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
         if (novo.getCompra()){
@@ -850,7 +842,7 @@ public class EstoqueController {
 
     @FXML
     private void onEntrada() {
-        String nome = pedirProduto(Misc.nomes, "Entrada de produto");
+        String nome = pedirProduto(Estoque.getNomes(), "Entrada de produto");
         if (nome == null) return;
         nome = nome.trim().toUpperCase();
 
@@ -866,7 +858,7 @@ public class EstoqueController {
 
 
             if (p != null) {
-                p.setAlterHora(Misc.getTime());
+                p.setAlterHora(Time.getTime());
                 boolean a = p.getCompra();
                 p.atualizaCompra();
                 if (a == p.getCompra()) {
@@ -884,7 +876,7 @@ public class EstoqueController {
     @FXML
     private void onSaida() {
 
-        String nome = pedirProduto(Misc.nomes, "Saida de produto");
+        String nome = pedirProduto(Estoque.getNomes(), "Saida de produto");
         if (nome.isEmpty()) return;
         nome = nome.toUpperCase();
 
@@ -899,7 +891,7 @@ public class EstoqueController {
             Produto p = Produto.getProdutoPorCodigo(codigo);
 
             if (p != null) {
-                p.setAlterHora(Misc.getTime());
+                p.setAlterHora(Time.getTime());
 
                 boolean a = p.getCompra();
                 p.atualizaCompra();
@@ -1007,7 +999,7 @@ public class EstoqueController {
             // Limpar dados locais
             Estoque.getProdutos().clear();
             Categoria.categorias.clear();
-            Misc.nomes.clear();
+            Estoque.getNomes().clear();
 
             // Voltar para tela de seleção
             Stage stage = (Stage) tabela.getScene().getWindow();

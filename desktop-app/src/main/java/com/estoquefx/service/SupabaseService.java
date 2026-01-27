@@ -19,7 +19,6 @@ public class SupabaseService {
         this.apiKey = SupabaseConfig.getSupabaseKey();
     }
 
-    // LOGIN
     public boolean login(String email, String senha) throws IOException {
         JsonObject json = new JsonObject();
         json.addProperty("email", email);
@@ -48,7 +47,6 @@ public class SupabaseService {
         return false;
     }
 
-    // REGISTRAR NOVO USUÁRIO
     public boolean registrar(String email, String senha) throws IOException {
         JsonObject json = new JsonObject();
         json.addProperty("email", email);
@@ -70,7 +68,7 @@ public class SupabaseService {
         return response.isSuccessful();
     }
 
-    // CRIAR ESTOQUE (após login)
+    // equivalente ao preencher de antes
     public String criarEstoque(String nomeEstoque) throws IOException {
         if (authToken == null) throw new IllegalStateException("Usuário não logado");
 
@@ -103,7 +101,7 @@ public class SupabaseService {
         String errorBody = response.body() != null ? response.body().string() : "sem detalhes";
         throw new IOException("Erro ao criar estoque: " + response.code() + " - " + errorBody);
     }
-    // BUSCAR ESTOQUES DO USUÁRIO
+
     public List<JsonObject> listarEstoques() throws IOException {
         if (authToken == null) throw new IllegalStateException("Usuário não logado");
 
@@ -127,7 +125,7 @@ public class SupabaseService {
         throw new IOException("Erro ao listar estoques: " + response.code());
     }
 
-    // DELETAR todos produtos de um estoque (antes de salvar novamente)
+    // apaga pra reescrever
     public void deletarProdutosEstoque(String estoqueId) throws IOException {
         if (authToken == null) throw new IllegalStateException("Usuário não logado");
 
@@ -145,8 +143,6 @@ public class SupabaseService {
         }
     }
 
-
-    // SALVAR PRODUTO
     public void salvarProduto(Produto produto, String estoqueId) throws IOException {
         if (authToken == null) throw new IllegalStateException("Usuário não logado");
 
@@ -180,7 +176,6 @@ public class SupabaseService {
         }
     }
 
-    // BUSCAR PRODUTOS DE UM ESTOQUE
     public List<Produto> carregarProdutos(String estoqueId) throws IOException {
         if (authToken == null) throw new IllegalStateException("Usuário não logado");
 

@@ -13,41 +13,42 @@
         <dependency>
             <groupId>com.resend</groupId>
             <artifactId>resend-java</artifactId>
-            <version>4.12.0</version>
+            <version>LATEST</version>
             <scope>compile</scope>
-        </dependency>        <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>25.0.2</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>25.0.2</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.2.2</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>com.dlsc.formsfx</groupId>
             <artifactId>formsfx-core</artifactId>
-            <version>11.4.1</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
-            <version>12.4.0</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>org.kordamp.bootstrapfx</groupId>
             <artifactId>bootstrapfx-core</artifactId>
-            <version>0.4.0</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>com.estoquefx</groupId>
@@ -58,13 +59,13 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.10.1</version>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
     <build>
@@ -72,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>LATEST</version>
                 <configuration>
                     <source>25</source>
                     <target>25</target>
@@ -81,7 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>LATEST</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

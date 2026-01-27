@@ -24,6 +24,7 @@ public class Estoque {
     public static void removeNome(String nome){
         nomes.remove(nome);
     }
+    public static HashSet<String> getNomes(){return nomes;}
 
     public static double getSaldo(){return saldo;}
     public static void setSaldo(double saldo){

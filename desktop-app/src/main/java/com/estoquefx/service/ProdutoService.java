@@ -42,7 +42,7 @@ public class ProdutoService {
             // adiciona normal
             Estoque.addProduto(prod);
             Produto.mapaCodigo.put(prod.getCodigo(), prod);
-            Misc.addNome(prod.getNome());
+            Estoque.addNome(prod.getNome());
             Produto.setUltimaAcao("c");
         } else {
             try {

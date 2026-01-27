@@ -48,7 +48,14 @@ public class Misc {
                 c++;
             }
         }
-        qtdUrgentes = c;
+        setUrgentes(c);
+    }
+
+    public static void setUrgentes(int urgentes){
+        qtdUrgentes = urgentes;
+    }
+    public static int getUrgentes(){
+        return  qtdUrgentes;
     }
 
 
@@ -74,14 +81,6 @@ public class Misc {
     public static boolean getNegouAtualizacao(){return negouAtualizacao;}
 
 
-    public static void updateTime(){
-        LocalDateTime hora = LocalDateTime.now();
-        setUltimaAtualizacao(hora.format(DateTimeFormatter.ofPattern("dd/MM HH:mm")));
-    }
-    public static String getTime(){
-        LocalDateTime tempo = LocalDateTime.now();
-        return tempo.format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
-    }
 
     //muito provavelmente não vai ser mais usado
     public static boolean isNumeric(String n) {

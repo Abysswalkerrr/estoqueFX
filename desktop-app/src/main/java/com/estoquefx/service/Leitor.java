@@ -3,6 +3,7 @@ package com.estoquefx.service;
 import com.estoquefx.controller.EstoqueController;
 import com.estoquefx.model.Produto;
 import com.estoquefx.util.Misc;
+import com.estoquefx.util.Time;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,9 +15,9 @@ import javax.swing.filechooser.FileSystemView;
 
 public class Leitor {
     static String nomeArquivo = "estoque.txt";
-    static String nomePasta = "Sistema estoque";
+    public static String nomePasta = "Sistema estoque";
     static String nomeMisc = "misc.txt";
-    static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
+    public static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
 
     public static LinkedHashSet<Produto> carregarEstoque() throws IOException {
         LinkedHashSet<Produto> estoque = new LinkedHashSet<>();
@@ -152,7 +153,7 @@ public class Leitor {
                             Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
                         if (partes.length >= 7) {
                             if (partes[6].isEmpty()) {
-                                partes[6] = Misc.getTime();
+                                partes[6] = Time.getTime();
                             }
                         }
                         Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0],
@@ -166,7 +167,7 @@ public class Leitor {
                             Misc.isNumeric(partes[3]) && Misc.isNumeric(partes[4])) {
                         Produto temp = new Produto(String.valueOf(Produto.getProximoCodigo()), partes[0], partes[1],
                                 Integer.parseInt(partes[2]), Double.parseDouble(partes[3]),
-                                Integer.parseInt(partes[4]), "", Misc.getTime());
+                                Integer.parseInt(partes[4]), "", Time.getTime());
                         ProdutoService.addEstoque(temp);
                     }
                 }
