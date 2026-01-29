@@ -34,6 +34,17 @@ public class EstoqueAppFX extends Application {
         EstoqueService.atualizaTotal();
          */
 
+        try{
+            Leitor.carregarMisc();
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Erro ao carregar preferências.");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("EstoqueFX-login");

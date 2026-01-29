@@ -5,12 +5,9 @@ import com.estoquefx.model.Produto;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
-import java.io.IOException;
 import javax.swing.filechooser.FileSystemView;
 
 public class Leitor {
@@ -23,7 +20,6 @@ public class Leitor {
         LinkedHashSet<Produto> estoque = new LinkedHashSet<>();
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo = new File(pastaApp, nomeArquivo);
-        File misc = new File(pastaApp, nomeMisc);
 
         // Criar pasta se não existir
         if (!pastaApp.exists()) {
@@ -52,7 +48,18 @@ public class Leitor {
             System.out.println("Nenhum estoque foi encontrado. Criando novo...");
         }
 
-        // Carregar configurações do misc.txt
+        return estoque;
+    }
+
+    public static void carregarMisc() throws IOException {
+        File pastaApp = new File(pastaDocs, nomePasta);
+        File misc = new File(pastaApp, nomeMisc);
+
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+            System.out.println("Pasta criada: " + pastaApp.getAbsolutePath());
+        }
+
         if (misc.exists()) {
             Scanner scm = new Scanner(misc);
             if (scm.hasNextLine()) {
@@ -74,7 +81,6 @@ public class Leitor {
             criarArquivoMiscPadrao(misc);
         }
 
-        return estoque;
     }
 
     private static void criarArquivoMiscPadrao(File misc) throws IOException {
