@@ -35,7 +35,7 @@ public class Produto {
         this.alterHora = alterHora;
     }
 
-    // Construtor para produtos carregados do arquivo (código já existe)
+    // Construtor para produtos carregados do arquivo (código já existe) - talvez obsoleto
     public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd,
                    String descricao, String alterHora) {
         this.codigo = codigo;

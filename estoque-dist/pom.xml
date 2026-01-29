@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>LATEST</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -51,7 +51,7 @@
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>LATEST</version>
+                <version>1.6.6</version>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
                     <appVersion>3.0.0</appVersion>
@@ -80,7 +80,8 @@
                         <option>--add-exports=javafx.base/com.sun.javafx.binding=ALL-UNNAMED</option>
                     </javaOptions>
                 </configuration>
-            </plugin>        </plugins>
+            </plugin>
+        </plugins>
     </build>
 
     <properties>

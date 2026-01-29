@@ -36,7 +36,7 @@ public class SelecaoEstoqueController {
 
     @FXML
     public void initialize() {
-        // Duplo clique para abrir
+        // double click gamer
         listaEstoques.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !listaEstoques.getSelectionModel().isEmpty()) {
                 onAbrirEstoque();
@@ -56,7 +56,7 @@ public class SelecaoEstoqueController {
                     listaEstoques.getItems().clear();
 
                     if (estoquesData.isEmpty()) {
-                        lblStatus.setText("Nenhum estoque encontrado. Crie um novo!");
+                        lblStatus.setText("Nenhum estoque encontrado. Crie um novo!"); //acho que sempre tem um inicial mas sla
                         lblStatus.setStyle("-fx-text-fill: #7f8c8d;");
                     } else {
                         estoquesData.forEach(estoque -> {
@@ -136,7 +136,7 @@ public class SelecaoEstoqueController {
 
         new Thread(() -> {
             try {
-                // Carregar produtos do estoque
+                // programa velho começa aq basicamente
                 List<Produto> produtos = supabaseService.carregarProdutos(estoqueId);
 
                 Platform.runLater(() -> {
@@ -160,7 +160,7 @@ public class SelecaoEstoqueController {
     }
 
     private void abrirTelaEstoque(String estoqueId, String estoqueNome, List<Produto> produtos) throws IOException {
-        // Preencher dados locais
+        // initialize og
         Estoque.getProdutos().clear();
         produtos.forEach(p -> {
             ProdutoService.addEstoque(p);
@@ -170,7 +170,6 @@ public class SelecaoEstoqueController {
         EstoqueService.carregaNomes();
         EstoqueService.atualizaTotal();
 
-        // Abrir tela principal
         Stage stage = (Stage) btnAbrir.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(
                 EstoqueAppFX.class.getResource("estoque-view.fxml")

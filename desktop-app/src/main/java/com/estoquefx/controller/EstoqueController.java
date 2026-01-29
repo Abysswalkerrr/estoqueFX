@@ -450,7 +450,6 @@ public class EstoqueController {
             ));
         }
         pieCategoriasR.setData(dadosChart);
-        pieCategoriasR.setTitle("Valor por Categoria");
 
         qtdCategorias.set(String.valueOf(Categoria.getCategorias().size()));
     }
@@ -1225,7 +1224,6 @@ public class EstoqueController {
             ));
         }
         pieCategoriasR.setData(dadosChart);
-        pieCategoriasR.setTitle("Valor por Categoria");
     }
 
     public Map<String, Double> calcularValorPorCategoria(){

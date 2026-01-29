@@ -2,9 +2,9 @@
 
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.EstoqueController">
     <Tab closable="false" text="Tabela">
         <BorderPane stylesheets="@style.css">
@@ -15,7 +15,7 @@
                         <Menu text="Ajuda">
                             <MenuItem onAction="#onReportarBug" text="Relatar problema" />
                             <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
-                            <MenuItem text="Sair" onAction="#onSair"/>
+                            <MenuItem onAction="#onSair" text="Sair" />
                             <MenuItem onAction="#onSobre" text="Sobre" />
                         </Menu>
                         <Menu text="Arquivo">
@@ -48,9 +48,8 @@
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
-                            <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0"
-                                      promptText="Escolher categoria"/>
-                            <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes"/>
+                            <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0" promptText="Escolher categoria" />
+                            <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
                         </VBox>
                         <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0" promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
                     </HBox>
@@ -109,25 +108,23 @@
                     </VBox>
                 </HBox>
 
-                <!-- Linha 2: gráfico e tabela -->
+                <!-- gráfico e tabela -->
                 <HBox spacing="10" VBox.vgrow="ALWAYS">
-                    <!-- Gráfico de pizza -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (gráfico)" />
-                        <PieChart fx:id="pieCategoriasR" prefHeight="300" title="teste" />
+                        <PieChart fx:id="pieCategoriasR" prefHeight="300" />
                     </VBox>
 
-                    <!-- Tabela de valor por categoria -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (tabela)" />
                         <TableView fx:id="tabelaCategoriasR" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colCategoriaR" text="Categoria" prefWidth="150">
+                                <TableColumn fx:id="colCategoriaR" prefWidth="150" text="Categoria">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="key" />
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque" >
+                                <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="value" />
                                     </cellValueFactory>

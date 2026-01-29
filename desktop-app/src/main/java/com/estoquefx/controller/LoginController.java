@@ -43,7 +43,7 @@ public class LoginController {
         lblStatus.setText("Entrando...");
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
-        // Executar em thread separada para não travar UI
+        // Feito em outra thread pra n travar a ui
         new Thread(() -> {
             try {
                 boolean loginOk = supabaseService.login(email, senha);
@@ -87,6 +87,7 @@ public class LoginController {
         lblStatus.setText("Criando conta...");
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
+        // em outra thread pra n travar
         new Thread(() -> {
             try {
                 boolean registroOk = supabaseService.registrar(email, senha);
@@ -97,7 +98,7 @@ public class LoginController {
                         // Fazer login automaticamente após registro
                         onLogin();
                     } else {
-                        lblStatus.setText("Erro ao criar conta. Email já existe?");
+                        lblStatus.setText("Erro ao criar conta.");
                         lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                         btnRegistrar.setDisable(false);
                     }
@@ -130,7 +131,7 @@ public class LoginController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            lblStatus.setText("Erro ao abrir próxima tela!");
+            lblStatus.setText("Erro ao abrir seleção de estoque.");
         }
     }
 }
