@@ -19,6 +19,7 @@ public class SupabaseConfig {
 
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("ERRO: " + e.getMessage());
         }
     }
 

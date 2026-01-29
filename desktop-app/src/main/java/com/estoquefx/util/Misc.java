@@ -1,36 +1,31 @@
 package com.estoquefx.util;
 
-import com.estoquefx.service.Leitor;
-import com.estoquefx.model.Categoria;
+import com.estoquefx.data.Leitor;
 import com.estoquefx.model.Estoque;
 import com.estoquefx.model.Produto;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 
-//todo terminar misc
-
-
+// terminar misc
 // imprimir
 // salvar como
 // bug pesquisa
 // revisar botões
-//todo ícones
+// classe categoria
 //import
+// sync via drive
+// Multi-usuário
+// apenas urgente só funciona depois de pesquisar
+// POO
+// limpar arquivos/projetos
+//todo btn load from estq, salvar .txt com nome - talvez pasta nomeada?,
+//todo ícones
 //todo calendário?
-//todo apenas urgente só funciona depois de pesquisar
-//classe categoria
-//todo supabase
+//todo supabase *
 //todo documentação
 //todo FAQ
 //todo README
-//todo POO
-//todo limpar arquivos/projetos
-//todo relatórios
-//todo sync via drive
-//todo Multi-usuário
+//todo relatórios *
 //todo https://openjfx.io/ - olhar community
 
 

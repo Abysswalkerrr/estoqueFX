@@ -3,7 +3,7 @@ package com.estoquefx;
 import com.estoquefx.controller.EstoqueController;
 import com.estoquefx.model.Estoque;
 import com.estoquefx.model.Produto;
-import com.estoquefx.service.Leitor;
+import com.estoquefx.data.Leitor;
 import com.estoquefx.updater.core.*;
 
 import com.estoquefx.util.Misc;

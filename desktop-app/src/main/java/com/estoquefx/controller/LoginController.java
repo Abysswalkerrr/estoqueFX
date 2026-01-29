@@ -131,7 +131,7 @@ public class LoginController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            lblStatus.setText("Erro ao abrir seleção de estoque.");
+            lblStatus.setText("Erro ao abrir seleção de estoque. \n" + e.getMessage());
         }
     }
 }

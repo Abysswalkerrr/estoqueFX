@@ -23,4 +23,6 @@ module com.estoquefx {
     opens com.estoquefx.service to javafx.fxml;
     exports com.estoquefx.util;
     opens com.estoquefx.util to javafx.fxml;
+    exports com.estoquefx.data;
+    opens com.estoquefx.data to javafx.fxml;
 }

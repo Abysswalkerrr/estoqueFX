@@ -2,6 +2,7 @@ package com.estoquefx.controller;
 
 
 import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.data.Leitor;
 import com.estoquefx.model.*;
 import com.estoquefx.service.*;
 import com.estoquefx.updater.core.*;
@@ -460,6 +461,7 @@ public class EstoqueController {
     public void setEstoqueAtual(String estoqueId, String estoqueNome, SupabaseService service) {
         this.estoqueId = estoqueId;
         this.supabaseService = service;
+        Leitor.setNomeEstoque(estoqueNome);
         // Atualizar título ou label se quiser mostrar qual estoque está aberto
     }
 
@@ -941,6 +943,7 @@ public class EstoqueController {
                 // 2. Inserir todos os produtos atuais
                 for (Produto p : Estoque.getProdutos()) {
                     supabaseService.salvarProduto(p, estoqueId);
+                    System.out.println(p.getNome() + "salvo");
                 }
 
                 Platform.runLater(() -> {
@@ -975,8 +978,8 @@ public class EstoqueController {
 
             confirm.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
-                    onSalvar();
-                    voltarParaSelecao();
+                    // SALVAR E ESPERAR terminar antes de trocar
+                    salvarAntesDeVoltarParaSelecao();
                 } else if (response == ButtonType.NO) {
                     voltarParaSelecao();
                 }
@@ -984,6 +987,65 @@ public class EstoqueController {
             });
         } else {
             voltarParaSelecao();
+        }
+    }
+
+    private void salvarAntesDeVoltarParaSelecao() {
+        try {
+            atualizarUltimaAlteracao();
+            Leitor.salvarEstoque(Estoque.getProdutos());
+
+            if (supabaseService != null && estoqueId != null) {
+                Alert progresso = new Alert(Alert.AlertType.INFORMATION);
+                progresso.setTitle("Salvando");
+                progresso.setHeaderText("Sincronizando com servidor...");
+                progresso.setContentText("Aguarde...");
+                progresso.show();
+
+                // Criar uma CÓPIA da lista antes de passar para a thread
+                List<Produto> produtosParaSalvar = new ArrayList<>(Estoque.getProdutos());
+
+                new Thread(() -> {
+                    try {
+                        supabaseService.deletarProdutosEstoque(estoqueId);
+
+                        // Usa a CÓPIA, não a lista original
+                        for (Produto p : produtosParaSalvar) {
+                            supabaseService.salvarProduto(p, estoqueId);
+                        }
+
+                        Platform.runLater(() -> {
+                            progresso.close();
+                            Produto.setUltimaAcao("s");
+                            // SÓ AGORA troca de estoque
+                            voltarParaSelecao();
+                        });
+
+                    } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            progresso.close();
+                            Alert erro = new Alert(Alert.AlertType.ERROR);
+                            erro.setTitle("Erro ao salvar");
+                            erro.setContentText("Não foi possível sincronizar: " + e.getMessage() +
+                                    "\n\nVoltando sem salvar no servidor.");
+                            erro.showAndWait();
+                            // Mesmo com erro, volta (dados locais já foram salvos)
+                            voltarParaSelecao();
+                        });
+                    }
+                }).start();
+
+            } else {
+                // Se não tem Supabase, só salva local e volta
+                Produto.setUltimaAcao("s");
+                voltarParaSelecao();
+            }
+
+        } catch (IOException e) {
+            Alert erro = new Alert(Alert.AlertType.ERROR);
+            erro.setTitle("Erro");
+            erro.setContentText("Erro ao salvar localmente: " + e.getMessage());
+            erro.showAndWait();
         }
     }
 

@@ -1,7 +1,8 @@
-package com.estoquefx.service;
+package com.estoquefx.data;
 
 import com.estoquefx.controller.EstoqueController;
 import com.estoquefx.model.Produto;
+import com.estoquefx.service.ProdutoService;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 
@@ -15,6 +16,14 @@ public class Leitor {
     public static String nomePasta = "Sistema estoque";
     static String nomeMisc = "misc.txt";
     public static File pastaDocs = FileSystemView.getFileSystemView().getDefaultDirectory();
+    private static String nomeEstoque;
+
+    public static void setNomeEstoque(String nomeEstoque) {
+        Leitor.nomeEstoque = nomeEstoque;
+    }
+    public static String getNomeEstoque() {
+        return nomeEstoque;
+    }
 
     public static LinkedHashSet<Produto> carregarEstoque() throws IOException {
         LinkedHashSet<Produto> estoque = new LinkedHashSet<>();

@@ -1,10 +1,6 @@
 package com.estoquefx.model;
 
-import com.estoquefx.controller.EstoqueController;
-import com.estoquefx.util.Misc;
-
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class Produto {

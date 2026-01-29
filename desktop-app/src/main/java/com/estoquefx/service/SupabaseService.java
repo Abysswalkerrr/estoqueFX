@@ -39,6 +39,7 @@ public class SupabaseService {
         Response response = client.newCall(request).execute();
 
         if (response.isSuccessful()) {
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonObject result = JsonParser.parseString(responseBody).getAsJsonObject();
             authToken = result.get("access_token").getAsString();
@@ -92,6 +93,7 @@ public class SupabaseService {
         Response response = client.newCall(request).execute();
 
         if (response.isSuccessful()) {
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray result = JsonParser.parseString(responseBody).getAsJsonArray();
             return result.get(0).getAsJsonObject().get("id").getAsString();
@@ -115,6 +117,7 @@ public class SupabaseService {
         Response response = client.newCall(request).execute();
 
         if (response.isSuccessful()) {
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray array = JsonParser.parseString(responseBody).getAsJsonArray();
 
@@ -189,6 +192,7 @@ public class SupabaseService {
         Response response = client.newCall(request).execute();
 
         if (response.isSuccessful()) {
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray array = JsonParser.parseString(responseBody).getAsJsonArray();
 

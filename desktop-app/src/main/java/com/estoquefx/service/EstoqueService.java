@@ -1,7 +1,6 @@
 package com.estoquefx.service;
 
 import com.estoquefx.model.*;
-import java.util.HashSet;
 
 public class EstoqueService {
 

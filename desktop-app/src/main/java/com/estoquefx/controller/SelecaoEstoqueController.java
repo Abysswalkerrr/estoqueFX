@@ -3,7 +3,6 @@ package com.estoquefx.controller;
 import com.estoquefx.EstoqueAppFX;
 import com.estoquefx.service.EstoqueService;
 import com.estoquefx.service.ProdutoService;
-import com.estoquefx.util.Misc;
 import com.estoquefx.service.SupabaseService;
 import com.estoquefx.model.Categoria;
 import com.estoquefx.model.Estoque;
@@ -182,4 +181,5 @@ public class SelecaoEstoqueController {
         stage.setScene(scene);
         stage.setTitle("EstoqueFX - " + estoqueNome);
     }
+
 }
