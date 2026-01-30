@@ -104,42 +104,31 @@ public class Leitor {
 
     public static void salvarEstoque(LinkedHashSet<Produto> estoque) throws IOException {
         File[] arquivos = criaArquivos();
-        File arquivo =  arquivos[0];
-        File misc =  arquivos[1];
+        File arquivo = arquivos[0];
+        File misc = arquivos[1];
         File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
             pastaApp.mkdir();
         }
         File miscGeral = new File(pastaApp, nomeMisc);
 
-
-        FileWriter fw = new FileWriter(arquivo);
-        PrintWriter pw = new PrintWriter(fw);
-
-        for (Produto p : estoque) {
-            pw.println(p.toString());
+        try (PrintWriter pw = new PrintWriter(new FileWriter(arquivo))) {
+            for (Produto p : estoque) {
+                pw.println(p.toString());
+            }
         }
 
-        pw.close();
-        fw.close();
+        // misc do estoque
+        try (PrintWriter pwm = new PrintWriter(new FileWriter(misc))) {
+            pwm.println(Misc.getUltimaAtualizacao());
+            pwm.println(Misc.getNegouAtualizacao());
+        }
 
-        FileWriter fwm = new FileWriter(misc);
-        PrintWriter pwm = new PrintWriter(fwm);
-
-        pwm.println(Misc.getUltimaAtualizacao());
-        pwm.println(Misc.getNegouAtualizacao());
-        pwm.close();
-        fwm.close();
-
-        FileWriter fwc = new FileWriter(miscGeral);
-        PrintWriter pwc = new PrintWriter(fwc);
-
-        pwc.println(Misc.getNegouAtualizacao());
-
-        pwc.close();
-        fwc.close();
+        // misc geral
+        try (PrintWriter pwc = new PrintWriter(new FileWriter(miscGeral))) {
+            pwc.println(Misc.getNegouAtualizacao());
+        }
     }
-
     public static void importarCSV(File arquivo) throws IOException {
         Scanner sc = new Scanner(arquivo);
         while (sc.hasNextLine()) {
@@ -208,23 +197,29 @@ public class Leitor {
     }
 
     public static void salvarNA(boolean set) throws IOException {
-        String temp = lerUltimaAtt();
         File pastaApp = new File(pastaDocs, nomePasta);
-        File arquivo2 = new File(pastaApp, nomeMisc);
-        File arquivo = criaArquivos()[1];
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+        }
 
-        FileWriter fw = new FileWriter(arquivo);
-        PrintWriter pw = new PrintWriter(fw);
-        pw.println(temp);
-        pw.println(set);
-        pw.close();
-        fw.close();
+        File miscGeral = new File(pastaApp, nomeMisc);
+        try (PrintWriter pwm = new PrintWriter(new FileWriter(miscGeral))) {
+            pwm.println(set);
+        }
 
-        FileWriter fwm = new FileWriter(arquivo2);
-        PrintWriter pwm = new PrintWriter(fwm);
-        pwm.println(set);
-        fwm.close();
-        pwm.close();
+        if (nomeEstoque != null && !nomeEstoque.isEmpty()) {
+            try {
+                String temp = lerUltimaAtt();
+                File arquivo = criaArquivos()[1];
+
+                try (PrintWriter pw = new PrintWriter(new FileWriter(arquivo))) {
+                    pw.println(temp);
+                    pw.println(set);
+                }
+            } catch (Exception e) {
+                System.err.println("Aviso: Não foi possível salvar no misc.txt do estoque: " + e.getMessage());
+            }
+        }
     }
 
     public static File[] criaArquivos(){
@@ -287,20 +282,29 @@ public class Leitor {
     }
 
     public static void carregarNA() throws IOException {
-        File pastaApp =  new File(pastaDocs, nomePasta);
+        File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
             pastaApp.mkdirs();
         }
         File miscGeral = new File(pastaApp, nomeMisc);
+
         if (!miscGeral.exists()) {
             Misc.setNegouAtualizacaoSemSalvar(false);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(miscGeral))) {
+                pw.println("false");
+            }
             return;
         }
-        Scanner sc = new Scanner(miscGeral);
-        Misc.setNegouAtualizacaoSemSalvar(sc.nextLine().equals("true"));
-        sc.close();
-    }
 
+        try (Scanner sc = new Scanner(miscGeral)) {
+            if (sc.hasNextLine()) {
+                String linha = sc.nextLine().trim();
+                Misc.setNegouAtualizacaoSemSalvar("true".equals(linha));
+            } else {
+                Misc.setNegouAtualizacaoSemSalvar(false);
+            }
+        }
+    }
     public static String getPath() {
         File pastaApp = new File(pastaDocs, nomePasta);
         File pastaEstoque = new File(pastaApp, nomeEstoque);
