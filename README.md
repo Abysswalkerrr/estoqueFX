@@ -235,15 +235,6 @@ Tem ideias para melhorar o sistema?
 
 ---
 
-## 👤 Autor
-
-**Arthur Meneghel de Souza**
-
-- GitHub: [@Abysswalkerrr](https://github.com/Abysswalkerrr)
-- Email: arthurmsouza321@gmail.com
-
----
-
 ## ⭐ Apoie o Projeto
 
 Se este projeto foi útil para você, considere:
@@ -276,3 +267,11 @@ Este código está disponível publicamente apenas para fins educacionais.
 **Violações serão processadas de acordo com a lei brasileira de direitos autorais (Lei 9.610/98).**
 
 ---
+
+## 👤 Autor
+
+**Arthur Meneghel de Souza**
+
+- GitHub: [@Abysswalkerrr](https://github.com/Abysswalkerrr)
+- Email: arthurmsouza321@gmail.com
+
