@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.0.3";
+            "3.0.4";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.0.4
+            Agora o app cria uma pasta pra cada estoque, permitindo mais flexibilidade na gestão.
+            \s
             3.0.3
             Correção de um erro que fazia com que a opção salvar estoque, quando usada dentro do trocar estoque, acabava deletando tudo.
             \s
