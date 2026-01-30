@@ -64,8 +64,9 @@ Desenvolvido com JavaFX e integração em nuvem com Supabase
 1. **Tela de Login/Registro**
    - Se tiver conta: faça login
    - Caso contrário: registre-se ou use modo offline
-   - <img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/e1a6acf5-dc0f-4001-9413-016b47acf10e" />
-
+   <p align="center">
+      <img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/e1a6acf5-dc0f-4001-9413-016b47acf10e" />
+   </p>
 
 2. **Criar Estoque**
    - Clique em "Criar Novo Estoque"
@@ -173,11 +174,40 @@ Menu → Trocar Estoque → Selecione outro estoque da lista
 
 ### 🔮 Versão 4.0 (Futuro)
 - [ ] Módulo de fornecedores
-- [ ] Notas fiscais
-- [ ] Código de barras
+- [ ] Código de barras/etiquetas
 - [ ] Permissões de usuário (admin/operador)
-- [ ] API REST
 - [ ] App mobile
+- [ ] Configurações robustas
+
+---
+
+Preços
+
+### 🆓 Versão Atual (Beta Público)
+Durante o período de desenvolvimento, o sistema está disponível gratuitamente para testes.
+
+**Recursos Disponíveis:**
+- Todos os recursos atuais
+- Sincronização Supabase (configure suas próprias credenciais)
+- Atualizações automáticas
+
+**Limitações:**
+- Sem suporte técnico oficial
+- Bugs podem ocorrer
+- Funcionalidades podem mudar
+
+### 🚀 Futuro (2026-2027)
+
+Após o lançamento oficial, o EstoqueFX será comercializado com planos de assinatura:
+
+- **Community** - Gratuito limitado
+- **Básico** - ~R$ 29,90/mês
+- **Profissional** - ~R$ 79,90/mês  
+- **Enterprise** - Sob consulta
+
+Usuários beta terão condições especiais no lançamento! 🎉
+
+📧 Interessado em licenciamento futuro? Entre em contato via o email: arthurmsouza321@gmail.com
 
 ---
 
@@ -223,8 +253,24 @@ Se este projeto foi útil para você, considere:
 
 ---
 
-<div align="center">
+## 📄 Licença
 
-© 2026 EstoqueFX - Todos os direitos reservados
+**Licença de Uso Não Comercial - EstoqueFX**
 
-</div>
+Copyright © 2026 Valube
+
+Este código está disponível publicamente apenas para fins educacionais.
+
+### Permitido:
+✅ Visualizar o código-fonte
+✅ Estudar a implementação
+
+### NÃO Permitido:
+❌ Uso comercial
+❌ Redistribuição
+❌ Modificação e distribuição de versões derivadas
+❌ Uso em produção sem licença paga
+
+**Violações serão processadas de acordo com a lei brasileira de direitos autorais (Lei 9.610/98).**
+
+---
