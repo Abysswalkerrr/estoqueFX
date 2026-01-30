@@ -71,8 +71,9 @@ Desenvolvido com JavaFX e integração em nuvem com Supabase
 2. **Criar Estoque**
    - Clique em "Criar Novo Estoque"
    - Digite um nome (ex: "Loja Centro", "Depósito Sul")
+   <p align="center">
    <img width="622" height="531" alt="image" src="https://github.com/user-attachments/assets/9f49ea96-a78c-40de-b8fc-1ff3d3a30d28" />
-
+   </p>
 
 3. **Adicionar Produtos**
    - Abra o menu "Estoque"
@@ -83,10 +84,11 @@ Desenvolvido com JavaFX e integração em nuvem com Supabase
      - Quantidade mínima (para alertas)
      - Valor unitário
      - Quantidade em estoque
+    <p align="center">
     <img width="1919" height="1012" alt="image" src="https://github.com/user-attachments/assets/3a0d1a71-1621-41f0-9617-5dc0eeaf6c01" />
     
     <img width="1243" height="606" alt="image" src="https://github.com/user-attachments/assets/46a2ade8-05d0-4162-baba-c9d59ac96a5d" />
-
+    </p>
 
 
 ### Operações Diárias
