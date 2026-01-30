@@ -35,7 +35,7 @@ public class EstoqueAppFX extends Application {
          */
 
         try{
-            Leitor.carregarMisc();
+            Leitor.carregarNA();
         } catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erro");

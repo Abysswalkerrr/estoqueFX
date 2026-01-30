@@ -462,6 +462,11 @@ public class EstoqueController {
         this.estoqueId = estoqueId;
         this.supabaseService = service;
         Leitor.setNomeEstoque(estoqueNome);
+        try {
+            Leitor.carregarMisc();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Atualizar título ou label se quiser mostrar qual estoque está aberto
     }
 

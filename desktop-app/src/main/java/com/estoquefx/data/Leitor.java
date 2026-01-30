@@ -27,15 +27,7 @@ public class Leitor {
 
     public static LinkedHashSet<Produto> carregarEstoque() throws IOException {
         LinkedHashSet<Produto> estoque = new LinkedHashSet<>();
-        File pastaApp = new File(pastaDocs, nomePasta);
-        File arquivo = new File(pastaApp, nomeArquivo);
-
-        // Criar pasta se não existir
-        if (!pastaApp.exists()) {
-            pastaApp.mkdirs();
-            System.out.println("Pasta criada: " + pastaApp.getAbsolutePath());
-        }
-
+        File arquivo = criaArquivos()[0];
         if (arquivo.exists()) {
             Scanner sc = new Scanner(arquivo);
 
@@ -61,16 +53,10 @@ public class Leitor {
     }
 
     public static void carregarMisc() throws IOException {
-        File pastaApp = new File(pastaDocs, nomePasta);
-        File misc = new File(pastaApp, nomeMisc);
+        File arquivoMisc = criaArquivos()[1];
 
-        if (!pastaApp.exists()) {
-            pastaApp.mkdirs();
-            System.out.println("Pasta criada: " + pastaApp.getAbsolutePath());
-        }
-
-        if (misc.exists()) {
-            Scanner scm = new Scanner(misc);
+        if (arquivoMisc.exists()) {
+            Scanner scm = new Scanner(arquivoMisc);
             if (scm.hasNextLine()) {
                 String linha2 = scm.nextLine();
                 Misc.setUltimaAtualizacaoSemSalvar(linha2);
@@ -87,12 +73,12 @@ public class Leitor {
             System.out.println("Arquivo misc.txt não encontrado. Criando com valores padrão...");
             Misc.setUltimaAtualizacaoSemSalvar("");
             Misc.setNegouAtualizacaoSemSalvar(false);
-            criarArquivoMiscPadrao(misc);
+            criarMiscPadrao(arquivoMisc);
         }
 
     }
 
-    private static void criarArquivoMiscPadrao(File misc) throws IOException {
+    private static void criarMiscPadrao(File misc) throws IOException {
         FileWriter fw = new FileWriter(misc);
         PrintWriter pw = new PrintWriter(fw);
         pw.println(""); // Última atualização vazia
@@ -117,12 +103,15 @@ public class Leitor {
     }
 
     public static void salvarEstoque(LinkedHashSet<Produto> estoque) throws IOException {
+        File[] arquivos = criaArquivos();
+        File arquivo =  arquivos[0];
+        File misc =  arquivos[1];
         File pastaApp = new File(pastaDocs, nomePasta);
         if (!pastaApp.exists()) {
-            pastaApp.mkdirs();
+            pastaApp.mkdir();
         }
-        File arquivo = new File(pastaApp, nomeArquivo);
-        File misc = new File(pastaApp, nomeMisc);
+        File miscGeral = new File(pastaApp, nomeMisc);
+
 
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
@@ -141,6 +130,10 @@ public class Leitor {
         pwm.println(Misc.getNegouAtualizacao());
         pwm.close();
         fwm.close();
+
+        FileWriter fwc = new FileWriter(miscGeral);
+        PrintWriter pwc = new PrintWriter(fwc);
+        pwc.println(Misc.getNegouAtualizacao());
     }
 
     public static void importarCSV(File arquivo) throws IOException {
@@ -194,7 +187,8 @@ public class Leitor {
 
     public static String lerUltimaAtt() throws IOException {
         File pastaApp = new File(pastaDocs, nomePasta);
-        File arquivo = new File(pastaApp, nomeMisc);
+        File pastaEstoque =  new File(pastaApp, nomeEstoque);
+        File arquivo = new File(pastaEstoque, nomeMisc);
 
         if (!arquivo.exists()) {
             return "";
@@ -212,22 +206,42 @@ public class Leitor {
     public static void salvarNA(boolean set) throws IOException {
         String temp = lerUltimaAtt();
         File pastaApp = new File(pastaDocs, nomePasta);
-
-        if (!pastaApp.exists()) {
-            pastaApp.mkdirs();
+        File arquivo2 = new File(pastaApp, nomeMisc);
+        if  (!arquivo2.exists()) {
+            arquivo2.mkdirs();
         }
 
-        File arquivo = new File(pastaApp, nomeMisc);
+        File arquivo = criaArquivos()[1];
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
         pw.println(temp);
         pw.println(set);
         pw.close();
         fw.close();
+        FileWriter fwm = new FileWriter(arquivo2);
+        PrintWriter pwm = new PrintWriter(fwm);
+        pwm.println(set);
+        fwm.close();
+        pwm.close();
+    }
+
+    public static File[] criaArquivos(){
+        File pastaApp = new File(pastaDocs, nomePasta);
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+        }
+        File  pastaEstoque = new File(pastaApp, nomeEstoque);
+        if (!pastaEstoque.exists()) {
+            pastaEstoque.mkdirs();
+        }
+        File arquivo = new File(pastaEstoque, nomeArquivo);
+        File arquivoMisc = new File(pastaEstoque, nomeMisc);
+        return new File[]{arquivo, arquivoMisc};
     }
 
     // arquivo é escolhido antes
-    public static void exportarEstoqueParaArquivo(LinkedHashSet<Produto> estoque, File arquivoCSV) throws IOException {
+    public static void exportarEstoqueParaArquivo(LinkedHashSet<Produto> estoque,
+                                                  File arquivoCSV) throws IOException {
         try (java.io.PrintWriter pw = new java.io.PrintWriter(
                 new java.io.OutputStreamWriter(
                         new java.io.FileOutputStream(arquivoCSV),
@@ -270,8 +284,23 @@ public class Leitor {
         }
     }
 
+    public static void carregarNA() throws IOException {
+        File pastaApp =  new File(pastaDocs, nomePasta);
+        if (!pastaApp.exists()) {
+            pastaApp.mkdirs();
+        }
+        File miscGeral = new File(pastaDocs, nomeMisc);
+        if (!miscGeral.exists()) {
+            Misc.setNegouAtualizacao(false);
+        }
+        Scanner sc = new Scanner(miscGeral);
+        Misc.setNegouAtualizacao(sc.nextLine().equals("true"));
+        sc.close();
+    }
+
     public static String getPath() {
         File pastaApp = new File(pastaDocs, nomePasta);
-        return pastaApp.getAbsolutePath();
+        File pastaEstoque = new File(pastaApp, nomeEstoque);
+        return pastaEstoque.getAbsolutePath();
     }
 }
