@@ -5,7 +5,6 @@
 ![Java](https://img.shields.io/badge/Java-25-orange?style=for-the-badge&logo=java)
 ![JavaFX](https://img.shields.io/badge/JavaFX-25.0.2-blue?style=for-the-badge&logo=java)
 ![Maven](https://img.shields.io/badge/Maven-3.8+-red?style=for-the-badge&logo=apache-maven)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 **Sistema profissional de gestão de estoque para empresas**
 
@@ -47,56 +46,14 @@ Desenvolvido com JavaFX e integração em nuvem com Supabase
 
 ---
 
-## 📋 Pré-requisitos
-
-Antes de começar, certifique-se de ter instalado:
-
-- **Java JDK 25** ou superior
-  - [Download Java](https://www.oracle.com/java/technologies/downloads/)
-- **Maven 3.8+** (para compilar do código-fonte)
-  - [Download Maven](https://maven.apache.org/download.cgi)
-- **Conta Supabase** (opcional, para sincronização em nuvem)
-  - [Criar conta grátis](https://supabase.com/)
-
----
-
 ## 🚀 Instalação
 
 ### Opção 1: Baixar Executável (Recomendado)
 
-1. Acesse a [página de releases](https://github.com/Abysswalkerrr/estoqueFX/releases)
-2. Baixe o instalador mais recente (`.exe` para Windows)
+1. Acesse a [página de releases](https://github.com/Abysswalkerrr/estoque_releases/releases)
+2. Baixe o instalador mais recente (`.msi` para Windows)
 3. Execute o instalador e siga as instruções
 4. Pronto! O sistema está instalado
-
-### Opção 2: Compilar do Código-Fonte
-
-1. **Clone o repositório**
-```bash
-git clone https://github.com/Abysswalkerrr/estoqueFX.git
-cd estoqueFX
-```
-
-2. **Configure as variáveis de ambiente** (opcional, para usar Supabase)
-```bash
-# Windows
-setx SUPABASE_URL "https://seu-projeto.supabase.co"
-setx SUPABASE_KEY "sua-chave-anon-aqui"
-
-# Linux/Mac
-export SUPABASE_URL="https://seu-projeto.supabase.co"
-export SUPABASE_KEY="sua-chave-anon-aqui"
-```
-
-3. **Compile o projeto**
-```bash
-mvn clean install
-```
-
-4. **Execute**
-```bash
-java -jar desktop-app/target/desktop-app-1.0.0.jar
-```
 
 ---
 
@@ -105,21 +62,31 @@ java -jar desktop-app/target/desktop-app-1.0.0.jar
 ### Primeiro Acesso
 
 1. **Tela de Login/Registro**
-   - Se tiver conta Supabase: faça login
+   - Se tiver conta: faça login
    - Caso contrário: registre-se ou use modo offline
+   - <img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/e1a6acf5-dc0f-4001-9413-016b47acf10e" />
+
 
 2. **Criar Estoque**
    - Clique em "Criar Novo Estoque"
    - Digite um nome (ex: "Loja Centro", "Depósito Sul")
+   <img width="622" height="531" alt="image" src="https://github.com/user-attachments/assets/9f49ea96-a78c-40de-b8fc-1ff3d3a30d28" />
+
 
 3. **Adicionar Produtos**
+   - Abra o menu "Estoque"
    - Clique no botão "Criar Produto"
    - Preencha:
      - Nome do produto
      - Categoria
      - Quantidade mínima (para alertas)
      - Valor unitário
-     - Quantidade inicial
+     - Quantidade em estoque
+    <img width="1919" height="1012" alt="image" src="https://github.com/user-attachments/assets/3a0d1a71-1621-41f0-9617-5dc0eeaf6c01" />
+    
+    <img width="1243" height="606" alt="image" src="https://github.com/user-attachments/assets/46a2ade8-05d0-4162-baba-c9d59ac96a5d" />
+
+
 
 ### Operações Diárias
 
@@ -155,33 +122,12 @@ Menu → Trocar Estoque → Selecione outro estoque da lista
 
 ---
 
-## 🗂️ Estrutura do Projeto
-
-```
-estoqueFX/
-├── desktop-app/          # Aplicação principal JavaFX
-│   ├── src/main/java/
-│   │   └── com/estoquefx/
-│   │       ├── controller/   # Controllers (MVC)
-│   │       ├── model/        # Modelos de dados
-│   │       ├── service/      # Serviços (Supabase, etc)
-│   │       ├── data/         # Persistência local
-│   │       └── util/         # Utilitários
-│   └── src/main/resources/
-│       └── com/estoquefx/    # Arquivos FXML, CSS
-├── updater-core/         # Sistema de auto-atualização
-├── estoque-dist/         # Configuração de distribuição
-└── pom.xml               # Configuração Maven
-```
-
----
-
 ## 🛠️ Tecnologias
 
 ### Core
-- **Java 25** - Linguagem de programação
-- **JavaFX 25.0.2** - Framework para interface gráfica
-- **Maven** - Gerenciamento de dependências e build
+- **Java 25**
+- **JavaFX 25.0.2**
+- **Maven**
 
 ### Bibliotecas
 - **OkHttp 4.12.0** - Cliente HTTP para comunicação com Supabase
@@ -192,55 +138,38 @@ estoqueFX/
 - **Resend Java 4.12.0** - Envio de emails
 
 ### Serviços
-- **Supabase** - Backend as a Service (autenticação + banco de dados PostgreSQL)
-
----
-
-## 📊 Estrutura do Banco de Dados (Supabase)
-
-### Tabela: `estoques`
-```sql
-CREATE TABLE estoques (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  nome TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-### Tabela: `produtos`
-```sql
-CREATE TABLE produtos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  estoque_id UUID REFERENCES estoques(id) ON DELETE CASCADE,
-  codigo TEXT NOT NULL,
-  nome TEXT NOT NULL,
-  categoria TEXT NOT NULL,
-  qtd_min INTEGER NOT NULL,
-  valor_unitario DECIMAL(10,2) NOT NULL,
-  quantidade INTEGER NOT NULL,
-  descricao TEXT,
-  ultima_alteracao TIMESTAMP DEFAULT NOW(),
-  UNIQUE(estoque_id, codigo)
-);
-```
+- **Supabase** - Serviço de banco de daos
 
 ---
 
 ## 🎯 Roadmap
 
-### ✅ Versão 3.0 (Atual)
-- [x] Sistema de múltiplos estoques
-- [x] Integração com Supabase
+### ✅ Versão 1.0 - 1.8
+- [x] Autocomplete nos produtos
 - [x] Auto-atualização
+- [x] Histórico de atualizações
+- [x] Impressão
+- [x] Conversão para PDF
+- [x] Pesquisa
+- [x] Importar e exportar em formato .CSV(excel)
+- [x] Filtro exclusivo de categorias
+
+### ✅ Versão 2.0 - 2.1
+- [x] Reforma visual total da tabela
 - [x] Dashboard com gráficos
-- [x] Importação/Exportação CSV
+- [x] Otimização de processamento e memória
+- [x] Melhorias de qualidade de vida
+- [x] Inúmeras correções de falhas
+
+### ✅ Versão 3.0 (Atual)
+- [x] Sincronização com nuvem
+- [x] Sistema de login(múltiplas contas)
 
 ### 🚧 Versão 3.1 (Em breve)
 - [ ] Histórico de movimentações
-- [ ] Relatórios em PDF
-- [ ] Filtros avançados
+- [ ] Relatórios
 - [ ] Backup automático
+- [ ] Autenticação de dois fatores
 
 ### 🔮 Versão 4.0 (Futuro)
 - [ ] Módulo de fornecedores
@@ -254,7 +183,7 @@ CREATE TABLE produtos (
 
 ## 🐛 Reportar Bugs
 
-Encontrou um problema? [Abra uma issue](https://github.com/Abysswalkerrr/estoqueFX/issues/new) com:
+Encontrou um problema? [Abra uma issue](https://github.com/Abysswalkerrr/estoque_releases/issues/new) ou [Preencha um formulário](https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog) com:
 
 - **Descrição clara** do problema
 - **Passos para reproduzir**
@@ -268,27 +197,9 @@ Encontrou um problema? [Abra uma issue](https://github.com/Abysswalkerrr/estoque
 
 Tem ideias para melhorar o sistema? 
 
-1. [Abra uma issue](https://github.com/Abysswalkerrr/estoqueFX/issues/new) com a tag `enhancement`
+1. [Abra uma issue](https://github.com/Abysswalkerrr/estoqueFX/issues/new) com a tag `enhancement` ou [Preencha um formulário](https://forms.gle/tCGuZcpAEiZRfsRo8)
 2. Descreva sua sugestão em detalhes
 3. Explique por que seria útil
-
----
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Para contribuir:
-
-1. **Fork** o projeto
-2. Crie uma **branch** para sua feature (`git checkout -b feature/MinhaFeature`)
-3. **Commit** suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. **Push** para a branch (`git push origin feature/MinhaFeature`)
-5. Abra um **Pull Request**
-
-### Diretrizes
-- Código limpo e comentado
-- Mantenha o padrão MVC existente
-- Teste suas alterações antes de commitar
-- Descreva detalhadamente o que foi alterado no PR
 
 ---
 
@@ -300,7 +211,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 👤 Autor
 
-**Arthur**
+**Arthur Meneghel de Souza**
 
 - GitHub: [@Abysswalkerrr](https://github.com/Abysswalkerrr)
 - Email: arthurmsouza321@gmail.com
@@ -311,17 +222,14 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 Se este projeto foi útil para você, considere:
 
-- ⭐ Dar uma estrela no repositório
+- ⭐ Aproveitar o máximo possível
 - 🐛 Reportar bugs
 - 💡 Sugerir melhorias
-- 🤝 Contribuir com código
 - 📢 Compartilhar com outros
 
 ---
 
 <div align="center">
-
-**Desenvolvido com ❤️ por Arthur**
 
 © 2026 EstoqueFX - Todos os direitos reservados
 
