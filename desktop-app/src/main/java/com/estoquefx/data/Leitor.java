@@ -133,7 +133,11 @@ public class Leitor {
 
         FileWriter fwc = new FileWriter(miscGeral);
         PrintWriter pwc = new PrintWriter(fwc);
+
         pwc.println(Misc.getNegouAtualizacao());
+
+        pwc.close();
+        fwc.close();
     }
 
     public static void importarCSV(File arquivo) throws IOException {
@@ -207,17 +211,15 @@ public class Leitor {
         String temp = lerUltimaAtt();
         File pastaApp = new File(pastaDocs, nomePasta);
         File arquivo2 = new File(pastaApp, nomeMisc);
-        if  (!arquivo2.exists()) {
-            arquivo2.mkdirs();
-        }
-
         File arquivo = criaArquivos()[1];
+
         FileWriter fw = new FileWriter(arquivo);
         PrintWriter pw = new PrintWriter(fw);
         pw.println(temp);
         pw.println(set);
         pw.close();
         fw.close();
+
         FileWriter fwm = new FileWriter(arquivo2);
         PrintWriter pwm = new PrintWriter(fwm);
         pwm.println(set);
@@ -289,12 +291,13 @@ public class Leitor {
         if (!pastaApp.exists()) {
             pastaApp.mkdirs();
         }
-        File miscGeral = new File(pastaDocs, nomeMisc);
+        File miscGeral = new File(pastaApp, nomeMisc);
         if (!miscGeral.exists()) {
-            Misc.setNegouAtualizacao(false);
+            Misc.setNegouAtualizacaoSemSalvar(false);
+            return;
         }
         Scanner sc = new Scanner(miscGeral);
-        Misc.setNegouAtualizacao(sc.nextLine().equals("true"));
+        Misc.setNegouAtualizacaoSemSalvar(sc.nextLine().equals("true"));
         sc.close();
     }
 
