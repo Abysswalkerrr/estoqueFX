@@ -129,6 +129,7 @@ public class Leitor {
             pwc.println(Misc.getNegouAtualizacao());
         }
     }
+
     public static void importarCSV(File arquivo) throws IOException {
         Scanner sc = new Scanner(arquivo);
         while (sc.hasNextLine()) {
@@ -305,6 +306,7 @@ public class Leitor {
             }
         }
     }
+
     public static String getPath() {
         File pastaApp = new File(pastaDocs, nomePasta);
         File pastaEstoque = new File(pastaApp, nomeEstoque);
