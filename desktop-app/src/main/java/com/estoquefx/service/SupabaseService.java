@@ -219,4 +219,8 @@ public class SupabaseService {
     public boolean isLogado() {
         return authToken != null;
     }
+
+    public String getAuthToken() {
+        return authToken;
+    }
 }

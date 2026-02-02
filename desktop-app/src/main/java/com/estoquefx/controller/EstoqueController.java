@@ -470,7 +470,6 @@ public class EstoqueController {
         // Atualizar título ou label se quiser mostrar qual estoque está aberto
     }
 
-
     public void contaUrgentes(){
         for (Produto produto : Estoque.getProdutos()) {
             if (produto.getCompra()){
@@ -1086,7 +1085,6 @@ public class EstoqueController {
         }
     }
 
-
     @FXML
     private void onExportarCsv() {
         try {
@@ -1277,10 +1275,9 @@ public class EstoqueController {
     @FXML
     private void atualizarDashboard() {
         atualizarTotal();
-        double total = Estoque.getSaldo();
         qtdProdutos.set(String.valueOf(Estoque.getProdutos().size()));
 
-        Map<String, Double> mapa = calcularValorPorCategoria();
+        Map<String, Double> mapa = CategoriaService.calcularValorPorCategoria();
 
 
         ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
@@ -1293,14 +1290,6 @@ public class EstoqueController {
         pieCategoriasR.setData(dadosChart);
     }
 
-    public Map<String, Double> calcularValorPorCategoria(){
-        Map<String, Double> result = new HashMap<>();
-        for (Map.Entry<String, Categoria> entry : Categoria.categorias.entrySet()) {
-                Categoria categoria = entry.getValue();
-                result.put(categoria.getNome(), categoria.getValor());
-        }
-        return result;
-    }
 
     public void onAvisarAtualizacoes(ActionEvent actionEvent) {
         try {
