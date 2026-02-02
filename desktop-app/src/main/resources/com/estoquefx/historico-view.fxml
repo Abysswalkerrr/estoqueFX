@@ -71,8 +71,8 @@
                style="-fx-background-color: white; -fx-background-radius: 5;">
         <columns>
             <TableColumn fx:id="colDataHora" text="Data/Hora" prefWidth="140"/>
-            <TableColumn fx:id="colTipo" text="Tipo" prefWidth="100"/>
-            <TableColumn fx:id="colCodigo" text="Código" prefWidth="100"/>
+            <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="80"/>
             <TableColumn fx:id="colProduto" text="Produto" prefWidth="200"/>
             <TableColumn fx:id="colQtdAnterior" text="Qtd Anterior" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
             <TableColumn fx:id="colQtdNova" text="Qtd Nova" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>

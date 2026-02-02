@@ -88,4 +88,24 @@ public class Movimento {
     public int getDiff() {return diff;}
     public int getVelhaQuantidade() {return velhaQuantidade;}
     public double getVelhoValor() {return velhoValor;}
+
+    public String getDiferencaFormatada() {
+        if (diff > 0) {
+            return "+" + diff;
+        }
+        return String.valueOf(diff);
+    }
+
+    public String getTipoDescricao() {
+        switch (tipo.toUpperCase()) {
+            case "ENTRADA": return "Entrada";
+            case "SAIDA": return "Saída";
+            case "AJUSTE": return "Ajuste";
+            case "CRIACAO": return "Criação";
+            case "EDICAO_VALOR": return "Alteração Valor";
+            case "EDICAO_DADOS": return "Alteração Dados";
+            default: return tipo;
+        }
+    }
+
 }

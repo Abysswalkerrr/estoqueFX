@@ -137,14 +137,8 @@
             </VBox>
         </AnchorPane>
     </Tab>
-    <Tab fx:id="historico" closable="false" text="Histórico">
-        <BorderPane stylesheets="@style.css">
-            <center>
-                <Label text="EM CONSTRUÇÃO" BorderPane.alignment="CENTER" />
-            </center>
-        </BorderPane>
-
+    <Tab fx:id="tabHistorico" closable="false" text="Histórico">
+        <fx:include source="historico-view.fxml" fx:id="historicoView"/>
     </Tab>
-
 
 </TabPane>

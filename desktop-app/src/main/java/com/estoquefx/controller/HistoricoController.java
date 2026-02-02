@@ -247,7 +247,7 @@ public class HistoricoController {
         if (tipoSelecionado == null || tipoSelecionado.equals("Todos")) {
             return true;
         }
-        return mov.getTipo().equals(tipoSelecionado);
+        return mov.getTipoDescricao().equals(tipoSelecionado);
     }
 
     private boolean filtrarPorProduto(Movimento mov) {
@@ -268,7 +268,7 @@ public class HistoricoController {
         int totalSaidas = 0;
 
         for (Movimento mov : todos) {
-            String tipo = mov.getTipo().toUpperCase();
+            String tipo = mov.getTipoDescricao().toUpperCase();
 
             // Só contar movimentos de quantidade
             if (tipo.equals("ENTRADA") || tipo.equals("CRIACAO") || tipo.equals("AJUSTE")) {

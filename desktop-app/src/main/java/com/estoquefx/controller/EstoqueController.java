@@ -53,6 +53,9 @@ import java.util.function.LongConsumer;
 
 public class EstoqueController {
 
+    @FXML private Tab tabHistorico;
+    private HistoricoController historicoController;
+
     @FXML private Label lblValorTotalR;
     private String vlr = String.format("%.2f", Estoque.getSaldo());
     private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
@@ -102,13 +105,6 @@ public class EstoqueController {
     @FXML private TableColumn<Produto, String> colDescricao;
     @FXML private TableColumn<Produto, String> colHora;
 
-    @FXML private Button btnCriar;
-    @FXML private Button btnEntrada;
-    @FXML private Button btnSaida;
-    @FXML private Button btnSalvar;
-    @FXML private Button btnExportar;
-    @FXML private Button btnListar;
-
     private ObservableList<Produto> dados;
     private FilteredList<Produto> filtrados;
 
@@ -132,6 +128,7 @@ public class EstoqueController {
         lblQtdUrgentesR.textProperty().bind(qtdUrgentes);
 
         lblQtdCategoriasR.textProperty().bind(qtdCategorias);
+
 
         Platform.runLater(() -> {
             atualizarRelatorio();
@@ -227,7 +224,16 @@ public class EstoqueController {
             Produto p = event.getRowValue();
             try {
                 int novaQtd = Integer.parseInt(event.getNewValue().toString().trim());
+                int qtdAntiga = p.getQtd();
                 p.setQtd(novaQtd);
+
+                if (novaQtd != qtdAntiga && historicoController != null) {
+                    int diff = novaQtd - qtdAntiga;
+                    String tipoMov = diff > 0 ? "ENTRADA" : "SAIDA";
+                    Movimento mov = new Movimento(p, tipoMov, diff);
+                    historicoController.registrarMovimento(mov);
+                }
+
                 boolean a = p.getCompra();
                 p.atualizaCompra();
                 if (a != p.getCompra()) {
@@ -425,6 +431,8 @@ public class EstoqueController {
             }
         });
 
+        carregarHistoricoController();
+
         Platform.runLater(() -> {
             tabela.getScene().getRoot().requestFocus();
         });
@@ -467,7 +475,10 @@ public class EstoqueController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Atualizar título ou label se quiser mostrar qual estoque está aberto
+        if (historicoController != null) {
+            historicoController.setSupabaseService(service);
+            historicoController.setEstoqueAtual(estoqueId);
+        }
     }
 
     public void contaUrgentes(){
@@ -503,6 +514,29 @@ public class EstoqueController {
                         &&
                         (nome.contains(busca) || cod.contains(busca));
             });
+    }
+
+    private void carregarHistoricoController() {
+        try {
+            // Buscar o controller que foi carregado via fx:include
+            Object includeContent = tabHistorico.getContent();
+
+            if (includeContent != null) {
+
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/estoquefx/historico-view.fxml")
+                );
+                VBox historicoView = loader.load();
+                historicoController = loader.getController();
+
+                tabHistorico.setContent(historicoView);
+
+                System.out.println("✓ HistoricoController carregado");
+            }
+        } catch (Exception e) {
+            System.err.println("⚠ Erro ao carregar HistoricoController: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public String pedirProduto(HashSet<String> produtos, String title) {
@@ -832,6 +866,12 @@ public class EstoqueController {
         String tempo = Time.getTime();
 
         Produto novo = new Produto(nome, qtdMin, vlrUnd, qtd, categoria, tempo);
+
+        Movimento movCriacao = new Movimento(novo, "CRIACAO");
+        if (historicoController != null) {
+            historicoController.registrarMovimento(movCriacao);
+        }
+
         if (novo.getCompra()){
             urgentes.add(novo);
         }
@@ -861,8 +901,12 @@ public class EstoqueController {
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
 
-
             if (p != null) {
+                Movimento movEntrada = new Movimento(p, "ENTRADA", qtd);
+                if (historicoController != null) {
+                    historicoController.registrarMovimento(movEntrada);
+                }
+
                 p.setAlterHora(Time.getTime());
                 boolean a = p.getCompra();
                 p.atualizaCompra();
@@ -896,6 +940,11 @@ public class EstoqueController {
             Produto p = Produto.getProdutoPorCodigo(codigo);
 
             if (p != null) {
+                Movimento movSaida = new Movimento(p, "SAIDA", -qtd);
+                if (historicoController != null) {
+                    historicoController.registrarMovimento(movSaida);
+                }
+
                 p.setAlterHora(Time.getTime());
 
                 boolean a = p.getCompra();
@@ -1394,6 +1443,11 @@ public class EstoqueController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+
+    public void setHistoricoController(HistoricoController historicoController) {
+        this.historicoController = historicoController;
+    }
+
 
     public static void setStage(Stage stage) {
         EstoqueController.stage = stage;
