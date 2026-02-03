@@ -18,6 +18,7 @@ import java.io.IOException;
 // apenas urgente só funciona depois de pesquisar
 // POO
 // limpar arquivos/projetos
+//todo erro é entrada de qtd e não movimentações
 //todo btn load from estq, salvar .txt com nome - talvez pasta nomeada?,
 //todo ícones
 //todo calendário?
