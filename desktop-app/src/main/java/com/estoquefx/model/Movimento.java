@@ -48,6 +48,11 @@ public class Movimento {
         this.delta = delta;
         this.valorNovo = produto.getVlrUnd();
         this.velhoValor = valorNovo - delta;
+
+        this.quantidadeNova = produto.getQtd();
+        this.velhaQuantidade = produto.getQtd();
+        this.diff = 0;
+
         Historico.addMovimento(this);
     }
     public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
@@ -59,6 +64,11 @@ public class Movimento {
         this.delta = delta;
         this.valorNovo = valorNovo;
         this.velhoValor = velhoValor;
+
+        this.quantidadeNova = 0;
+        this.velhaQuantidade = 0;
+        this.diff = 0;
+
         Historico.addMovimento(this);
     }
 
@@ -85,8 +95,12 @@ public class Movimento {
     public double getDelta() {return delta;}
     public int getQuantidadeNova() {return quantidadeNova;}
     public int getDiff() {return diff;}
-    public int getVelhaQuantidade() {return velhaQuantidade;}
+    public int getQuantidadeAnterior() {return velhaQuantidade;}
     public double getVelhoValor() {return velhoValor;}
+
+    public String getTempoFormatado(){
+        return Time.getTempoFormatado(tempo);
+    }
 
     public String getDiferencaFormatada() {
         if (diff > 0) {
@@ -95,16 +109,28 @@ public class Movimento {
         return String.valueOf(diff);
     }
 
-    public String getTipoDescricao() {
-        switch (tipo.toUpperCase()) {
-            case "ENTRADA": return "Entrada";
-            case "SAIDA": return "Saída";
-            case "AJUSTE": return "Ajuste";
-            case "CRIACAO": return "Criação";
-            case "ALTERACAO_VALOR": return "Alteração Valor";
-            case "ALTERACAO_DADOS": return "Alteração Dados";
-            default: return tipo;
+    public String getObservacao() {
+        String tipoUpper = tipo.toUpperCase();
+
+        if (tipoUpper.equals("EDICAO_VALOR") || tipoUpper.equals("AJUSTE_VALOR")) {
+            return String.format("R$ %.2f → R$ %.2f (Δ R$ %.2f)",
+                    velhoValor, valorNovo, delta);
         }
+
+        return "";
+    }
+
+
+    public String getTipoDescricao() {
+        return switch (tipo.toUpperCase()) {
+            case "ENTRADA" -> "Entrada";
+            case "SAIDA" -> "Saída";
+            case "AJUSTE" -> "Ajuste";
+            case "CRIACAO" -> "Criação";
+            case "ALTERACAO_VALOR" -> "Alteração Valor";
+            case "ALTERACAO_DADOS" -> "Alteração Dados";
+            default -> tipo;
+        };
     }
 
 }

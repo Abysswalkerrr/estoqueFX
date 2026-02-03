@@ -18,7 +18,7 @@ public class Time {
         return tempo.format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
     }
 
-    public String getTempoFormatado(LocalDateTime tempo) {
+    public static String getTempoFormatado(LocalDateTime tempo) {
         if (tempo == null) return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return tempo.format(formatter);

@@ -47,7 +47,7 @@ public class MovimentoService {
         json.addProperty("produto_codigo", movimento.getCodigo());
         json.addProperty("produto_nome", movimento.getNome());
         json.addProperty("tipo", tipo);
-        json.addProperty("quantidade_anterior", movimento.getVelhaQuantidade());
+        json.addProperty("quantidade_anterior", movimento.getQuantidadeAnterior());
         json.addProperty("quantidade_nova", movimento.getQuantidadeNova());
         json.addProperty("quantidade_alterada", movimento.getDiff());
 

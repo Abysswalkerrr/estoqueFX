@@ -2,6 +2,7 @@ package com.estoquefx.controller;
 
 import com.estoquefx.model.Movimento;
 import com.estoquefx.model.Historico;
+import com.estoquefx.service.MovimentoExtraService;
 import com.estoquefx.service.MovimentoService;
 import com.estoquefx.service.SupabaseService;
 import com.estoquefx.util.SupabaseConfig;
@@ -41,6 +42,7 @@ public class HistoricoController {
 
     private SupabaseService supabaseService;
     private MovimentoService movimentoService;
+    private MovimentoExtraService alteracaoService;
     private String estoqueAtualId;
 
     private ObservableList<Movimento> movimentacoesFiltradas = FXCollections.observableArrayList();
@@ -162,6 +164,12 @@ public class HistoricoController {
                 SupabaseConfig.getSupabaseKey()
         );
         this.movimentoService.setAuthToken(service.getAuthToken());
+
+        this.alteracaoService = new MovimentoExtraService(
+                SupabaseConfig.getSupabaseUrl(),
+                SupabaseConfig.getSupabaseKey()
+        );
+        this.alteracaoService.setAuthToken(service.getAuthToken());
     }
 
     public void setEstoqueAtual(String estoqueId) {
@@ -197,8 +205,11 @@ public class HistoricoController {
 
         new Thread(() -> {
             try {
-                // Carrega do Supabase e preenche o Historico
+                Historico.limpar();
+
                 movimentoService.carregarMovimentos(estoqueAtualId);
+
+                alteracaoService.carregarAlteracoes(estoqueAtualId);
 
                 Platform.runLater(() -> {
                     aplicarFiltros();
@@ -288,11 +299,22 @@ public class HistoricoController {
             return;
         }
 
+        String tipo = movimento.getTipo().toUpperCase();
+
         // Salvar no Supabase em background
         new Thread(() -> {
             try {
-                movimentoService.salvarMovimento(movimento, estoqueAtualId);
-                System.out.println("✓ Movimento salvo: " + movimento.getTipo());
+                // Movimentos de QUANTIDADE vão para tabela movimentacoes
+                if (tipo.equals("ENTRADA") || tipo.equals("SAIDA") ||
+                        tipo.equals("AJUSTE") || tipo.equals("CRIACAO")) {
+                    movimentoService.salvarMovimento(movimento, estoqueAtualId);
+                }
+                // ALTERAÇÕES vão para tabela alteracoes_produto
+                else if (alteracaoService != null) {
+                    alteracaoService.salvarAlteracao(movimento, estoqueAtualId);
+                }
+
+                System.out.println("✓ Movimento/Alteração salvo: " + movimento.getTipo());
 
                 // Atualizar interface
                 Platform.runLater(() -> {
@@ -305,5 +327,4 @@ public class HistoricoController {
                 e.printStackTrace();
             }
         }).start();
-    }
-}
+    }}
