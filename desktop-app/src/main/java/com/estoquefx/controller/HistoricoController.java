@@ -30,9 +30,9 @@ public class HistoricoController {
     @FXML
     private TableColumn<Movimento, String> colProduto;
     @FXML
-    private TableColumn<Movimento, Integer> colQtdAnterior;
+    private TableColumn<Movimento, String> colQtdAnterior;
     @FXML
-    private TableColumn<Movimento, Integer> colQtdNova;
+    private TableColumn<Movimento, String> colQtdNova;
     @FXML
     private TableColumn<Movimento, String> colDiferenca;
     @FXML

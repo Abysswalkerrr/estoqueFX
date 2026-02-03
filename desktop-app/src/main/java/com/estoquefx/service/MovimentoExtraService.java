@@ -57,7 +57,6 @@ public class MovimentoExtraService {
             json.addProperty("qtd_min_antiga", movimento.getQuantidadeAnterior());
             json.addProperty("qtd_min_nova", movimento.getQuantidadeNova());
         }
-        // Adicione EDICAO_DADOS aqui se precisar
 
         RequestBody body = RequestBody.create(
                 json.toString(),
@@ -136,7 +135,7 @@ public class MovimentoExtraService {
                 }
 
                 // Criar movimento baseado no tipo
-                if (tipo.equals("EDICAO_VALOR") || tipo.equals("AJUSTE_VALOR")) {
+                if (tipo.equals("ALTERACAO_VALOR")) {
                     double valorAntigo = obj.get("valor_antigo").getAsDouble();
                     double valorNovo = obj.get("valor_novo").getAsDouble();
                     double delta = obj.get("delta_valor").getAsDouble();

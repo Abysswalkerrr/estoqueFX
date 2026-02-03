@@ -44,7 +44,7 @@ public class Movimento {
         this.codigo = produto.getCodigo();
         this.nome = produto.getNome();
         this.tempo = Time.getTime(true);
-        this.tipo = tipo;              // "EDICAO_VALOR"
+        this.tipo = tipo;
         this.delta = delta;            // diferença de preço
         this.valorNovo = produto.getVlrUnd();
         this.velhoValor = valorNovo - delta;
@@ -52,7 +52,8 @@ public class Movimento {
         this.velhaQuantidade = produto.getQtd();
         this.diff = 0;                 // não mexe em quantidade
         Historico.addMovimento(this);
-    }    public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
+    }
+    public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
                      double delta, double valorNovo, double velhoValor){
         this.codigo = codigo;
         this.nome = nome;
@@ -109,7 +110,7 @@ public class Movimento {
     public String getObservacao() {
         String tipoUpper = tipo.toUpperCase();
 
-        if (tipoUpper.equals("EDICAO_VALOR") || tipoUpper.equals("AJUSTE_VALOR")) {
+        if (tipoUpper.equals("AJUSTE_VALOR")) {
             return String.format("R$ %.2f → R$ %.2f (Δ R$ %.2f)",
                     velhoValor, valorNovo, delta);
         }

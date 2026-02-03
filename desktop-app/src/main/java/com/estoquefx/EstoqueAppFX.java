@@ -51,34 +51,25 @@ public class EstoqueAppFX extends Application {
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {
-            if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {return;}
+            if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {
+                return;
+            }
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Sair do Sistema");
-            alert.setHeaderText("Existem alterações não salvas.");
-            alert.setContentText("Deseja salvar o estoque antes de sair?");
+            alert.setHeaderText("Atenção!");
+            alert.setContentText("Existem alterações não salvas.\n\n" +
+                    "Para salvar, vá para Arquivo -> Salvar.\n" +
+                    "Deseja realmente sair?");
 
-            ButtonType btnSalvar = new ButtonType("Salvar");
-            ButtonType btnNaoSalvar = new ButtonType("Não salvar");
+            ButtonType btnSair = new ButtonType("Sair mesmo assim");
             ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(btnSalvar, btnNaoSalvar, btnCancelar);
+            alert.getButtonTypes().setAll(btnSair, btnCancelar);
 
             Optional<ButtonType> result = alert.showAndWait();
-
             if (result.isEmpty() || result.get() == btnCancelar) {
-                event.consume(); // não fecha
-            } else if (result.get() == btnSalvar) {
-                try {
-                    Time.updateTime();
-                    Leitor.salvarEstoque(Estoque.getProdutos());
-                    Produto.setUltimaAcao("i"); // salvo
-                } catch (IOException e) {
-                    new Alert(Alert.AlertType.ERROR,
-                            "Erro ao salvar antes de sair: " + e.getMessage()).showAndWait();
-                    event.consume(); // mantém aberto se der erro
-                }
+                event.consume(); // Não fecha
             }
-            //else não salva
         });
 
         if (!Misc.getNegouAtualizacao()) {
