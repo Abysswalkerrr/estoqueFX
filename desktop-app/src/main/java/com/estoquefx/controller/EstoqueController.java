@@ -205,8 +205,16 @@ public class EstoqueController {
             Produto p = event.getRowValue();
             try {
                 int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
+                int velhoMin = p.getVlrMin();
                 p.setVlrMin(novoMin);
                 p.setAlterHora(Time.getTime());
+
+                if (novoMin != velhoMin && historicoController != null) {
+                    int diff = novoMin - velhoMin;
+                    Movimento mov = new Movimento(p, "AJUSTE", diff);
+                    historicoController.registrarMovimento(mov);
+                }
+
                 boolean a = p.getCompra();
                 p.atualizaCompra();
                 if (a != p.getCompra()) {
@@ -261,12 +269,20 @@ public class EstoqueController {
 
         colValorUnd.setOnEditCommit(event -> {
             Produto p = event.getRowValue();
+            double oldValor = p.getVlrUnd();
             String texto = event.getNewValue();
             try {
                 texto = texto.replace("R$", "");
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
                 p.setAlterHora(Time.getTime());
+
+                if (novoVlr != oldValor && historicoController != null) {
+                    double delta = novoVlr - oldValor;
+                    Movimento mov = new Movimento(p, "ALTERACAO_VALOR", delta);
+                    historicoController.registrarMovimento(mov);
+                }
+
                 atualizarTotal();
                 tabela.refresh();
             } catch (NumberFormatException ex) {

@@ -102,8 +102,8 @@ public class Movimento {
             case "SAIDA": return "Saída";
             case "AJUSTE": return "Ajuste";
             case "CRIACAO": return "Criação";
-            case "EDICAO_VALOR": return "Alteração Valor";
-            case "EDICAO_DADOS": return "Alteração Dados";
+            case "ALTERACAO_VALOR": return "Alteração Valor";
+            case "ALTERACAO_DADOS": return "Alteração Dados";
             default: return tipo;
         }
     }

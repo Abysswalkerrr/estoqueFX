@@ -270,16 +270,10 @@ public class HistoricoController {
         for (Movimento mov : todos) {
             String tipo = mov.getTipoDescricao().toUpperCase();
 
-            // Só contar movimentos de quantidade
-            if (tipo.equals("ENTRADA") || tipo.equals("CRIACAO") || tipo.equals("AJUSTE")) {
-                int diff = mov.getDiff();
-                if (diff > 0) {
-                    totalEntradas += diff;
-                } else if (diff < 0) {
-                    totalSaidas += Math.abs(diff);
-                }
+            if (tipo.equals("ENTRADA")) {
+                    totalEntradas ++;
             } else if (tipo.equals("SAIDA")) {
-                totalSaidas += Math.abs(mov.getDiff());
+                totalSaidas ++;
             }
         }
 
@@ -288,7 +282,6 @@ public class HistoricoController {
         lblTotalMovimentacoes.setText(String.valueOf(todos.size()));
     }
 
-    // Método público para adicionar movimento e salvar no Supabase
     public void registrarMovimento(Movimento movimento) {
         if (movimentoService == null || estoqueAtualId == null) {
             System.err.println("⚠ MovimentoService ou estoqueId não configurado");

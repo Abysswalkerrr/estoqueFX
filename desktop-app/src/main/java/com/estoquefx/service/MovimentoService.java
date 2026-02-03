@@ -37,7 +37,7 @@ public class MovimentoService {
         // Só salvar movimentos de quantidade no Supabase
         String tipo = movimento.getTipo().toUpperCase();
         if (!tipo.equals("ENTRADA") && !tipo.equals("SAIDA") &&
-                !tipo.equals("AJUSTE") && !tipo.equals("CRIACAO")) {
+                !tipo.equals("AJUSTE") && !tipo.equals("ALTERACAO_VALOR")) {
             System.out.println("Movimento do tipo '" + tipo + "' não será salvo no Supabase");
             return;
         }
@@ -101,13 +101,14 @@ public class MovimentoService {
             String responseBody = response.body().string();
             JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 
-            // Limpar histórico local antes de carregar do banco
+            // MUDANÇA: Limpar histórico local antes de carregar do banco
             Historico.limpar();
+
+            System.out.println("📦 Carregando " + jsonArray.size() + " movimentos do Supabase...");
 
             for (JsonElement element : jsonArray) {
                 JsonObject obj = element.getAsJsonObject();
 
-                String id = obj.get("id").getAsString();
                 String produtoCodigo = obj.get("produto_codigo").getAsString();
                 String produtoNome = obj.get("produto_nome").getAsString();
                 String tipo = obj.get("tipo").getAsString();
@@ -115,14 +116,26 @@ public class MovimentoService {
                 int qtdNova = obj.get("quantidade_nova").getAsInt();
                 int qtdAlterada = obj.get("quantidade_alterada").getAsInt();
 
-                // Parse data
+                // Parse data - CORREÇÃO: adicionar tratamento de erro
                 String dataHoraStr = obj.get("data_hora").getAsString();
-                LocalDateTime dataHora = LocalDateTime.parse(
-                        dataHoraStr.substring(0, 19),
-                        DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                );
+                LocalDateTime dataHora;
+                try {
+                    // Tenta com timezone primeiro
+                    if (dataHoraStr.contains("+") || dataHoraStr.contains("Z")) {
+                        dataHora = LocalDateTime.parse(
+                                dataHoraStr.substring(0, 19),
+                                DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                        );
+                    } else {
+                        dataHora = LocalDateTime.parse(dataHoraStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    }
+                } catch (Exception e) {
+                    System.err.println("⚠ Erro ao parsear data: " + dataHoraStr);
+                    dataHora = LocalDateTime.now();
+                }
 
-                // Criar movimento e adicionar no histórico
+                // Criar movimento - os valores estão na ordem correta?
+                // Construtor: (codigo, nome, tempo, tipo, quantidadeNova, diff, velhaQuantidade)
                 new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                         qtdNova, qtdAlterada, qtdAnterior);
             }
