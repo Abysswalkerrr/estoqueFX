@@ -68,7 +68,6 @@ public class Movimento {
         this.nome = produto.getNome();
         this.tempo = Time.getTime(true);
         this.tipo = tipo;
-        Historico.addMovimento(this);
     }
     public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo){
         this.codigo = codigo;

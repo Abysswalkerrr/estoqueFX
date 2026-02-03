@@ -34,7 +34,7 @@ public class MovimentoService {
             throw new IllegalStateException("Usuário não autenticado");
         }
 
-        // Só salvar movimentos de quantidade no Supabase
+        // todo investigar pq ajuste saida e vlrUnd não estão indo
         String tipo = movimento.getTipo().toUpperCase();
         if (!tipo.equals("ENTRADA") && !tipo.equals("SAIDA") &&
                 !tipo.equals("AJUSTE") && !tipo.equals("ALTERACAO_VALOR")) {
@@ -73,9 +73,7 @@ public class MovimentoService {
         }
     }
 
-    /**
-     * Carrega movimentos do Supabase e adiciona no Histórico
-     */
+
     public void carregarMovimentos(String estoqueId) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
@@ -101,7 +99,6 @@ public class MovimentoService {
             String responseBody = response.body().string();
             JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 
-            // MUDANÇA: Limpar histórico local antes de carregar do banco
             Historico.limpar();
 
             System.out.println("📦 Carregando " + jsonArray.size() + " movimentos do Supabase...");
@@ -116,11 +113,9 @@ public class MovimentoService {
                 int qtdNova = obj.get("quantidade_nova").getAsInt();
                 int qtdAlterada = obj.get("quantidade_alterada").getAsInt();
 
-                // Parse data - CORREÇÃO: adicionar tratamento de erro
                 String dataHoraStr = obj.get("data_hora").getAsString();
                 LocalDateTime dataHora;
                 try {
-                    // Tenta com timezone primeiro
                     if (dataHoraStr.contains("+") || dataHoraStr.contains("Z")) {
                         dataHora = LocalDateTime.parse(
                                 dataHoraStr.substring(0, 19),
@@ -134,8 +129,8 @@ public class MovimentoService {
                     dataHora = LocalDateTime.now();
                 }
 
-                // Criar movimento - os valores estão na ordem correta?
                 // Construtor: (codigo, nome, tempo, tipo, quantidadeNova, diff, velhaQuantidade)
+                //todo ver se vlrUnd e vlrMin funcionam com isso - talvez ignorar zeros no fim?
                 new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                         qtdNova, qtdAlterada, qtdAnterior);
             }
@@ -144,9 +139,6 @@ public class MovimentoService {
         }
     }
 
-    /**
-     * Busca movimentos de um produto específico
-     */
     public List<Movimento> buscarMovimentosProduto(String estoqueId, String produtoCodigo) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
