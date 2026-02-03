@@ -28,7 +28,7 @@ public class MovimentoExtraService {
     /**
      * Salva alteração de valor/qtdMin/dados no Supabase
      */
-    public void salvarAlteracao(Movimento movimento, String estoqueId) throws IOException {
+    public void salvarMovimento(Movimento movimento, String estoqueId) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
         }
@@ -48,7 +48,7 @@ public class MovimentoExtraService {
         json.addProperty("tipo", tipo);
 
         // Preencher campos específicos por tipo
-        if (tipo.equals("EDICAO_VALOR") || tipo.equals("AJUSTE_VALOR")) {
+        if (tipo.equals("ALTERACAO_VALOR") || tipo.equals("AJUSTE_VALOR")) {
             json.addProperty("valor_antigo", movimento.getVelhoValor());
             json.addProperty("valor_novo", movimento.getValorNovo());
             json.addProperty("delta_valor", movimento.getDelta());

@@ -44,18 +44,15 @@ public class Movimento {
         this.codigo = produto.getCodigo();
         this.nome = produto.getNome();
         this.tempo = Time.getTime(true);
-        this.tipo = tipo;
-        this.delta = delta;
+        this.tipo = tipo;              // "EDICAO_VALOR"
+        this.delta = delta;            // diferença de preço
         this.valorNovo = produto.getVlrUnd();
         this.velhoValor = valorNovo - delta;
-
         this.quantidadeNova = produto.getQtd();
         this.velhaQuantidade = produto.getQtd();
-        this.diff = 0;
-
+        this.diff = 0;                 // não mexe em quantidade
         Historico.addMovimento(this);
-    }
-    public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
+    }    public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
                      double delta, double valorNovo, double velhoValor){
         this.codigo = codigo;
         this.nome = nome;

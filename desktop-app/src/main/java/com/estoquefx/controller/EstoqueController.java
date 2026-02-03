@@ -980,7 +980,6 @@ public class EstoqueController {
     @FXML
     private void onSalvar() {
         try {
-            // Salvar localmente primeiro (backup)
             atualizarUltimaAlteracao();
             Leitor.salvarEstoque(Estoque.getProdutos());
 
@@ -1471,6 +1470,10 @@ public class EstoqueController {
 
     public static Stage getStage() {
         return stage;
+    }
+
+    public void chamarSalvar(){
+        onSalvar();
     }
 
 }

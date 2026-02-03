@@ -19,30 +19,48 @@ import java.util.stream.Collectors;
 
 public class HistoricoController {
 
-    @FXML private TableView<Movimento> tabelaMovimentacoes;
-    @FXML private TableColumn<Movimento, String> colDataHora;
-    @FXML private TableColumn<Movimento, String> colTipo;
-    @FXML private TableColumn<Movimento, String> colCodigo;
-    @FXML private TableColumn<Movimento, String> colProduto;
-    @FXML private TableColumn<Movimento, Integer> colQtdAnterior;
-    @FXML private TableColumn<Movimento, Integer> colQtdNova;
-    @FXML private TableColumn<Movimento, String> colDiferenca;
-    @FXML private TableColumn<Movimento, String> colObservacao;
+    @FXML
+    private TableView<Movimento> tabelaMovimentacoes;
+    @FXML
+    private TableColumn<Movimento, String> colDataHora;
+    @FXML
+    private TableColumn<Movimento, String> colTipo;
+    @FXML
+    private TableColumn<Movimento, String> colCodigo;
+    @FXML
+    private TableColumn<Movimento, String> colProduto;
+    @FXML
+    private TableColumn<Movimento, Integer> colQtdAnterior;
+    @FXML
+    private TableColumn<Movimento, Integer> colQtdNova;
+    @FXML
+    private TableColumn<Movimento, String> colDiferenca;
+    @FXML
+    private TableColumn<Movimento, String> colObservacao;
 
-    @FXML private ComboBox<String> comboTipo;
-    @FXML private TextField txtFiltroProduto;
-    @FXML private Button btnAtualizar;
-    @FXML private Button btnFiltrar;
-    @FXML private Button btnLimpar;
+    @FXML
+    private ComboBox<String> comboTipo;
+    @FXML
+    private TextField txtFiltroProduto;
+    @FXML
+    private Button btnAtualizar;
+    @FXML
+    private Button btnFiltrar;
+    @FXML
+    private Button btnLimpar;
 
-    @FXML private Label lblTotalEntradas;
-    @FXML private Label lblTotalSaidas;
-    @FXML private Label lblTotalMovimentacoes;
-    @FXML private Label lblInfo;
+    @FXML
+    private Label lblTotalEntradas;
+    @FXML
+    private Label lblTotalSaidas;
+    @FXML
+    private Label lblTotalMovimentacoes;
+    @FXML
+    private Label lblInfo;
 
     private SupabaseService supabaseService;
     private MovimentoService movimentoService;
-    private MovimentoExtraService alteracaoService;
+    private MovimentoExtraService movimentoExtraService;
     private String estoqueAtualId;
 
     private ObservableList<Movimento> movimentacoesFiltradas = FXCollections.observableArrayList();
@@ -165,11 +183,11 @@ public class HistoricoController {
         );
         this.movimentoService.setAuthToken(service.getAuthToken());
 
-        this.alteracaoService = new MovimentoExtraService(
+        this.movimentoExtraService = new MovimentoExtraService(
                 SupabaseConfig.getSupabaseUrl(),
                 SupabaseConfig.getSupabaseKey()
         );
-        this.alteracaoService.setAuthToken(service.getAuthToken());
+        this.movimentoExtraService.setAuthToken(service.getAuthToken());
     }
 
     public void setEstoqueAtual(String estoqueId) {
@@ -209,7 +227,7 @@ public class HistoricoController {
 
                 movimentoService.carregarMovimentos(estoqueAtualId);
 
-                alteracaoService.carregarAlteracoes(estoqueAtualId);
+                movimentoExtraService.carregarAlteracoes(estoqueAtualId);
 
                 Platform.runLater(() -> {
                     aplicarFiltros();
@@ -279,12 +297,12 @@ public class HistoricoController {
         int totalSaidas = 0;
 
         for (Movimento mov : todos) {
-            String tipo = mov.getTipoDescricao().toUpperCase();
+            String tipo = mov.getTipo().toUpperCase();
 
             if (tipo.equals("ENTRADA")) {
-                    totalEntradas ++;
+                totalEntradas++;
             } else if (tipo.equals("SAIDA")) {
-                totalSaidas ++;
+                totalSaidas++;
             }
         }
 
@@ -294,29 +312,26 @@ public class HistoricoController {
     }
 
     public void registrarMovimento(Movimento movimento) {
-        if (movimentoService == null || estoqueAtualId == null) {
-            System.err.println("⚠ MovimentoService ou estoqueId não configurado");
+        if (estoqueAtualId == null) {
+            System.err.println("⚠ estoqueId não configurado");
             return;
         }
 
         String tipo = movimento.getTipo().toUpperCase();
 
-        // Salvar no Supabase em background
         new Thread(() -> {
             try {
-                // Movimentos de QUANTIDADE vão para tabela movimentacoes
                 if (tipo.equals("ENTRADA") || tipo.equals("SAIDA") ||
                         tipo.equals("AJUSTE") || tipo.equals("CRIACAO")) {
+                    // quantidade
                     movimentoService.salvarMovimento(movimento, estoqueAtualId);
-                }
-                // ALTERAÇÕES vão para tabela alteracoes_produto
-                else if (alteracaoService != null) {
-                    alteracaoService.salvarAlteracao(movimento, estoqueAtualId);
+                } else {
+                    // valor/dados
+                    if (movimentoExtraService != null) {
+                        movimentoExtraService.salvarMovimento(movimento, estoqueAtualId);
+                    }
                 }
 
-                System.out.println("✓ Movimento/Alteração salvo: " + movimento.getTipo());
-
-                // Atualizar interface
                 Platform.runLater(() -> {
                     aplicarFiltros();
                     atualizarEstatisticas();
@@ -327,4 +342,5 @@ public class HistoricoController {
                 e.printStackTrace();
             }
         }).start();
-    }}
+    }
+}
