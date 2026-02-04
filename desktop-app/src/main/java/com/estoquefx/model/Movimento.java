@@ -15,6 +15,8 @@ public class Movimento {
     private int quantidadeNova;
     private int diff;
     private int velhaQuantidade;
+    private String qtdVelhaMostrar;
+    private String qtdNovaMostrar;
 
     // qtdMin/qtd
     public Movimento(Produto produto, String tipo, int diff){
@@ -25,6 +27,8 @@ public class Movimento {
         this.tipo = tipo;
         this.diff = diff;
         this.velhaQuantidade = quantidadeNova - diff;
+        this.qtdVelhaMostrar = String.valueOf(velhaQuantidade);
+        this.qtdNovaMostrar = String.valueOf(quantidadeNova);
         Historico.addMovimento(this);
     }
     public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
@@ -36,6 +40,8 @@ public class Movimento {
         this.quantidadeNova = quantidadeNova;
         this.diff = diff;
         this.velhaQuantidade = velhaQuantidade;
+        this.qtdVelhaMostrar = String.valueOf(velhaQuantidade);
+        this.qtdNovaMostrar = String.valueOf(quantidadeNova);
         Historico.addMovimento(this);
     }
 
@@ -50,7 +56,9 @@ public class Movimento {
         this.velhoValor = valorNovo - delta;
         this.quantidadeNova = produto.getQtd();
         this.velhaQuantidade = produto.getQtd();
-        this.diff = 0;                 // não mexe em quantidade
+        this.diff = 0;
+        this.qtdVelhaMostrar = String.format("R$ %.2f", velhoValor);
+        this.qtdNovaMostrar = String.format("R$ %.2f", valorNovo);
         Historico.addMovimento(this);
     }
     public Movimento(String codigo, String nome, LocalDateTime tempo, String tipo,
@@ -62,10 +70,8 @@ public class Movimento {
         this.delta = delta;
         this.valorNovo = valorNovo;
         this.velhoValor = velhoValor;
-
-        this.quantidadeNova = 0;
-        this.velhaQuantidade = 0;
-        this.diff = 0;
+        this.qtdVelhaMostrar = String.format("R$ %.2f", velhoValor);
+        this.qtdNovaMostrar = String.format("R$ %.2f", valorNovo);
 
         Historico.addMovimento(this);
     }
@@ -101,11 +107,27 @@ public class Movimento {
     }
 
     public String getDiferencaFormatada() {
-        if (diff > 0) {
-            return "+" + diff;
+        String toReturn = "";
+        if (tipo.equals("ENTRADA") ||  tipo.equals("SAIDA")) {
+            if (diff > 0) {
+                toReturn = "+" + diff;
+            } else{
+                toReturn = String.valueOf(diff);
+            }
+        } else if (tipo.equals("ALTERACAO_VALOR")) {
+            if (delta > 0) {
+                toReturn = ("R$ +" + delta).replace(".", ",");
+            } else{
+                toReturn = ("R$ " + delta).replace(".", ",");
+            }
         }
-        return String.valueOf(diff);
+        return toReturn;
     }
+
+    public String getQtdVelhaMostrar() {return qtdVelhaMostrar;}
+    public String getQtdNovaMostrar() {return qtdNovaMostrar;}
+
+
 
     public String getObservacao() {
         String tipoUpper = tipo.toUpperCase();

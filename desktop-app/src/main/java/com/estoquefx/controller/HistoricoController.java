@@ -19,44 +19,26 @@ import java.util.stream.Collectors;
 
 public class HistoricoController {
 
-    @FXML
-    private TableView<Movimento> tabelaMovimentacoes;
-    @FXML
-    private TableColumn<Movimento, String> colDataHora;
-    @FXML
-    private TableColumn<Movimento, String> colTipo;
-    @FXML
-    private TableColumn<Movimento, String> colCodigo;
-    @FXML
-    private TableColumn<Movimento, String> colProduto;
-    @FXML
-    private TableColumn<Movimento, String> colQtdAnterior;
-    @FXML
-    private TableColumn<Movimento, String> colQtdNova;
-    @FXML
-    private TableColumn<Movimento, String> colDiferenca;
-    @FXML
-    private TableColumn<Movimento, String> colObservacao;
+    @FXML private TableView<Movimento> tabelaMovimentacoes;
+    @FXML private TableColumn<Movimento, String> colDataHora;
+    @FXML private TableColumn<Movimento, String> colTipo;
+    @FXML private TableColumn<Movimento, String> colCodigo;
+    @FXML private TableColumn<Movimento, String> colProduto;
+    @FXML private TableColumn<Movimento, String> colQtdAnterior;
+    @FXML private TableColumn<Movimento, String> colQtdNova;
+    @FXML private TableColumn<Movimento, String> colDiferenca;
+    @FXML private TableColumn<Movimento, String> colObservacao;
 
-    @FXML
-    private ComboBox<String> comboTipo;
-    @FXML
-    private TextField txtFiltroProduto;
-    @FXML
-    private Button btnAtualizar;
-    @FXML
-    private Button btnFiltrar;
-    @FXML
-    private Button btnLimpar;
+    @FXML private ComboBox<String> comboTipo;
+    @FXML private TextField txtFiltroProduto;
+    @FXML private Button btnAtualizar;
+    @FXML private Button btnFiltrar;
+    @FXML private Button btnLimpar;
 
-    @FXML
-    private Label lblTotalEntradas;
-    @FXML
-    private Label lblTotalSaidas;
-    @FXML
-    private Label lblTotalMovimentacoes;
-    @FXML
-    private Label lblInfo;
+    @FXML private Label lblTotalEntradas;
+    @FXML private Label lblTotalSaidas;
+    @FXML private Label lblTotalMovimentacoes;
+    @FXML private Label lblInfo;
 
     private SupabaseService supabaseService;
     private MovimentoService movimentoService;
@@ -80,8 +62,8 @@ public class HistoricoController {
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipoDescricao"));
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colProduto.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colQtdAnterior.setCellValueFactory(new PropertyValueFactory<>("quantidadeAnterior"));
-        colQtdNova.setCellValueFactory(new PropertyValueFactory<>("quantidadeNova"));
+        colQtdAnterior.setCellValueFactory(new PropertyValueFactory<>("qtdVelhaMostrar"));
+        colQtdNova.setCellValueFactory(new PropertyValueFactory<>("qtdNovaMostrar"));
         colDiferenca.setCellValueFactory(new PropertyValueFactory<>("diferencaFormatada"));
         colObservacao.setCellValueFactory(new PropertyValueFactory<>("observacao"));
 
@@ -97,9 +79,9 @@ public class HistoricoController {
                 } else {
                     setText(item);
 
-                    if (item.startsWith("+")) {
+                    if (item.startsWith("+") || item.startsWith("R$ +")) {
                         setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
-                    } else if (item.startsWith("-")) {
+                    } else if (item.startsWith("-") ||  item.startsWith("R$ -")) {
                         setStyle("-fx-text-fill: #F44336; -fx-font-weight: bold;");
                     } else {
                         setStyle("-fx-text-fill: #757575;");
@@ -134,7 +116,8 @@ public class HistoricoController {
                             setStyle("-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-font-weight: bold;");
                             break;
                         case "Alteração Valor":
-                            setStyle("-fx-background-color: #F3E5F5; -fx-text-fill: #7B1FA2; -fx-font-weight: bold;");
+                            setStyle("-fx-background-color: #E3F2FD; -fx-text-fill: #1565C0; -fx-font-weight: bold;");
+                            //setStyle("-fx-background-color: #F3E5F5; -fx-text-fill: #7B1FA2; -fx-font-weight: bold;");
                             break;
                         case "Alteração Dados":
                             setStyle("-fx-background-color: #E0F2F1; -fx-text-fill: #00695C; -fx-font-weight: bold;");
@@ -308,7 +291,7 @@ public class HistoricoController {
 
         lblTotalEntradas.setText(String.valueOf(totalEntradas));
         lblTotalSaidas.setText(String.valueOf(totalSaidas));
-        lblTotalMovimentacoes.setText(String.valueOf(todos.size()));
+        lblTotalMovimentacoes.setText(String.valueOf(todos.size() -(totalEntradas + totalSaidas)));
     }
 
     public void registrarMovimento(Movimento movimento) {

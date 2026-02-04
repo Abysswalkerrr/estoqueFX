@@ -62,7 +62,7 @@
 
         <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #2196F3; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
             <Label fx:id="lblTotalMovimentacoes" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-            <Label text="Total" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+            <Label text="Alterações de valor" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
         </VBox>
     </HBox>
 
