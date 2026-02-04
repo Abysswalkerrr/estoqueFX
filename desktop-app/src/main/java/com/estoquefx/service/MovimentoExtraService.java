@@ -25,9 +25,7 @@ public class MovimentoExtraService {
         this.authToken = token;
     }
 
-    /**
-     * Salva alteração de valor/qtdMin/dados no Supabase
-     */
+
     public void salvarMovimento(Movimento movimento, String estoqueId) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
@@ -35,10 +33,11 @@ public class MovimentoExtraService {
 
         String tipo = movimento.getTipo().toUpperCase();
 
-        // Só salvar alterações (não movimentos de quantidade)
+        // não salva movimentos de quantidade
         if (tipo.equals("ENTRADA") || tipo.equals("SAIDA") ||
-                tipo.equals("AJUSTE") || tipo.equals("CRIACAO")) {
-            return; // Ignora movimentos de quantidade
+                tipo.equals("AJUSTE") || tipo.equals("CRIACAO") ||
+                tipo.equals("ALTERACAO_DADOS")) {
+            return;
         }
 
         JsonObject json = new JsonObject();
@@ -81,9 +80,7 @@ public class MovimentoExtraService {
         }
     }
 
-    /**
-     * Carrega alterações do Supabase
-     */
+
     public void carregarAlteracoes(String estoqueId) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
@@ -118,7 +115,6 @@ public class MovimentoExtraService {
                 String produtoNome = obj.get("produto_nome").getAsString();
                 String tipo = obj.get("tipo").getAsString();
 
-                // Parse data
                 String dataHoraStr = obj.get("data_hora").getAsString();
                 LocalDateTime dataHora;
                 try {
@@ -134,7 +130,7 @@ public class MovimentoExtraService {
                     dataHora = LocalDateTime.now();
                 }
 
-                // Criar movimento baseado no tipo
+                // criar movimento baseado no tipo
                 if (tipo.equals("ALTERACAO_VALOR")) {
                     double valorAntigo = obj.get("valor_antigo").getAsDouble();
                     double valorNovo = obj.get("valor_novo").getAsDouble();
@@ -147,7 +143,7 @@ public class MovimentoExtraService {
                     int qtdMinAntiga = obj.get("qtd_min_antiga").getAsInt();
                     int qtdMinNova = obj.get("qtd_min_nova").getAsInt();
 
-                    // Construtor: (codigo, nome, tempo, tipo, qtdNova, diff, qtdAntiga)
+                    // codigo, nome, tempo, tipo, qtdNova, diff, qtdAntiga
                     new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                             qtdMinNova, qtdMinNova - qtdMinAntiga, qtdMinAntiga);
                 }

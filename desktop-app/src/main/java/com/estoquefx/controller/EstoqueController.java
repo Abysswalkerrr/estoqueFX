@@ -1471,9 +1471,4 @@ public class EstoqueController {
     public static Stage getStage() {
         return stage;
     }
-
-    public void chamarSalvar(){
-        onSalvar();
-    }
-
 }

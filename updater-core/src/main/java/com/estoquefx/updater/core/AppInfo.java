@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.0.4";
+            "3.1.6";
     public static final String VERSAO_CHANNEL =
             "stable";
     public static String UPDATE_CHANNEL = "stable";
@@ -37,6 +37,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.1.6
+            Lançada a aba de histórico de movimentações, onde é possível rastrear entradas, saídas e ajustes de preço do estoque.
+            \s
             3.0.4
             Agora o app cria uma pasta pra cada estoque, permitindo mais flexibilidade na gestão.
             \s

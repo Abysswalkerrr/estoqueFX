@@ -28,7 +28,7 @@ public class MovimentoService {
         this.authToken = token;
     }
 
-    //movimentos de quantidade
+    // entradas/saídas
     public void salvarMovimento(Movimento movimento, String estoqueId) throws IOException {
         if (authToken == null) {
             throw new IllegalStateException("Usuário não autenticado");
@@ -129,7 +129,7 @@ public class MovimentoService {
                     dataHora = LocalDateTime.now();
                 }
 
-                // Construtor: (codigo, nome, tempo, tipo, quantidadeNova, diff, velhaQuantidade)
+                // código, nome, tempo, tipo, quantidadeNova, diff, velhaQuantidade
                 //todo ver se vlrUnd e vlrMin funcionam com isso - talvez ignorar zeros no fim?
                 new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                         qtdNova, qtdAlterada, qtdAnterior);
