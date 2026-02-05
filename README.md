@@ -168,13 +168,13 @@ Menu → Trocar Estoque → Selecione outro estoque da lista
 - [x] Sincronização com nuvem
 - [x] Sistema de login(múltiplas contas)
 
-### 🚧 Versão 3.1 (Em breve)
-- [ ] Histórico de movimentações
+### 🚧 Versão 3.1+ (Em breve)
+- [x] Histórico de movimentações
 - [ ] Relatórios
-- [ ] Backup automático
+- [x] Backup automático
 - [ ] Autenticação de dois fatores
 
-### 🔮 Versão 4.0 (Futuro)
+### 🔮 Versão 4.0+ (Futuro)
 - [ ] Módulo de fornecedores
 - [ ] Código de barras/etiquetas
 - [ ] Permissões de usuário (admin/operador)
