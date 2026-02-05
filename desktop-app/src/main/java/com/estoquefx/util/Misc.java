@@ -33,22 +33,6 @@ import java.io.IOException;
 public class Misc {
     private static String ultimaAtualizacao = "";
     private static boolean negouAtualizacao = false;
-    private static int qtdUrgentes;
-
-
-
-    public static void contaUrgentes(){
-        int c = 0;
-        for  (Produto p : Estoque.getProdutos()) {
-            if (p.getCompra()){
-                c++;
-            }
-        }
-        qtdUrgentes = c;
-    }
-    public static int getUrgentes(){
-        return  qtdUrgentes;
-    }
 
 
     public static void setUltimaAtualizacao(String ultimaAtualizacao) {

@@ -4,6 +4,7 @@ import com.estoquefx.model.*;
 import com.estoquefx.service.EstoqueService;
 import com.estoquefx.service.ProdutoService;
 import com.estoquefx.service.SupabaseService;
+import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -551,6 +552,12 @@ public class TabelaController {
 
     public void setUltimaAlteracao(String texto) {
         ultimaAlteracao.set(texto);
+    }
+
+    public void carregarUltimaAlteracao() {
+        String ultimaAlt = Misc.getUltimaAtualizacao();
+        System.out.println("🕒 Carregando última alteração: " + ultimaAlt);
+        setUltimaAlteracao("Salvo em: " + ultimaAlt);
     }
 
     // ========== MÉTODOS PÚBLICOS ==========
