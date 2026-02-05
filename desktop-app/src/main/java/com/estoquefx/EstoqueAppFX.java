@@ -44,7 +44,7 @@ public class EstoqueAppFX extends Application {
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         stage.setTitle("EstoqueFX-login");
         stage.setScene(scene);
 

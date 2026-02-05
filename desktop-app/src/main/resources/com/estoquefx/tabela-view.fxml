@@ -34,7 +34,7 @@
                     <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und"/>
                     <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd"/>
                     <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação"/>
-                    <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo"/>
+                    <TableColumn fx:id="colSaldo" prefWidth="65" text="Saldo"/>
                     <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter"/>
                     <TableColumn fx:id="colDescricao" text="Descrição"/>
                 </columns>

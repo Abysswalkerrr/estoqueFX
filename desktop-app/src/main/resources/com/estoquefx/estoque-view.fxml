@@ -7,78 +7,43 @@
 
 <TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.EstoqueController">
     <Tab closable="false" text="Tabela">
-        <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
         <BorderPane stylesheets="@style.css">
-
             <top>
-                <VBox>
-                    <MenuBar>
-                        <Menu text="Ajuda">
-                            <MenuItem onAction="#onReportarBug" text="Relatar problema" />
-                            <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />
-                            <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
-                            <MenuItem onAction="#onSair" text="Sair" />
-                            <MenuItem onAction="#onSobre" text="Sobre" />
-                        </Menu>
-                        <Menu text="Arquivo">
-                            <MenuItem onAction="#onAbrirArquivo" text="Abrir pasta de dados" />
-                            <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
-                            <MenuItem onAction="#onImportarCSV" text="Importar CSV" />
-                            <MenuItem onAction="#onSalvar" text="Salvar" />
-                        </Menu>
-                        <Menu text="Estoque">
-                            <MenuItem onAction="#onCriarProduto" text="Novo produto" />
-                            <MenuItem onAction="#onEntrada" text="Entrada" />
-                            <MenuItem onAction="#onSaida" text="Saída" />
-                        </Menu>
-                        <Menu text="Imprimir">
-                            <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
-                        </Menu>
-                        <Menu text="Versão">
-                            <MenuItem onAction="#onAvisarAtualizacoes" text="Avisar atualizações" />
-                            <MenuItem onAction="#onNovidades" text="Novidades" />
-                            <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
-                            <MenuItem onAction="#onAlterarVersao" text="Versão Estável/Beta" />
-                            <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
-                        </Menu>
-                    </MenuBar>
-
-                    <HBox spacing="8" style="-fx-padding: 8;">
-                        <VBox styleClass="status-bar">
-                            <Label fx:id="lblUltimaAlteracao" text="salvo as" />
-                            <Label fx:id="lblSaldoTotal" text="saldo total" />
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
-                            <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0" promptText="Escolher categoria" />
-                            <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
-                        </VBox>
-                        <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0" promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
-                    </HBox>
-                </VBox>
-
+                <MenuBar>
+                    <Menu text="Ajuda">
+                        <MenuItem onAction="#onReportarBug" text="Relatar problema" />
+                        <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />
+                        <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
+                        <MenuItem onAction="#onSair" text="Sair" />
+                        <MenuItem onAction="#onSobre" text="Sobre" />
+                    </Menu>
+                    <Menu text="Arquivo">
+                        <MenuItem onAction="#onAbrirArquivo" text="Abrir pasta de dados" />
+                        <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
+                        <MenuItem onAction="#onImportarCSV" text="Importar CSV" />
+                        <MenuItem onAction="#onSalvar" text="Salvar" />
+                    </Menu>
+                    <Menu text="Estoque">
+                        <MenuItem onAction="#onCriarProduto" text="Novo produto" />
+                        <MenuItem onAction="#onEntrada" text="Entrada" />
+                        <MenuItem onAction="#onSaida" text="Saída" />
+                    </Menu>
+                    <Menu text="Imprimir">
+                        <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
+                    </Menu>
+                    <Menu text="Versão">
+                        <MenuItem onAction="#onAvisarAtualizacoes" text="Avisar atualizações" />
+                        <MenuItem onAction="#onNovidades" text="Novidades" />
+                        <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
+                        <MenuItem onAction="#onAlterarVersao" text="Versão Estável/Beta" />
+                        <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
+                    </Menu>
+                </MenuBar>
             </top>
          <bottom>
-                 <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f0f0f0; -fx-padding: 5 10;" styleClass="status-bar" BorderPane.alignment="CENTER">
-                     <Label fx:id="lblResultados" text="Mostrando 0 de 0 produtos" />
-                     <Region HBox.hgrow="ALWAYS" />
-                 </HBox>
          </bottom>
          <center>
-                 <TableView fx:id="tabela" prefHeight="400" BorderPane.alignment="BOTTOM_LEFT">
-                     <columns>
-                         <TableColumn fx:id="colCodigo" prefWidth="45.00000077486038" text="Código" />
-                         <TableColumn fx:id="colNome" prefWidth="111.40000534057617" text="Nome" />
-                         <TableColumn fx:id="colCategoria" prefWidth="103.00001525878906" text="Categoria" />
-                         <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín" />
-                         <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und" />
-                         <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd" />
-                         <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação" />
-                         <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo" />
-                         <TableColumn fx:id="colHora" prefWidth="75" text="últ. Alter" />
-                         <TableColumn fx:id="colDescricao" text="Descrição" />
-                     </columns>
-                 </TableView>
+             <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
          </center>
 
         </BorderPane>

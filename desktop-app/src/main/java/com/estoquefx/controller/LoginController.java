@@ -121,7 +121,7 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(
                     EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
             );
-            Scene scene = new Scene(loader.load(), 500, 400);
+            Scene scene = new Scene(loader.load(), 600, 600);
 
             SelecaoEstoqueController controller = loader.getController();
             controller.setSupabaseService(supabaseService);

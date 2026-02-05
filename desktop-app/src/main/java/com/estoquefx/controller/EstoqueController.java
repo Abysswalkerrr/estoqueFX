@@ -34,7 +34,7 @@ import java.util.function.LongConsumer;
 
 /**
  * Controller principal do sistema de estoque
- * Coordena os sub-controllers (Tabela, Dashboard, Histórico)
+ * Coordena os subcontrollers (Tabela, Dashboard, Histórico)
  * Gerencia ações do menu e navegação
  */
 public class EstoqueController {
@@ -332,7 +332,7 @@ public class EstoqueController {
                     historicoController.registrarMovimento(movEntrada);
                 }
 
-                p.setAlterHora(Time.getTime());
+                p.setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
                 p.atualizaCompra();
             }
 
@@ -369,7 +369,7 @@ public class EstoqueController {
                     historicoController.registrarMovimento(movSaida);
                 }
 
-                p.setAlterHora(Time.getTime());
+                p.setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
                 p.atualizaCompra();
             }
 

@@ -150,21 +150,21 @@ public class TabelaController {
 
         // Configurar larguras
         colNome.setMinWidth(90);
-        colNome.setMaxWidth(200);
+        colNome.setPrefWidth(175);
         colCodigo.setMinWidth(50);
         colCodigo.setMaxWidth(50);
         colQtdMin.setMinWidth(60);
-        colQtdMin.setMaxWidth(100);
-        colQtd.setMinWidth(75);
-        colQtd.setMaxWidth(100);
+        colQtdMin.setMaxWidth(75);
+        colQtd.setMinWidth(60);
+        colQtd.setMaxWidth(75);
         colValorUnd.setMinWidth(100);
         colValorUnd.setMaxWidth(130);
-        colSaldo.setMinWidth(120);
-        colSaldo.setMaxWidth(150);
+        colSaldo.setMinWidth(85);
+        colSaldo.setMaxWidth(130);
         colOrientacao.setMinWidth(105);
         colOrientacao.setMaxWidth(105);
-        colHora.setMinWidth(75);
-        colHora.setMaxWidth(95);
+        colHora.setMinWidth(130);
+        colHora.setMaxWidth(150);
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
 
@@ -233,7 +233,7 @@ public class TabelaController {
                 int novoMin = Integer.parseInt(event.getNewValue().toString().trim());
                 int velhoMin = p.getVlrMin();
                 p.setVlrMin(novoMin);
-                p.setAlterHora(Time.getTime());
+                p.setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
 
                 if (novoMin != velhoMin && historicoController != null) {
                     int diff = novoMin - velhoMin;
@@ -277,7 +277,7 @@ public class TabelaController {
                     atualizaUrgentes(p);
                 }
 
-                p.setAlterHora(Time.getTime());
+                p.setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
                 atualizarTotal();
                 notificarAlteracao();
                 tabela.refresh();
@@ -308,7 +308,7 @@ public class TabelaController {
                 texto = texto.replace("R$", "");
                 double novoVlr = Double.parseDouble(texto.replace(',', '.').trim());
                 p.setVlrUnd(novoVlr);
-                p.setAlterHora(Time.getTime());
+                p.setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
 
                 if (novoVlr != oldValor && historicoController != null) {
                     double delta = novoVlr - oldValor;
