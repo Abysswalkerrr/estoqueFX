@@ -14,7 +14,14 @@
             prefHeight="400.0" prefWidth="600.0">
     <VBox prefHeight="600" prefWidth="800" spacing="10" style="-fx-padding: 10;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
-            <!-- Linha 1: cards de métricas -->
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 5;">
+            <Label text="📊 Dashboard" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnAtualizar" text="🔄 Atualizar" onAction="#onAtualizar"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 5 15;" />
+        </HBox>
+
+        <!-- Linha 1: cards de métricas -->
         <HBox spacing="10">
             <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
                 <Label style="-fx-font-size: 11;" text="Valor total em estoque" />
@@ -37,7 +44,7 @@
             </VBox>
         </HBox>
 
-            <!-- gráfico e tabela -->
+        <!-- gráfico e tabela -->
         <HBox spacing="10" VBox.vgrow="ALWAYS">
             <VBox spacing="5" HBox.hgrow="ALWAYS">
                 <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (gráfico)" />

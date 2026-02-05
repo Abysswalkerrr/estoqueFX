@@ -189,17 +189,6 @@ public class SelecaoEstoqueController {
             histController.setSupabaseService(supabaseService);
             histController.setEstoqueAtual(estoqueId);
 
-            FXMLLoader dashboardLoader = new FXMLLoader(
-                    EstoqueAppFX.class.getResource("dashboard-view.fxml")
-            );
-            dashboardLoader.load();
-
-            DashboardController dashboardController = dashboardLoader.getController();
-
-            // Conectar os dois controllers
-            controller.setHistoricoController(histController);
-            controller.setDashboardController(dashboardController);
-
         } catch (IOException e) {
             System.err.println("Erro ao carregar histórico: " + e.getMessage());
         }

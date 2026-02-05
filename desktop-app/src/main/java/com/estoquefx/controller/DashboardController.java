@@ -2,103 +2,146 @@ package com.estoquefx.controller;
 
 import com.estoquefx.model.Categoria;
 import com.estoquefx.model.Estoque;
-import com.estoquefx.service.CategoriaService;
+import com.estoquefx.model.Produto;
+import com.estoquefx.service.SupabaseService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.util.Map;
 
 public class DashboardController {
-    @FXML
-    private Label lblQtdProdutosR;
-    private final StringProperty qtdProdutos = new SimpleStringProperty();
 
     @FXML private Label lblValorTotalR;
-    private String vlr = String.format("%.2f", Estoque.getSaldo());
-    private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
-
-
+    @FXML private Label lblQtdProdutosR;
     @FXML private Label lblQtdCategoriasR;
-    private StringProperty qtdCategorias = new SimpleStringProperty();
-
     @FXML private Label lblQtdUrgentesR;
-    private StringProperty qtdUrgentes = new SimpleStringProperty();
 
     @FXML private PieChart pieCategoriasR;
-
     @FXML private TableView<Categoria> tabelaCategoriasR;
-
     @FXML private TableColumn<Categoria, String> colCategoriaR;
     @FXML private TableColumn<Categoria, String> colValorR;
-    ObservableList<Categoria> dadosRelatorio;
+
+    @FXML private Button btnAtualizar;
+
+    private SupabaseService supabaseService;
+    private String estoqueAtualId;
+    private String estoqueNome;
 
     @FXML
-    private void initialize() {
-        lblValorTotalR.textProperty().bind(vlrTotal);
-        lblQtdProdutosR.textProperty().bind(qtdProdutos);
-        lblQtdUrgentesR.textProperty().bind(qtdUrgentes);
-        lblQtdCategoriasR.textProperty().bind(qtdCategorias);
+    public void initialize() {
+        System.out.println("🎨 Inicializando DashboardController...");
+        configurarTabelaCategorias();
+        configurarGrafico();
+    }
 
+    private void configurarTabelaCategorias() {
+        colCategoriaR.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getNome())
+        );
+
+        colValorR.setCellValueFactory(data ->
+                new SimpleStringProperty(
+                        String.format("R$ %.2f", data.getValue().getValor())
+                )
+        );
+    }
+
+    private void configurarGrafico() {
+        pieCategoriasR.setLegendVisible(true);
+        pieCategoriasR.setLabelsVisible(true);
+    }
+
+    public void setSupabaseService(SupabaseService service) {
+        this.supabaseService = service;
+        System.out.println("✓ SupabaseService injetado no DashboardController");
+    }
+
+    public void setEstoqueAtual(String estoqueId, String estoqueNome) {
+        this.estoqueAtualId = estoqueId;
+        this.estoqueNome = estoqueNome;
+        System.out.println("✓ Estoque definido no DashboardController: " + estoqueNome);
+        atualizarDashboard();
+    }
+
+    /**
+     * ✅ ADICIONAR: Método chamado pelo botão Atualizar no FXML
+     */
+    @FXML
+    private void onAtualizar() {
+        System.out.println("🔄 Atualizando dashboard manualmente...");
+        btnAtualizar.setDisable(true);  // Desabilita durante atualização
+
+        atualizarDashboard();
+
+        // Reabilita o botão após 500ms (feedback visual)
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            Platform.runLater(() -> btnAtualizar.setDisable(false));
+        }).start();
+    }
+
+    public void atualizarDashboard() {
         Platform.runLater(() -> {
-            atualizarRelatorio();
-            atualizarDashboard();
+            try {
+                atualizarCards();
+                atualizarGrafico();
+                atualizarTabelaCategorias();
+                System.out.println("✓ Dashboard atualizado");
+            } catch (Exception e) {
+                System.err.println("⚠ Erro ao atualizar dashboard: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
-
-        colCategoriaR.setCellValueFactory(new PropertyValueFactory<>("nome"));
-
-        colValorR.setCellValueFactory(cellData -> {
-            Categoria cat = cellData.getValue();
-            String valorFormatado = String.format("R$ %.2f", cat.getValor());
-            return new SimpleStringProperty(valorFormatado);
-        });
-        dadosRelatorio = FXCollections.observableArrayList(Categoria.getCategorias());
-
-        tabelaCategoriasR.setItems(dadosRelatorio);
-
-
-
     }
 
-    @FXML
-    private void atualizarDashboard() {
-        qtdProdutos.set(String.valueOf(Estoque.getProdutos().size()));
+    private void atualizarCards() {
+        // Valor Total
+        double saldo = Estoque.getSaldo();
+        lblValorTotalR.setText(String.format("R$ %.2f", saldo));
 
-        Map<String, Double> mapa = CategoriaService.calcularValorPorCategoria();
+        // Quantidade de Produtos
+        int qtdProdutos = Estoque.getProdutos().size();
+        lblQtdProdutosR.setText(String.valueOf(qtdProdutos));
 
+        // Quantidade de Categorias
+        int qtdCategorias = Categoria.getCategorias().size();
+        lblQtdCategoriasR.setText(String.valueOf(qtdCategorias));
 
-        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
-        for (Map.Entry<String, Double> e : mapa.entrySet()) {
-            dadosChart.add(new PieChart.Data(
-                    e.getKey() + " (R$ " + String.format("%.2f", e.getValue()) + ")",
-                    e.getValue()
-            ));
-        }
-        pieCategoriasR.setData(dadosChart);
+        // Produtos Urgentes
+        long urgentes = Estoque.getProdutos().stream()
+                .filter(Produto::getCompra)
+                .count();
+        lblQtdUrgentesR.setText(String.valueOf(urgentes));
     }
 
-    private void atualizarRelatorio() {
-        dadosRelatorio.setAll(Categoria.getCategorias());
-        tabelaCategoriasR.refresh();
+    private void atualizarGrafico() {
+        ObservableList<PieChart.Data> dados = FXCollections.observableArrayList();
 
-        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
         for (Categoria cat : Categoria.getCategorias()) {
-            dadosChart.add(new PieChart.Data(
-                    cat.getNome() + " (R$ " + String.format("%.2f", cat.getValor()) + ")", cat.getValor()
-            ));
+            if (cat.getValor() > 0) {
+                String label = String.format("%s (R$ %.2f)",
+                        cat.getNome(), cat.getValor());
+                dados.add(new PieChart.Data(label, cat.getValor()));
+            }
         }
-        pieCategoriasR.setData(dadosChart);
 
-        qtdCategorias.set(String.valueOf(Categoria.getCategorias().size()));
+        pieCategoriasR.setData(dados);
     }
 
-
+    private void atualizarTabelaCategorias() {
+        ObservableList<Categoria> lista = FXCollections.observableArrayList(
+                Categoria.getCategorias()
+        );
+        tabelaCategoriasR.setItems(lista);
+    }
 }

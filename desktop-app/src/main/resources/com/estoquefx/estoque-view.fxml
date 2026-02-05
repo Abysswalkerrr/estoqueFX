@@ -82,7 +82,8 @@
 
         </BorderPane>
     </Tab>
-    <Tab closable="false" text="Dashboard">
+    <Tab fx:id="tabDashboard"  closable="false" text="Dashboard">
+        <fx:include source="dashboard-view.fxml" fx:id="dashboardView"/>
     </Tab>
     <Tab fx:id="tabHistorico" closable="false" text="Histórico">
         <fx:include source="historico-view.fxml" fx:id="historicoView"/>

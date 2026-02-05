@@ -384,11 +384,6 @@ public class EstoqueController {
         tabela.setItems(ordenados);
 
         dados.addListener((ListChangeListener<Produto>) change -> {
-            while (change.next()) {
-                if (change.wasAdded() || change.wasRemoved()) {
-                    atualizarRelatorio();
-                }
-            }
         });
 
 
@@ -428,7 +423,6 @@ public class EstoqueController {
             categorias.add(categoria.getNome());
         }
         boxCategorias.setItems(categorias);
-        qtdCategorias.set(String.valueOf(categorias.size()));
 
     }
 
@@ -449,6 +443,10 @@ public class EstoqueController {
             historicoController.setSupabaseService(service);
             historicoController.setEstoqueAtual(estoqueId);
         }
+        if (dashboardController != null) {
+            dashboardController.setSupabaseService(service);
+            dashboardController.setEstoqueAtual(estoqueId, estoqueNome);
+        }
     }
 
     public void contaUrgentes(){
@@ -457,7 +455,6 @@ public class EstoqueController {
                 urgentes.add(produto);
             }
         }
-        qtdUrgentes.set(String.valueOf(urgentes.size()));
     }
 
     private void atualizarFiltro(){
@@ -486,6 +483,8 @@ public class EstoqueController {
             });
     }
 
+
+
     private void carregarHistoricoController() {
         try {
             Object includeContent = tabHistorico.getContent();
@@ -511,17 +510,13 @@ public class EstoqueController {
     private void carregarDashboardController() {
         try {
             Object includeContent = tabDashboard.getContent();
-
             if (includeContent != null) {
-
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/estoquefx/dashboard-view.fxml")
                 );
                 VBox dashboardView = loader.load();
-                historicoController = loader.getController();
-
+                dashboardController = loader.getController();
                 tabDashboard.setContent(dashboardView);
-
                 System.out.println("✓ DashboardController carregado");
             }
         } catch (Exception e) {
@@ -742,13 +737,10 @@ public class EstoqueController {
         EstoqueService.atualizaTotal();
         String saldo = String.format("%.2f", Estoque.getSaldo());
         saldoTotal.set("Saldo total: " + "R$ " + saldo);
-        vlrTotal.set("R$ " + saldo);
-        atualizarRelatorio();
     }
 
     public void atualizarResultado(){
         resultado.set("Mostrando " + filtrados.size() + " de " + dados.size() + " produtos");
-        qtdProdutos.set(String.valueOf(dados.size()));
     }
 
     public void atualizaUrgentes(Produto produto) {
@@ -757,7 +749,6 @@ public class EstoqueController {
         } else{
             urgentes.remove(produto);
         }
-        qtdUrgentes.set(String.valueOf(urgentes.size()));
     }
 
     @FXML
