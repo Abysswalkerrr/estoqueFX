@@ -7,6 +7,7 @@
 
 <TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.EstoqueController">
     <Tab closable="false" text="Tabela">
+        <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
         <BorderPane stylesheets="@style.css">
 
             <top>
