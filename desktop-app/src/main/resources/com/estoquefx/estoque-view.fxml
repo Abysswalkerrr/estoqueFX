@@ -14,6 +14,7 @@
                     <MenuBar>
                         <Menu text="Ajuda">
                             <MenuItem onAction="#onReportarBug" text="Relatar problema" />
+                            <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />
                             <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
                             <MenuItem onAction="#onSair" text="Sair" />
                             <MenuItem onAction="#onSobre" text="Sobre" />
@@ -82,60 +83,6 @@
         </BorderPane>
     </Tab>
     <Tab closable="false" text="Dashboard">
-        <AnchorPane>
-            <VBox prefHeight="600" prefWidth="800" spacing="10" style="-fx-padding: 10;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-
-                <!-- Linha 1: cards de métricas -->
-                <HBox spacing="10">
-                    <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                        <Label style="-fx-font-size: 11;" text="Valor total em estoque" />
-                        <Label fx:id="lblValorTotalR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="R$ 0,00" />
-                    </VBox>
-
-                    <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                        <Label style="-fx-font-size: 11;" text="Produtos cadastrados" />
-                        <Label fx:id="lblQtdProdutosR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="0" />
-                    </VBox>
-
-                    <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                        <Label style="-fx-font-size: 11;" text="Categorias" />
-                        <Label fx:id="lblQtdCategoriasR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="0" />
-                    </VBox>
-
-                    <VBox prefWidth="180" style="-fx-background-color: #ffeeee; -fx-padding: 10; -fx-border-color: #ffcccc;">
-                        <Label style="-fx-font-size: 11;" text="Produtos em estoque baixo" />
-                        <Label fx:id="lblQtdUrgentesR" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #c62828;" text="0" />
-                    </VBox>
-                </HBox>
-
-                <!-- gráfico e tabela -->
-                <HBox spacing="10" VBox.vgrow="ALWAYS">
-                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (gráfico)" />
-                        <PieChart fx:id="pieCategoriasR" prefHeight="300" />
-                    </VBox>
-
-                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (tabela)" />
-                        <TableView fx:id="tabelaCategoriasR" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="colCategoriaR" prefWidth="150" text="Categoria">
-                                    <cellValueFactory>
-                                        <PropertyValueFactory property="key" />
-                                    </cellValueFactory>
-                                </TableColumn>
-                                <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque">
-                                    <cellValueFactory>
-                                        <PropertyValueFactory property="value" />
-                                    </cellValueFactory>
-                                </TableColumn>
-                            </columns>
-                        </TableView>
-                    </VBox>
-                </HBox>
-
-            </VBox>
-        </AnchorPane>
     </Tab>
     <Tab fx:id="tabHistorico" closable="false" text="Histórico">
         <fx:include source="historico-view.fxml" fx:id="historicoView"/>

@@ -1,13 +1,11 @@
 package com.estoquefx;
 
 import com.estoquefx.controller.EstoqueController;
-import com.estoquefx.model.Estoque;
 import com.estoquefx.model.Produto;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.updater.core.*;
 
 import com.estoquefx.util.Misc;
-import com.estoquefx.util.Time;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;

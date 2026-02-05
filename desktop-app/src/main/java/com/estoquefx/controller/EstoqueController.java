@@ -6,10 +6,9 @@ import com.estoquefx.data.Leitor;
 import com.estoquefx.model.*;
 import com.estoquefx.service.*;
 import com.estoquefx.updater.core.*;
-
-
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
+
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -26,7 +25,6 @@ import javafx.print.*;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Region;
@@ -56,31 +54,12 @@ public class EstoqueController {
     @FXML private Tab tabHistorico;
     private HistoricoController historicoController;
 
-    @FXML private Label lblValorTotalR;
-    private String vlr = String.format("%.2f", Estoque.getSaldo());
-    private StringProperty vlrTotal = new SimpleStringProperty("R$ " + vlr);
-
-    @FXML private Label lblQtdProdutosR;
-    private final StringProperty qtdProdutos = new SimpleStringProperty();
-
-    @FXML private Label lblQtdCategoriasR;
-    private StringProperty qtdCategorias = new SimpleStringProperty();
-
-    @FXML private Label lblQtdUrgentesR;
-    private StringProperty qtdUrgentes = new SimpleStringProperty();
-
-    @FXML private PieChart pieCategoriasR;
-
-    @FXML private TableView<Categoria> tabelaCategoriasR;
-
-    @FXML private TableColumn<Categoria, String> colCategoriaR;
-    @FXML private TableColumn<Categoria, String> colValorR;
-    ObservableList<Categoria> dadosRelatorio;
+    @FXML private Tab tabDashboard;
+    private DashboardController dashboardController;
 
 
     @FXML private CheckBox boxApenasUrgente;
     @FXML private ComboBox<String> boxCategorias;
-
 
     @FXML private Label lblUltimaAlteracao;
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
@@ -122,20 +101,14 @@ public class EstoqueController {
         lblUltimaAlteracao.textProperty().bind(ultimaAlteracao);
 
         lblSaldoTotal.textProperty().bind(saldoTotal);
-        lblValorTotalR.textProperty().bind(vlrTotal);
         lblResultados.textProperty().bind(resultado);
-        lblQtdProdutosR.textProperty().bind(qtdProdutos);
-        lblQtdUrgentesR.textProperty().bind(qtdUrgentes);
-
-        lblQtdCategoriasR.textProperty().bind(qtdCategorias);
 
 
         Platform.runLater(() -> {
-            atualizarRelatorio();
-            atualizarDashboard();
             carregarUltimaAlteracao();
             atualizarResultado();
             contaUrgentes();
+            Produto.setUltimaAcao("s");
         });
 
 
@@ -177,7 +150,10 @@ public class EstoqueController {
             String novoNome = event.getNewValue();
             if (novoNome == null || novoNome.isBlank()) return;
             novoNome = novoNome.trim().toUpperCase();
-            p.setNome(novoNome);
+
+            if (!novoNome.equals(p.getNome())) {
+                p.setNome(novoNome);
+            }
 
             tabela.refresh();
         });
@@ -186,8 +162,9 @@ public class EstoqueController {
         colCategoria.setOnEditCommit(event -> {
             Produto p = event.getRowValue();
             String novaCat = event.getNewValue();
-            if (novaCat == null || novaCat.isBlank()) return;
+            if (null == novaCat || novaCat.isBlank()) return;
             String c = p.getCategoria();
+            if (c.equals(novaCat)) {return;}
             Categoria categoria = Categoria.getCategoria(c);
             if (categoria.getProdutos().size() > 1){
                 categoria.removeProduto(p);
@@ -375,16 +352,6 @@ public class EstoqueController {
         colDescricao.setMinWidth(150);
         colDescricao.setPrefWidth(300);
 
-        colCategoriaR.setCellValueFactory(new PropertyValueFactory<>("nome"));
-
-        colValorR.setCellValueFactory(cellData -> {
-            Categoria cat = cellData.getValue();
-            String valorFormatado = String.format("R$ %.2f", cat.getValor());
-            return new SimpleStringProperty(valorFormatado);
-        });
-        dadosRelatorio = FXCollections.observableArrayList(Categoria.getCategorias());
-
-        tabelaCategoriasR.setItems(dadosRelatorio);
 
         dados = FXCollections.observableArrayList(Estoque.getProdutos());
         filtrados = new FilteredList<>(dados, _ -> true);
@@ -448,6 +415,7 @@ public class EstoqueController {
         });
 
         carregarHistoricoController();
+        carregarDashboardController();
 
         Platform.runLater(() -> {
             tabela.getScene().getRoot().requestFocus();
@@ -464,20 +432,6 @@ public class EstoqueController {
 
     }
 
-    private void atualizarRelatorio() {
-        dadosRelatorio.setAll(Categoria.getCategorias());
-        tabelaCategoriasR.refresh();
-
-        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
-        for (Categoria cat : Categoria.getCategorias()) {
-            dadosChart.add(new PieChart.Data(
-                    cat.getNome() + " (R$ " + String.format("%.2f", cat.getValor()) + ")", cat.getValor()
-            ));
-        }
-        pieCategoriasR.setData(dadosChart);
-
-        qtdCategorias.set(String.valueOf(Categoria.getCategorias().size()));
-    }
 
     private SupabaseService supabaseService;
     private String estoqueId;
@@ -534,7 +488,6 @@ public class EstoqueController {
 
     private void carregarHistoricoController() {
         try {
-            // Buscar o controller que foi carregado via fx:include
             Object includeContent = tabHistorico.getContent();
 
             if (includeContent != null) {
@@ -551,6 +504,28 @@ public class EstoqueController {
             }
         } catch (Exception e) {
             System.err.println("⚠ Erro ao carregar HistoricoController: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void carregarDashboardController() {
+        try {
+            Object includeContent = tabDashboard.getContent();
+
+            if (includeContent != null) {
+
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/estoquefx/dashboard-view.fxml")
+                );
+                VBox dashboardView = loader.load();
+                historicoController = loader.getController();
+
+                tabDashboard.setContent(dashboardView);
+
+                System.out.println("✓ DashboardController carregado");
+            }
+        } catch (Exception e) {
+            System.err.println("⚠ Erro ao carregar DashboardController: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -913,6 +888,7 @@ public class EstoqueController {
         dialogQtd.setContentText("Quantidade a entrar:");
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
+            if (qtd == 0){return;}
             ProdutoService.entrada(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
@@ -951,6 +927,7 @@ public class EstoqueController {
         dialogQtd.setContentText("Quantidade a retirar:");
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
+            if (qtd == 0){return;}
             ProdutoService.saida(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
             Produto p = Produto.getProdutoPorCodigo(codigo);
@@ -1005,10 +982,10 @@ public class EstoqueController {
 
         new Thread(() -> {
             try {
-                // 1. Deletar produtos antigos do estoque no servidor
+                // deletar produtos antigos do estoque no servidor
                 supabaseService.deletarProdutosEstoque(estoqueId);
 
-                // 2. Inserir todos os produtos atuais
+                // inserir todos os produtos atuais
                 for (Produto p : Estoque.getProdutos()) {
                     supabaseService.salvarProduto(p, estoqueId);
                     System.out.println(p.getNome() + "salvo");
@@ -1308,6 +1285,9 @@ public class EstoqueController {
     private void onReportarBug() {EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.BUG_REPORT_URL);}
 
     @FXML
+    private void onSugestoes() {EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.SUGGESTIONS_URL);}
+
+    @FXML
     private void onImprimir() {
         tabela.getSelectionModel().clearSelection();
 
@@ -1335,25 +1315,6 @@ public class EstoqueController {
         tabela.getTransforms().clear();
         tabela.setPrefHeight(Region.USE_COMPUTED_SIZE);
         tabela.setFixedCellSize(Region.USE_COMPUTED_SIZE);    }
-
-    @FXML
-    private void atualizarDashboard() {
-        atualizarTotal();
-        qtdProdutos.set(String.valueOf(Estoque.getProdutos().size()));
-
-        Map<String, Double> mapa = CategoriaService.calcularValorPorCategoria();
-
-
-        ObservableList<PieChart.Data> dadosChart = FXCollections.observableArrayList();
-        for (Map.Entry<String, Double> e : mapa.entrySet()) {
-            dadosChart.add(new PieChart.Data(
-                    e.getKey() + " (R$ " + String.format("%.2f", e.getValue()) + ")",
-                    e.getValue()
-            ));
-        }
-        pieCategoriasR.setData(dadosChart);
-    }
-
 
     public void onAvisarAtualizacoes(ActionEvent actionEvent) {
         try {
@@ -1461,6 +1422,10 @@ public class EstoqueController {
 
     public void setHistoricoController(HistoricoController historicoController) {
         this.historicoController = historicoController;
+    }
+
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
     }
 
 

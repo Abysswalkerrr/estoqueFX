@@ -208,9 +208,8 @@ public class HistoricoController {
             try {
                 Historico.limpar();
 
-                movimentoService.carregarMovimentos(estoqueAtualId);
-
-                movimentoExtraService.carregarAlteracoes(estoqueAtualId);
+                movimentoService.carregarMovimentos(estoqueAtualId); //qtd
+                movimentoExtraService.carregarAlteracoes(estoqueAtualId); //vlrUnd
 
                 Platform.runLater(() -> {
                     aplicarFiltros();

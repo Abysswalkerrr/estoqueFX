@@ -51,6 +51,7 @@ public class Produto {
         }
     }
 
+    //não lembro onde é usado, mas tá azul então vai ficar loll
     public Produto(String codigo, String nome, String categoria, int vlrMin, double vlrUnd, int qtd,
                    String alterHora) {
         this.codigo = codigo;

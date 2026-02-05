@@ -44,11 +44,7 @@ public class Misc {
                 c++;
             }
         }
-        setUrgentes(c);
-    }
-
-    public static void setUrgentes(int urgentes){
-        qtdUrgentes = urgentes;
+        qtdUrgentes = c;
     }
     public static int getUrgentes(){
         return  qtdUrgentes;
