@@ -10,7 +10,7 @@
 <?import javafx.scene.chart.PieChart?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.estoquefx.controller.DashboardController"
+            fx:controller="com.estoquefx.controller.estoque.DashboardController"
             prefHeight="400.0" prefWidth="600.0">
     <VBox prefHeight="600" prefWidth="800" spacing="10" style="-fx-padding: 10;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 

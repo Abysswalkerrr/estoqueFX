@@ -1,4 +1,4 @@
-package com.estoquefx.controller;
+package com.estoquefx.controller.estoque;
 
 import com.estoquefx.data.Leitor;
 import com.estoquefx.model.*;
@@ -10,12 +10,9 @@ import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.print.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.*;
 
 
 public class EstoqueController {

@@ -1,4 +1,4 @@
-package com.estoquefx.controller;
+package com.estoquefx.controller.estoque;
 
 import com.estoquefx.model.*;
 import com.estoquefx.service.EstoqueService;
@@ -449,7 +449,7 @@ public class TabelaController {
         });
     }
 
-    // ========== DIALOGS ==========
+    // DIALOGS
 
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
@@ -511,7 +511,7 @@ public class TabelaController {
         }
     }
 
-    // ========== MÉTODOS AUXILIARES ==========
+    // MÉTODOS AUXILIARES
 
     public void carregarCategorias() {
         ObservableList<String> categorias = FXCollections.observableArrayList();
@@ -558,7 +558,7 @@ public class TabelaController {
         setUltimaAlteracao("Salvo em: " + ultimaAlt);
     }
 
-    // ========== MÉTODOS PÚBLICOS ==========
+    // MÉTODOS PÚBLICOS
 
     public void refresh() {
         dados.setAll(Estoque.getProdutos());
@@ -598,4 +598,5 @@ public class TabelaController {
     public TableView<Produto> getTabela() {
         return tabela;
     }
+
 }

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.estoquefx.controller.HistoricoController"
+      fx:controller="com.estoquefx.controller.estoque.HistoricoController"
       spacing="15" style="-fx-background-color: #f5f5f5;">
 
     <padding>

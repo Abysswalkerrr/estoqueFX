@@ -1,6 +1,6 @@
 package com.estoquefx;
 
-import com.estoquefx.controller.EstoqueController;
+import com.estoquefx.controller.estoque.EstoqueController;
 import com.estoquefx.model.Produto;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.updater.core.*;

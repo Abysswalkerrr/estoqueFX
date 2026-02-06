@@ -5,7 +5,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.estoquefx.controller.EstoqueController"
+            fx:controller="com.estoquefx.controller.estoque.EstoqueController"
             stylesheets="@style.css">
 
     <!-- Menu no topo de TUDO -->

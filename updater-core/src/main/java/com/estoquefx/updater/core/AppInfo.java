@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.1.9";
+            "0.2.0";
     public static String UPDATE_CHANNEL = "stable";
 
     public static final String BUG_REPORT_URL =
@@ -31,8 +31,12 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.2.0
+            Atualizações reabrem o app agora.
+            \s
             3.1.7 - 3.1.9
             Reestruturações e otimizações de código(menores consumos de memória e CPU).
+            \s
             3.1.6
             Lançada a aba de histórico de movimentações, onde é possível rastrear entradas, saídas e ajustes de preço do estoque.
             \s

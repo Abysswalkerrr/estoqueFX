@@ -1,4 +1,4 @@
-package com.estoquefx.controller;
+package com.estoquefx.controller.estoque;
 
 import com.estoquefx.model.Movimento;
 import com.estoquefx.model.Historico;

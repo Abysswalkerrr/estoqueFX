@@ -5,7 +5,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.estoquefx.controller.TabelaController">
+            fx:controller="com.estoquefx.controller.estoque.TabelaController">
 
 
     <HBox spacing="8" style="-fx-padding: 8;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">

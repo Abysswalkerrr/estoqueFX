@@ -4,7 +4,7 @@
 
 
 
- <MenuBar xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.MenuController">
+ <MenuBar xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.estoque.MenuController">
      <Menu text="Ajuda">
          <MenuItem onAction="#onReportarBug" text="Relatar problema" />
          <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />

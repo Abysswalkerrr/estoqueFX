@@ -1,6 +1,7 @@
-package com.estoquefx.controller;
+package com.estoquefx.controller.estoque;
 
 import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.controller.SelecaoEstoqueController;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.model.*;
 import com.estoquefx.service.*;

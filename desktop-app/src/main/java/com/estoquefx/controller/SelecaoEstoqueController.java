@@ -1,6 +1,8 @@
 package com.estoquefx.controller;
 
 import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.controller.estoque.EstoqueController;
+import com.estoquefx.controller.estoque.HistoricoController;
 import com.estoquefx.service.EstoqueService;
 import com.estoquefx.service.ProdutoService;
 import com.estoquefx.service.SupabaseService;

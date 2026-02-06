@@ -1,6 +1,6 @@
 package com.estoquefx.service;
 
-import com.estoquefx.controller.EstoqueController;
+import com.estoquefx.controller.estoque.EstoqueController;
 import com.estoquefx.model.Categoria;
 import com.estoquefx.model.Produto;
 import com.estoquefx.model.Estoque;
