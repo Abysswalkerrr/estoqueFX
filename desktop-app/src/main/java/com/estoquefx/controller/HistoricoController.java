@@ -195,7 +195,7 @@ public class HistoricoController {
         aplicarFiltros();
     }
 
-    private void carregarMovimentacoes() {
+    public void carregarMovimentacoes() {
         if (estoqueAtualId == null || movimentoService == null) {
             lblInfo.setText("Nenhum estoque selecionado");
             return;
