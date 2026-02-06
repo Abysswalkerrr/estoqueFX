@@ -72,9 +72,9 @@ public class EstoqueController {
     private void carregarMenuController(){
         try{
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/MenuController.fxml")
+                    getClass().getResource("/com/estoquefx/Menu-view.fxml")
             );
-            AnchorPane menuView = loader.load();
+            MenuBar menuView = loader.load();
             menuController = loader.getController();
             tabTabela.setContent(menuView);
 

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.EstoqueController">
-    <Tab closable="false" text="Tabela">
+    <Tab closable="false" text="Tabela" fx:id="tabTabela">
         <BorderPane stylesheets="@style.css">
             <top>
                 <fx:include source="menu-view.fxml" fx:id="menuView"/>
