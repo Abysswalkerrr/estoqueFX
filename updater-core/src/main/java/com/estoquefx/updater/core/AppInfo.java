@@ -4,9 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.1.6";
-    public static final String VERSAO_CHANNEL =
-            "stable";
+            "3.1.9";
     public static String UPDATE_CHANNEL = "stable";
 
     public static final String BUG_REPORT_URL =
@@ -23,14 +21,8 @@ public class AppInfo {
             "https://api.github.com/repos/abysswalkerrr/estoque_releases/releases/latest";
 
     private static String getUpdateUrl() {
-        if (isBeta()) {
-            return RELEASES_URL;
-        } else {
-            return LATEST_RELEASES_URL;
-        }
+        return LATEST_RELEASES_URL;
     }
-
-    public static boolean isBeta() {return "beta".equalsIgnoreCase(UPDATE_CHANNEL);}
 
     public static void setUpdateChannel(String updateChannel) {
         if (updateChannel.equalsIgnoreCase("beta") || updateChannel.equalsIgnoreCase("stable")) {
@@ -39,6 +31,8 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.1.7 - 3.1.9
+            Reestruturações e otimizações de código(menores consumos de memória e CPU).
             3.1.6
             Lançada a aba de histórico de movimentações, onde é possível rastrear entradas, saídas e ajustes de preço do estoque.
             \s

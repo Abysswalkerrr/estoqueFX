@@ -24,19 +24,9 @@ public class UpdateService {
 
             String json = in.lines().collect(Collectors.joining());
 
-            String versaoRemota;
-            String linkInstaller;
-            String changeLog;
-
-            if (AppInfo.isBeta()) {
-                versaoRemota = extrairPrimeiraVersao(json);
-                linkInstaller = extrairPrimeiroInstaller(json);
-                changeLog = extrairPrimeiroChangelog(json);
-            } else {
-                versaoRemota = extrairVersao(json);
-                linkInstaller = extrairInstaller(json);
-                changeLog = extrairChangelog(json);
-            }
+            String versaoRemota = extrairVersao(json);
+            String linkInstaller = extrairInstaller(json);
+            String changeLog = extrairChangelog(json);
 
             if (versaoRemota == null || linkInstaller == null) {
                 return new UpdateInfo(AppInfo.VERSAO, null, null, null);
@@ -44,17 +34,6 @@ public class UpdateService {
 
             return new UpdateInfo(AppInfo.VERSAO, versaoRemota, linkInstaller, changeLog);
         }
-    }
-
-    public Path downloadSilencioso(String urlInstaller, String versao) throws Exception {
-        URL url = new URL(urlInstaller);
-        Path temp = Files.createTempFile("SistemaEstoqueFX-" + versao + "-", ".msi");
-
-        try (InputStream in = url.openStream()) {
-            Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        return temp;
     }
 
     public static Path downloadComBarraDeProgresso(String urlInstaller, String versao,
@@ -119,8 +98,6 @@ public class UpdateService {
         return false;
     }
 
-    // === Métodos para versão Stable (API /latest) ===
-
     private String extrairVersao(String json) {
         String tagPattern = "\"tag_name\":\"([^\"]+)\"";
         Pattern pattern = Pattern.compile(tagPattern);
@@ -155,42 +132,4 @@ public class UpdateService {
         return null;
     }
 
-    // === Métodos para versão Beta (API /releases - array) ===
-
-    private String extrairPrimeiraVersao(String json) {
-        // Busca o primeiro "tag_name" no array de releases
-        String tagPattern = "\"tag_name\":\"([^\"]+)\"";
-        Pattern pattern = Pattern.compile(tagPattern);
-        Matcher matcher = pattern.matcher(json);
-
-        if (matcher.find()) {
-            String tag = matcher.group(1);
-            return tag.replace("v", "");
-        }
-        return null;
-    }
-
-    private String extrairPrimeiroInstaller(String json) {
-        // Busca o primeiro .msi no array
-        String msiPattern = "\"browser_download_url\":\"([^\"]+\\.msi)\"";
-        Pattern pattern = Pattern.compile(msiPattern);
-        Matcher matcher = pattern.matcher(json);
-
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
-
-    private String extrairPrimeiroChangelog(String json) {
-        // Busca o primeiro "body" no array
-        String changelogPattern = "\"body\":\"([^\"]+?)\"";
-        Pattern pattern = Pattern.compile(changelogPattern);
-        Matcher matcher = pattern.matcher(json);
-
-        if (matcher.find()) {
-            return matcher.group(1).replace("\\n", "\n").replace("\\r", "");
-        }
-        return null;
-    }
 }
