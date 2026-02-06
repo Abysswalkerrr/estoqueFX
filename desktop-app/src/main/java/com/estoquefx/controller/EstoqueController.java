@@ -12,23 +12,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.print.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.*;
 
-/**
- * Controller principal do sistema de estoque
- * Coordena os subcontrollers (Tabela, Dashboard, Histórico)
- * Gerencia ações do menu e navegação
- */
+
 public class EstoqueController {
 
-    // ========== SUB-CONTROLLERS ==========
+    // SUB-CONTROLLERS
 
     @FXML private Tab tabTabela;
 
@@ -41,25 +33,19 @@ public class EstoqueController {
     @FXML private Tab tabDashboard;
     private DashboardController dashboardController;
 
-    // ========== VARIÁVEIS DE ESTADO ==========
+    // VARIÁVEIS DE ESTADO
 
     private SupabaseService supabaseService;
     private String estoqueId;
     private static Stage stage;
 
-    // ========== INICIALIZAÇÃO ==========
-
     @FXML
     public void initialize() {
         System.out.println("🎬 Inicializando EstoqueController principal...");
 
-        // Carregar sub-controllers
-        carregarTabelaController();
-        carregarMenuController();
         carregarHistoricoController();
         carregarDashboardController();
 
-        // Conectar controllers
         conectarControllers();
 
         Platform.runLater(() -> {
@@ -67,37 +53,7 @@ public class EstoqueController {
         });
     }
 
-    // ========== CARREGAMENTO DE SUB-CONTROLLERS ==========
-
-    private void carregarMenuController(){
-        try{
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/estoquefx/Menu-view.fxml")
-            );
-            MenuBar menuView = loader.load();
-            menuController = loader.getController();
-            tabTabela.setContent(menuView);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void carregarTabelaController() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/estoquefx/tabela-view.fxml")
-            );
-            VBox tabelaView = loader.load();
-            tabelaController = loader.getController();
-            tabTabela.setContent(tabelaView);
-
-            System.out.println("✓ TabelaController carregado");
-        } catch (Exception e) {
-            System.err.println("⚠ Erro ao carregar TabelaController: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+    // CARREGAMENTO DE SUB-CONTROLLERS
 
     private void carregarHistoricoController() {
         try {
@@ -138,7 +94,7 @@ public class EstoqueController {
         }
     }
 
-    // ========== CONEXÃO ENTRE CONTROLLERS ==========
+    // CONEXÃO ENTRE CONTROLLERS
 
     private void conectarControllers() {
         // Tabela → Histórico
@@ -154,7 +110,7 @@ public class EstoqueController {
         System.out.println("✓ Controllers conectados");
     }
 
-    // ========== CONFIGURAÇÃO DE ESTOQUE ==========
+    // CONFIGURAÇÃO DE ESTOQUE
 
     public void setEstoqueAtual(String estoqueId, String estoqueNome, SupabaseService service) {
         this.estoqueId = estoqueId;
@@ -189,7 +145,7 @@ public class EstoqueController {
         }
     }
 
-    // ========== MÉTODOS AUXILIARES ==========
+    // MÉTODOS AUXILIARES
 
     private void atualizarUltimaAlteracao() {
         Time.updateTime();
@@ -198,7 +154,7 @@ public class EstoqueController {
         }
     }
 
-    // ========== AÇÕES DO MENU - VERSÃO ==========
+    // VERIFICAR ATT SEM APARECER NA TELA
 
     public static void verificarAtualizacaoSilenciosa() {
         UpdateService service = new UpdateService();
@@ -247,7 +203,7 @@ public class EstoqueController {
         }
     }
 
-    // ========== MÉTODOS AUXILIARES - DIALOGS ==========
+    // MÉTODOS AUXILIARES - DIALOGS(top 10 funções de todo o código)
 
     public static void mostrarInfoStatic(Alert.AlertType tipo, String title, String header, String message) {
         Alert alert = new Alert(tipo);
@@ -257,7 +213,7 @@ public class EstoqueController {
         alert.showAndWait();
     }
 
-    // ========== SETTERS ==========
+    // SETTERS
 
     public void setHistoricoController(HistoricoController historicoController) {
         this.historicoController = historicoController;
@@ -271,7 +227,4 @@ public class EstoqueController {
         EstoqueController.stage = stage;
     }
 
-    public static Stage getStage() {
-        return stage;
-    }
 }

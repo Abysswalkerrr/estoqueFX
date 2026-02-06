@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.EstoqueController">
-    <Tab closable="false" text="Tabela" fx:id="tabTabela">
-        <BorderPane stylesheets="@style.css">
-            <top>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.estoquefx.controller.EstoqueController"
+            stylesheets="@style.css">
+
+    <!-- Menu no topo de TUDO -->
+    <top>
+    </top>
+
+    <!-- Tabs no centro -->
+    <center>
+        <TabPane>
+            <Tab fx:id="tabTabela" closable="false" text="Tabela">
                 <fx:include source="menu-view.fxml" fx:id="menuView"/>
-            </top>
-         <bottom>
-         </bottom>
-         <center>
-             <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
-         </center>
+                <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
+            </Tab>
 
-        </BorderPane>
-    </Tab>
-    <Tab fx:id="tabDashboard"  closable="false" text="Dashboard">
-        <fx:include source="dashboard-view.fxml" fx:id="dashboardView"/>
-    </Tab>
-    <Tab fx:id="tabHistorico" closable="false" text="Histórico">
-        <fx:include source="historico-view.fxml" fx:id="historicoView"/>
-    </Tab>
+            <Tab fx:id="tabDashboard" closable="false" text="Dashboard">
+                <fx:include source="dashboard-view.fxml" fx:id="dashboardView"/>
+            </Tab>
 
-</TabPane>
+            <Tab fx:id="tabHistorico" closable="false" text="Histórico">
+                <fx:include source="historico-view.fxml" fx:id="historicoView"/>
+            </Tab>
+        </TabPane>
+    </center>
+
+</BorderPane>

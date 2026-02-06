@@ -3,48 +3,55 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.TabelaController">
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.estoquefx.controller.TabelaController">
 
-    <top>
-        <VBox>
-            <!-- Barra de Status e Filtros -->
-            <HBox spacing="8" style="-fx-padding: 8;">
-                <VBox styleClass="status-bar">
-                    <Label fx:id="lblUltimaAlteracao" text="Salvo às" />
-                    <Label fx:id="lblSaldoTotal" text="Saldo total" />
-                </VBox>
-                <Region HBox.hgrow="ALWAYS" />
-                <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
-                    <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0" promptText="Escolher categoria" />
-                    <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
-                </VBox>
-                <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0" promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
-            </HBox>
+
+    <HBox spacing="8" style="-fx-padding: 8;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <VBox styleClass="status-bar">
+            <Label fx:id="lblUltimaAlteracao" text="Salvo às" />
+            <Label fx:id="lblSaldoTotal" text="Saldo total" />
         </VBox>
-    </top>
-
-    <bottom>
-        <VBox BorderPane.alignment="CENTER">
-            <TableView fx:id="tabela" prefHeight="400">
-                <columns>
-                    <TableColumn fx:id="colCodigo" prefWidth="45.0" text="Código"/>
-                    <TableColumn fx:id="colNome" prefWidth="111.4" text="Nome"/>
-                    <TableColumn fx:id="colCategoria" prefWidth="103.0" text="Categoria"/>
-                    <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín"/>
-                    <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und"/>
-                    <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd"/>
-                    <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação"/>
-                    <TableColumn fx:id="colSaldo" prefWidth="65" text="Saldo"/>
-                    <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter"/>
-                    <TableColumn fx:id="colDescricao" text="Descrição"/>
-                </columns>
-            </TableView>
-            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f0f0f0; -fx-padding: 5 10;"
-                  styleClass="status-bar">
-                <Label fx:id="lblResultados" text="Mostrando 0 de 0 produtos"/>
-                <Region HBox.hgrow="ALWAYS"/>
-            </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
+            <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0" promptText="Escolher categoria" />
+            <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
         </VBox>
-    </bottom>
+        <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0" promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
+    </HBox>
 
-</BorderPane>
+    <!-- Tabela - ancorada entre filtros (60px do topo) e status (25px do bottom) -->
+    <TableView fx:id="tabela"
+               AnchorPane.topAnchor="60"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               AnchorPane.bottomAnchor="25">
+        <columns>
+            <TableColumn fx:id="colCodigo" prefWidth="45.0" text="Código"/>
+            <TableColumn fx:id="colNome" prefWidth="111.4" text="Nome"/>
+            <TableColumn fx:id="colCategoria" prefWidth="103.0" text="Categoria"/>
+            <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín"/>
+            <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und"/>
+            <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd"/>
+            <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação"/>
+            <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo"/>
+            <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter"/>
+            <TableColumn fx:id="colDescricao" text="Descrição"/>
+        </columns>
+    </TableView>
+
+    <!-- Barra de status - ancorada no bottom -->
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: #f0f0f0; -fx-padding: 3 10 3 10;"
+          styleClass="status-bar"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          prefHeight="25">
+        <Label fx:id="lblResultados" text="Mostrando 0 de 0 produtos"
+               style="-fx-font-size: 11px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+</AnchorPane>
