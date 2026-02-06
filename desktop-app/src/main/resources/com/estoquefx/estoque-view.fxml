@@ -9,36 +9,7 @@
     <Tab closable="false" text="Tabela">
         <BorderPane stylesheets="@style.css">
             <top>
-                <MenuBar>
-                    <Menu text="Ajuda">
-                        <MenuItem onAction="#onReportarBug" text="Relatar problema" />
-                        <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />
-                        <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
-                        <MenuItem onAction="#onSair" text="Sair" />
-                        <MenuItem onAction="#onSobre" text="Sobre" />
-                    </Menu>
-                    <Menu text="Arquivo">
-                        <MenuItem onAction="#onAbrirArquivo" text="Abrir pasta de dados" />
-                        <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
-                        <MenuItem onAction="#onImportarCSV" text="Importar CSV" />
-                        <MenuItem onAction="#onSalvar" text="Salvar" />
-                    </Menu>
-                    <Menu text="Estoque">
-                        <MenuItem onAction="#onCriarProduto" text="Novo produto" />
-                        <MenuItem onAction="#onEntrada" text="Entrada" />
-                        <MenuItem onAction="#onSaida" text="Saída" />
-                    </Menu>
-                    <Menu text="Imprimir">
-                        <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
-                    </Menu>
-                    <Menu text="Versão">
-                        <MenuItem onAction="#onAvisarAtualizacoes" text="Avisar atualizações" />
-                        <MenuItem onAction="#onNovidades" text="Novidades" />
-                        <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
-                        <MenuItem onAction="#onAlterarVersao" text="Versão Estável/Beta" />
-                        <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
-                    </Menu>
-                </MenuBar>
+                <fx:include source="menu-view.fxml" fx:id="menuView"/>
             </top>
          <bottom>
          </bottom>

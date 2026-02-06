@@ -5,6 +5,7 @@ import com.estoquefx.model.Produto;
 import com.estoquefx.service.ProdutoService;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.util.LinkedHashSet;
@@ -174,7 +175,7 @@ public class Leitor {
                     }
                 }
             } catch (Exception e) {
-                EstoqueController.mostrarInfoStatic("Erro", "Erro " +  e.getMessage());
+                EstoqueController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro " +  e.getMessage());
             }
         }
     }

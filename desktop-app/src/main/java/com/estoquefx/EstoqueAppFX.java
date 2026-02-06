@@ -26,12 +26,6 @@ public class EstoqueAppFX extends Application {
     public void start(Stage stage) throws IOException {
         hostServicesRef = getHostServices();
 
-        /*ProdutoService.preencher(Leitor.carregarEstoque());
-        EstoqueService.carregaCategorias();
-        EstoqueService.carregaNomes();
-        EstoqueService.atualizaTotal();
-         */
-
         try{
             Leitor.carregarNA();
         } catch (Exception e){
@@ -56,9 +50,11 @@ public class EstoqueAppFX extends Application {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Sair do Sistema");
             alert.setHeaderText("Atenção!");
-            alert.setContentText("Existem alterações não salvas.\n\n" +
-                    "Para salvar, vá para Arquivo -> Salvar.\n" +
-                    "Deseja realmente sair?");
+            alert.setContentText("""
+                    Existem alterações não salvas.
+                    
+                    Para salvar, vá para Arquivo -> Salvar.
+                    Deseja realmente sair?""");
 
             ButtonType btnSair = new ButtonType("Sair mesmo assim");
             ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);

@@ -4,6 +4,7 @@ import com.estoquefx.controller.EstoqueController;
 import com.estoquefx.model.Categoria;
 import com.estoquefx.model.Produto;
 import com.estoquefx.model.Estoque;
+import javafx.scene.control.Alert;
 
 import java.util.*;
 
@@ -53,7 +54,7 @@ public class ProdutoService {
                 existente.setVlrUnd(prod.getVlrUnd());
                 existente.atualizaCompra();
             } catch (Exception ex) {
-                EstoqueController.mostrarInfoStatic("Erro", "Erro importar " + prod.getNome() + ": " + ex.getMessage());
+                EstoqueController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro importar " + prod.getNome() + ": " + ex.getMessage());
             }
             Produto.setUltimaAcao("c");
         }
