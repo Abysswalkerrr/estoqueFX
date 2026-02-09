@@ -1,23 +1,10 @@
 package com.estoquefx.util;
 
 import com.estoquefx.data.Leitor;
-import com.estoquefx.model.Estoque;
-import com.estoquefx.model.Produto;
-
 import java.io.IOException;
 
-// terminar misc
-// imprimir
-// salvar como
-// bug pesquisa
 // revisar botões
-// classe categoria
-//import
-// sync via drive
-// Multi-usuário
-// apenas urgente só funciona depois de pesquisar
-// POO
-// limpar arquivos/projetos
+//todo reabrir app
 //todo erro é entrada de qtd e não movimentações
 //todo btn load from estq, salvar .txt com nome - talvez pasta nomeada?,
 //todo ícones

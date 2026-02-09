@@ -45,7 +45,7 @@ public class MenuController {
         System.out.println("📋 Inicializando MenuController...");
     }
 
-    // ========== SETTERS PARA DEPENDÊNCIAS ==========
+    // SETTERS PARA DEPENDÊNCIAS
 
     public void setTabelaController(TabelaController tabelaController) {
         this.tabelaController = tabelaController;
@@ -60,7 +60,7 @@ public class MenuController {
         this.estoqueId = estoqueId;
     }
 
-    // ========== AÇÕES DO MENU - ESTOQUE ==========
+    // AÇÕES DO MENU - ESTOQUE
 
     @FXML
     private void onCriarProduto() {
@@ -368,10 +368,16 @@ public class MenuController {
             alert.setTitle("Importar");
             alert.setHeaderText("ATENÇÃO");
             alert.getDialogPane().setContent(new Label(
-                    "O arquivo precisa estar em uma das seguintes" +
-                            "\nordens para que as informações sejam interpretadas como esperado:" +
-                            "\n\n codigo -> nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..." +
-                            "\n\n nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..."
+                    """
+                            O arquivo precisa estar em uma das seguintes\
+                            
+                            ordens para que as informações sejam interpretadas como esperado:\
+                            
+                            
+                             codigo -> nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ...\
+                            
+                            
+                             nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..."""
             ));
             alert.showAndWait();
 
@@ -653,8 +659,7 @@ public class MenuController {
                 Path installer = UpdateService.downloadComBarraDeProgresso(
                         info.getUrlInstaller(),
                         info.getVersaoRemota(),
-                        progressBytes,
-                        totalBytes
+                        progressBytes
                 );
 
                 updateMessage("Executando instalador...");
@@ -757,9 +762,5 @@ public class MenuController {
 
         alert.getDialogPane().setContent(textArea);
         alert.showAndWait();
-    }
-
-    private void mostrarErro(String msg) {
-
     }
 }

@@ -9,7 +9,6 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.function.LongConsumer;
 import java.util.regex.Matcher;
@@ -38,15 +37,11 @@ public class UpdateService {
     }
 
     public static Path downloadComBarraDeProgresso(String urlInstaller, String versao,
-                                                   LongConsumer progressBytes, long totalBytes) throws Exception {
+                                                   LongConsumer progressBytes) throws Exception {
         URL url = new URL(urlInstaller);
         Path temp = Files.createTempFile("SistemaEstoqueFX-" + versao + "-", ".msi");
 
         URLConnection conn = url.openConnection();
-        long contentLength = conn.getContentLengthLong();
-        if (totalBytes <= 0) {
-            totalBytes = contentLength;
-        }
 
         try (InputStream in = conn.getInputStream();
              OutputStream out = Files.newOutputStream(temp)) {
@@ -79,8 +74,8 @@ public class UpdateService {
         // Executar instalador
         ProcessBuilder installerProcess = new ProcessBuilder(
                 "cmd", "/c",
-                "start /wait msiexec /i \"" + installerPath.toAbsolutePath().toString() + "\" /qb /norestart" +
-                        " && \"" + scriptPath.toAbsolutePath().toString() + "\""
+                "start /wait msiexec /i \"" + installerPath.toAbsolutePath() + "\" /qb /norestart" +
+                        " && \"" + scriptPath.toAbsolutePath() + "\""
         );
         installerProcess.start();
 
@@ -94,17 +89,38 @@ public class UpdateService {
 
         String script = """
         @echo off
+        
+        REM Aguardar instalação
         timeout /t 3 /nobreak >nul
-        set FLAG_FILE=%USERPROFILE%\\.estoquefx_reopen
+        
+        set "FLAG_FILE=%USERPROFILE%\\.estoquefx_reopen"
+        
         if exist "%FLAG_FILE%" (
-            set /p APP_PATH=<"%FLAG_FILE%"
-            del "%FLAG_FILE%"
-            start "" "%APP_PATH%"
+            REM Ler caminho usando FOR (mais robusto que SET /P)
+            for /f "usebackq delims=" %%A in ("%FLAG_FILE%") do set "APP_PATH=%%A"
+            
+            REM Deletar flag
+            del "%FLAG_FILE%" 2>nul
+            
+            REM Verificar se leu algo
+            if defined APP_PATH (
+                REM Tentar abrir o executável
+                if exist "%APP_PATH%" (
+                    start "" "%APP_PATH%"
+                ) else (
+                    start "" SistemaEstoqueFX.exe
+                )
+            ) else (
+                start "" SistemaEstoqueFX.exe
+            )
         )
-        del "%~f0"
+        
+        REM Auto-deletar após 2 segundos
+        timeout /t 2 /nobreak >nul
+        (goto) 2>nul & del "%~f0"
         """;
 
-        Files.writeString(scriptPath, script);
+        Files.writeString(scriptPath, script, StandardCharsets.UTF_8);
         return scriptPath;
     }
 
