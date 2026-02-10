@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "0.2.0";
+            "3.1.10";
     public static String UPDATE_CHANNEL = "stable";
 
     public static final String BUG_REPORT_URL =
@@ -31,8 +31,8 @@ public class AppInfo {
     }
 
     public static String novidades = """
-            3.2.0
-            Atualizações reabrem o app agora.
+            3.1.10
+            Opção de mostrar/esconder senha implementada.
             \s
             3.1.7 - 3.1.9
             Reestruturações e otimizações de código(menores consumos de memória e CPU).
