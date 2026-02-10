@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 
@@ -21,49 +23,52 @@ public class LoginController {
     @FXML private Button btnRegistrar;
     @FXML private Label lblStatus;
     @FXML private TextField txtSenhaVisivel;
-    @FXML private Button togglePasswordButton;
+    @FXML private HBox hboxSenhaOculta;
+    @FXML private HBox hboxSenhaVisivel;
+    SupabaseService supabaseService;
 
     private boolean showingPassword = false;
-    private SupabaseService supabaseService;
 
     @FXML
     public void initialize() {
-        System.out.println("txtEmail: " + txtEmail);
-        System.out.println("txtSenha: " + txtSenha);
-        System.out.println("txtSenhaVisivel: " + txtSenhaVisivel);
-        System.out.println("togglePasswordButton: " + togglePasswordButton);
-
         supabaseService = new SupabaseService();
+
+        // Sincroniza os textos
+        txtSenhaVisivel.textProperty().bindBidirectional(txtSenha.textProperty());
+
+        // Enter no campo senha = fazer login
         txtSenha.setOnAction(_ -> onLogin());
+        txtSenhaVisivel.setOnAction(_ -> onLogin()); // também no visível
     }
 
     @FXML
     private void onTogglePassword() {
-        // Faz o bind na primeira vez que clicar
-        if (!txtSenhaVisivel.textProperty().isBound()) {
-            txtSenhaVisivel.textProperty().bindBidirectional(txtSenha.textProperty());
-        }
-
         showingPassword = !showingPassword;
 
         if (showingPassword) {
-            txtSenhaVisivel.setVisible(true);
-            txtSenhaVisivel.setManaged(true);
+            // Mostrar HBox com senha visível
+            hboxSenhaVisivel.setVisible(true);
+            hboxSenhaVisivel.setManaged(true);
 
-            txtSenha.setVisible(false);
-            txtSenha.setManaged(false);
-        } else {
-            txtSenhaVisivel.setVisible(false);
-            txtSenhaVisivel.setManaged(false);
+            // Esconder HBox com senha oculta
+            hboxSenhaOculta.setVisible(false);
+            hboxSenhaOculta.setManaged(false);
 
-            txtSenha.setVisible(true);
-            txtSenha.setManaged(true);
-        }
-
-        // Manter o cursor no final
-        if (showingPassword) {
+            // Foco no campo visível
+            txtSenhaVisivel.requestFocus();
             txtSenhaVisivel.positionCaret(txtSenhaVisivel.getText().length());
+
         } else {
+            // Mostrar HBox com senha oculta
+            hboxSenhaOculta.setVisible(true);
+            hboxSenhaOculta.setManaged(true);
+
+            // Esconder HBox com senha visível
+            hboxSenhaVisivel.setVisible(false);
+            hboxSenhaVisivel.setManaged(false);
+
+            // Foco no campo senha
+            txtSenha.requestFocus();
             txtSenha.positionCaret(txtSenha.getText().length());
         }
     }

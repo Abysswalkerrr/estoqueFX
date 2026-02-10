@@ -40,29 +40,30 @@
 
         <Label text="Senha:" style="-fx-font-weight: bold;"/>
         <StackPane>
-            <HBox spacing="5">
+            <HBox fx:id="hboxSenhaOculta" spacing="5">
                 <PasswordField fx:id="txtSenha"
                                promptText="Senha"
-                               HBox.hgrow="ALWAYS"/>
-                <Button fx:id="togglePasswordButton"
-                        focusTraversable="false"
-                        styleClass="icon-button"
-                        onAction="#onTogglePassword">
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-pref-height: 35;"/>
+                <Button focusTraversable="false"
+                        onAction="#onTogglePassword"
+                        style="-fx-pref-width: 35; -fx-pref-height: 35;">
                     <graphic>
-                        <FontIcon iconLiteral="fas-eye" iconSize="16"/>
+                        <FontIcon iconLiteral="fas-eye" iconSize="14"/>
                     </graphic>
                 </Button>
             </HBox>
 
-            <HBox spacing="5" visible="false" managed="false">
+            <HBox fx:id="hboxSenhaVisivel" spacing="5" visible="false" managed="false">
                 <TextField fx:id="txtSenhaVisivel"
                            promptText="Senha"
-                           HBox.hgrow="ALWAYS"/>
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-pref-height: 35;"/>
                 <Button focusTraversable="false"
-                        styleClass="icon-button"
-                        onAction="#onTogglePassword">
+                        onAction="#onTogglePassword"
+                        style="-fx-pref-width: 35; -fx-pref-height: 35;">
                     <graphic>
-                        <FontIcon iconLiteral="fas-eye-slash" iconSize="16"/>
+                        <FontIcon iconLiteral="fas-eye-slash" iconSize="14"/>
                     </graphic>
                 </Button>
             </HBox>
