@@ -48,8 +48,6 @@ Desenvolvido com JavaFX e integração em nuvem com Supabase
 
 ## 🚀 Instalação
 
-### Opção 1: Baixar Executável (Recomendado)
-
 1. Acesse a [página de releases](https://github.com/Abysswalkerrr/estoque_releases/releases)
 2. Baixe o instalador mais recente (`.msi` para Windows)
 3. Execute o instalador e siga as instruções
