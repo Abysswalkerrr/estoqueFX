@@ -10,10 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+
+import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
 
 public class DashboardController {
 
@@ -99,7 +98,8 @@ public class DashboardController {
                 System.out.println("✓ Dashboard atualizado");
             } catch (Exception e) {
                 System.err.println("⚠ Erro ao atualizar dashboard: " + e.getMessage());
-                e.printStackTrace();
+                mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                        "Erro ao atualizar dashboard", e.getMessage());
             }
         });
     }

@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+
 public class LoginController {
 
     @FXML private TextField txtEmail;
@@ -18,15 +20,52 @@ public class LoginController {
     @FXML private Button btnLogin;
     @FXML private Button btnRegistrar;
     @FXML private Label lblStatus;
+    @FXML private TextField txtSenhaVisivel;
+    @FXML private Button togglePasswordButton;
 
+    private boolean showingPassword = false;
     private SupabaseService supabaseService;
 
     @FXML
     public void initialize() {
-        supabaseService = new SupabaseService();
+        System.out.println("txtEmail: " + txtEmail);
+        System.out.println("txtSenha: " + txtSenha);
+        System.out.println("txtSenhaVisivel: " + txtSenhaVisivel);
+        System.out.println("togglePasswordButton: " + togglePasswordButton);
 
-        // Enter no campo senha = fazer login
+        supabaseService = new SupabaseService();
         txtSenha.setOnAction(_ -> onLogin());
+    }
+
+    @FXML
+    private void onTogglePassword() {
+        // Faz o bind na primeira vez que clicar
+        if (!txtSenhaVisivel.textProperty().isBound()) {
+            txtSenhaVisivel.textProperty().bindBidirectional(txtSenha.textProperty());
+        }
+
+        showingPassword = !showingPassword;
+
+        if (showingPassword) {
+            txtSenhaVisivel.setVisible(true);
+            txtSenhaVisivel.setManaged(true);
+
+            txtSenha.setVisible(false);
+            txtSenha.setManaged(false);
+        } else {
+            txtSenhaVisivel.setVisible(false);
+            txtSenhaVisivel.setManaged(false);
+
+            txtSenha.setVisible(true);
+            txtSenha.setManaged(true);
+        }
+
+        // Manter o cursor no final
+        if (showingPassword) {
+            txtSenhaVisivel.positionCaret(txtSenhaVisivel.getText().length());
+        } else {
+            txtSenha.positionCaret(txtSenha.getText().length());
+        }
     }
 
     @FXML
@@ -131,7 +170,10 @@ public class LoginController {
 
         } catch (IOException e) {
             e.printStackTrace();
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao abrir tela de seleção de estoque.", e.getMessage());
             lblStatus.setText("Erro ao abrir seleção de estoque. \n" + e.getMessage());
         }
     }
+
 }

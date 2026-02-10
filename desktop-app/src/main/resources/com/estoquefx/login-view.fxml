@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -38,9 +39,34 @@
                    style="-fx-pref-height: 35;"/>
 
         <Label text="Senha:" style="-fx-font-weight: bold;"/>
-        <PasswordField fx:id="txtSenha" promptText="••••••••"
-                       style="-fx-pref-height: 35;"/>
+        <StackPane>
+            <HBox spacing="5">
+                <PasswordField fx:id="txtSenha"
+                               promptText="Senha"
+                               HBox.hgrow="ALWAYS"/>
+                <Button fx:id="togglePasswordButton"
+                        focusTraversable="false"
+                        styleClass="icon-button"
+                        onAction="#onTogglePassword">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-eye" iconSize="16"/>
+                    </graphic>
+                </Button>
+            </HBox>
 
+            <HBox spacing="5" visible="false" managed="false">
+                <TextField fx:id="txtSenhaVisivel"
+                           promptText="Senha"
+                           HBox.hgrow="ALWAYS"/>
+                <Button focusTraversable="false"
+                        styleClass="icon-button"
+                        onAction="#onTogglePassword">
+                    <graphic>
+                        <FontIcon iconLiteral="fas-eye-slash" iconSize="16"/>
+                    </graphic>
+                </Button>
+            </HBox>
+        </StackPane>
         <Region minHeight="10"/>
 
         <Button fx:id="btnLogin" text="Entrar" onAction="#onLogin"
@@ -51,7 +77,7 @@
                 prefWidth="300" prefHeight="35"
                 style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-border-color: #3498db; -fx-border-width: 2;"/>
 
-        <Label fx:id="lblStatus" text="" style="-fx-text-fill: #e74c3c;"
+        <Label fx:id="lblStatus" style="-fx-text-fill: #e74c3c;"
                wrapText="true" alignment="CENTER"/>
     </VBox>
 

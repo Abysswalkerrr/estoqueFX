@@ -5,14 +5,10 @@ import java.io.IOException;
 
 // revisar botões
 //todo reabrir app
-//todo erro é entrada de qtd e não movimentações
-//todo btn load from estq, salvar .txt com nome - talvez pasta nomeada?,
 //todo ícones
 //todo calendário?
-//todo supabase *
-//todo documentação
+//todo 2FA ou email
 //todo FAQ
-//todo README
 //todo relatórios *
 //todo https://openjfx.io/ - olhar community
 

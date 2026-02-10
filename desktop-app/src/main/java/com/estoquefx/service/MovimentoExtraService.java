@@ -3,6 +3,7 @@ package com.estoquefx.service;
 import com.estoquefx.model.Movimento;
 import com.google.gson.*;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -40,22 +41,7 @@ public class MovimentoExtraService {
             return;
         }
 
-        JsonObject json = new JsonObject();
-        json.addProperty("estoque_id", estoqueId);
-        json.addProperty("produto_codigo", movimento.getCodigo());
-        json.addProperty("produto_nome", movimento.getNome());
-        json.addProperty("tipo", tipo);
-
-        // Preencher campos específicos por tipo
-        if (tipo.equals("ALTERACAO_VALOR") || tipo.equals("AJUSTE_VALOR")) {
-            json.addProperty("valor_antigo", movimento.getVelhoValor());
-            json.addProperty("valor_novo", movimento.getValorNovo());
-            json.addProperty("delta_valor", movimento.getDelta());
-        }
-        else if (tipo.equals("AJUSTE_QTDMIN")) {
-            json.addProperty("qtd_min_antiga", movimento.getQuantidadeAnterior());
-            json.addProperty("qtd_min_nova", movimento.getQuantidadeNova());
-        }
+        JsonObject json = criarJson(movimento, estoqueId, tipo);
 
         RequestBody body = RequestBody.create(
                 json.toString(),
@@ -78,6 +64,27 @@ public class MovimentoExtraService {
             }
             System.out.println("✓ Alteração salva no Supabase: " + tipo);
         }
+    }
+
+    @NotNull
+    private static JsonObject criarJson(Movimento movimento, String estoqueId, String tipo) {
+        JsonObject json = new JsonObject();
+        json.addProperty("estoque_id", estoqueId);
+        json.addProperty("produto_codigo", movimento.getCodigo());
+        json.addProperty("produto_nome", movimento.getNome());
+        json.addProperty("tipo", tipo);
+
+        // Preencher campos específicos por tipo
+        if (tipo.equals("ALTERACAO_VALOR") || tipo.equals("AJUSTE_VALOR")) {
+            json.addProperty("valor_antigo", movimento.getVelhoValor());
+            json.addProperty("valor_novo", movimento.getValorNovo());
+            json.addProperty("delta_valor", movimento.getDelta());
+        }
+        else if (tipo.equals("AJUSTE_QTDMIN")) {
+            json.addProperty("qtd_min_antiga", movimento.getQuantidadeAnterior());
+            json.addProperty("qtd_min_nova", movimento.getQuantidadeNova());
+        }
+        return json;
     }
 
 
@@ -103,6 +110,7 @@ public class MovimentoExtraService {
                 throw new IOException("Erro ao carregar alterações: " + response.code());
             }
 
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 

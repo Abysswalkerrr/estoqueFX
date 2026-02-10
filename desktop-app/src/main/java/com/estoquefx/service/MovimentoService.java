@@ -96,6 +96,7 @@ public class MovimentoService {
                 throw new IOException("Erro ao carregar movimentos: " + response.code());
             }
 
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 
@@ -164,6 +165,7 @@ public class MovimentoService {
                 throw new IOException("Erro ao buscar movimentos do produto: " + response.code());
             }
 
+            assert response.body() != null;
             String responseBody = response.body().string();
             JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
 

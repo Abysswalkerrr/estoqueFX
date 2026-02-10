@@ -68,7 +68,8 @@ public class EstoqueController {
             }
         } catch (Exception e) {
             System.err.println("⚠ Erro ao carregar HistoricoController: " + e.getMessage());
-            e.printStackTrace();
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao carregar histórico.", e.getMessage());
         }
     }
 
@@ -87,7 +88,8 @@ public class EstoqueController {
             }
         } catch (Exception e) {
             System.err.println("⚠ Erro ao carregar DashboardController: " + e.getMessage());
-            e.printStackTrace();
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao carregar dashboard.", e.getMessage());
         }
     }
 
@@ -117,7 +119,8 @@ public class EstoqueController {
         try {
             Leitor.carregarMisc();
         } catch (Exception e) {
-            e.printStackTrace();
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao carregar preferências.", e.getMessage());
         }
 
         // Inicializar sub-controllers ANTES de atualizar tabela

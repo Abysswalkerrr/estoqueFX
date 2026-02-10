@@ -17,6 +17,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+
 public class HistoricoController {
 
     @FXML private TableView<Movimento> tabelaMovimentacoes;
@@ -68,7 +70,7 @@ public class HistoricoController {
         colObservacao.setCellValueFactory(new PropertyValueFactory<>("observacao"));
 
         // Colorir coluna de diferença
-        colDiferenca.setCellFactory(col -> new TableCell<Movimento, String>() {
+        colDiferenca.setCellFactory(_ -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -81,7 +83,7 @@ public class HistoricoController {
 
                     if (item.startsWith("+") || item.startsWith("R$ +")) {
                         setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
-                    } else if (item.startsWith("-") ||  item.startsWith("R$ -")) {
+                    } else if (item.startsWith("-") || item.startsWith("R$ -")) {
                         setStyle("-fx-text-fill: #F44336; -fx-font-weight: bold;");
                     } else {
                         setStyle("-fx-text-fill: #757575;");
@@ -91,7 +93,7 @@ public class HistoricoController {
         });
 
         // Colorir coluna de tipo
-        colTipo.setCellFactory(col -> new TableCell<Movimento, String>() {
+        colTipo.setCellFactory(_ -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -134,9 +136,8 @@ public class HistoricoController {
 
     private void configurarFiltros() {
         // Filtro automático ao digitar
-        txtFiltroProduto.textProperty().addListener((obs, oldVal, newVal) -> {
-            aplicarFiltros();
-        });
+        txtFiltroProduto.textProperty().addListener((_, _, _) ->
+                aplicarFiltros());
     }
 
     private void configurarComboTipo() {
@@ -153,9 +154,8 @@ public class HistoricoController {
         comboTipo.setValue("Todos");
 
         // Filtrar ao mudar tipo
-        comboTipo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            aplicarFiltros();
-        });
+        comboTipo.valueProperty().addListener((_, _, _) ->
+                aplicarFiltros());
     }
 
     public void setSupabaseService(SupabaseService service) {
@@ -222,16 +222,15 @@ public class HistoricoController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro");
-                    alert.setHeaderText("Erro ao carregar movimentações");
-                    alert.setContentText(e.getMessage());
-                    alert.showAndWait();
+                    mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                            "Erro ao carregar movimentações.", e.getMessage());
+
 
                     lblInfo.setText("Erro ao carregar movimentações");
                     btnAtualizar.setDisable(false);
                 });
-                e.printStackTrace();
+                mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                        "Erro ao carregar movimentações.", e.getMessage());
             }
         }).start();
     }
@@ -321,7 +320,8 @@ public class HistoricoController {
 
             } catch (Exception e) {
                 System.err.println("⚠ Erro ao salvar movimento: " + e.getMessage());
-                e.printStackTrace();
+                mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                        "Erro ao salvar movimentação.", e.getMessage());
             }
         }).start();
     }

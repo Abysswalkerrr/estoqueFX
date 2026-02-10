@@ -12,6 +12,7 @@ module com.estoquefx {
     requires okhttp3;
     requires com.google.gson;
     requires resend.java;
+    requires annotations;
 
     opens com.estoquefx to javafx.fxml;
     exports com.estoquefx;

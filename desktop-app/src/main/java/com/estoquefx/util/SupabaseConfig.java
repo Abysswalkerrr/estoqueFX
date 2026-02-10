@@ -1,8 +1,12 @@
 package com.estoquefx.util;
 
+import javafx.scene.control.Alert;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
 
 public class SupabaseConfig {
     private static final Properties props = new Properties();
@@ -18,7 +22,8 @@ public class SupabaseConfig {
             props.load(input);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao carregar configurações.", e.getMessage());
             System.out.println("ERRO: " + e.getMessage());
         }
     }
