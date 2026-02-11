@@ -61,6 +61,8 @@
 }
 
 .status-bar {
+    -fx-padding: 3 10 3 10;
+    -fx-background-insets: 0;
 }
 
 .status-bar .label {

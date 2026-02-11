@@ -16,8 +16,10 @@
     <center>
         <TabPane>
             <Tab fx:id="tabTabela" closable="false" text="Tabela">
-                <fx:include source="menu-view.fxml" fx:id="menuView"/>
-                <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
+                <VBox>
+                    <fx:include source="menu-view.fxml" fx:id="menuView"/>
+                    <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
+                </VBox>
             </Tab>
 
             <Tab fx:id="tabDashboard" closable="false" text="Dashboard">

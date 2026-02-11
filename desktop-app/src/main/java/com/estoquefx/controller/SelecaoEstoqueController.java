@@ -180,20 +180,6 @@ public class SelecaoEstoqueController {
         EstoqueController controller = loader.getController();
         controller.setEstoqueAtual(estoqueId, estoqueNome, supabaseService);
 
-        // Carregar e conectar o HistoricoController
-        try {
-            FXMLLoader histLoader = new FXMLLoader(
-                    EstoqueAppFX.class.getResource("historico-view.fxml")
-            );
-            histLoader.load(); // Carrega o FXML
-
-            HistoricoController histController = histLoader.getController();
-            histController.setSupabaseService(supabaseService);
-            histController.setEstoqueAtual(estoqueId);
-
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar histórico: " + e.getMessage());
-        }
 
         stage.setScene(scene);
         stage.setTitle("EstoqueFX - " + estoqueNome);

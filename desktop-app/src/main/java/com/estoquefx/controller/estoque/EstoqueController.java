@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -45,9 +46,7 @@ public class EstoqueController {
 
         conectarControllers();
 
-        Platform.runLater(() -> {
-            Produto.setUltimaAcao("s");
-        });
+        Platform.runLater(() -> Produto.setUltimaAcao("s"));
     }
 
     // CARREGAMENTO DE SUB-CONTROLLERS
@@ -76,11 +75,12 @@ public class EstoqueController {
     private void carregarDashboardController() {
         try {
             Object includeContent = tabDashboard.getContent();
+
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/estoquefx/dashboard-view.fxml")
                 );
-                VBox dashboardView = loader.load();
+                AnchorPane dashboardView = loader.load();
                 dashboardController = loader.getController();
                 tabDashboard.setContent(dashboardView);
 
@@ -96,14 +96,18 @@ public class EstoqueController {
     // CONEXÃO ENTRE CONTROLLERS
 
     private void conectarControllers() {
-        // Tabela → Histórico
+
         if (tabelaController != null && historicoController != null) {
             tabelaController.setHistoricoController(historicoController);
         }
-
-        // Tabela → Última alteração
-        if (tabelaController != null) {
+        if (tabelaController != null){
             tabelaController.setOnUltimaAlteracaoChanged(this::atualizarUltimaAlteracao);
+        }
+        if (menuController != null && historicoController != null) {
+            menuController.setHistoricoController(historicoController);
+        }
+        if  (menuController != null) {
+            menuController.setTabelaController(tabelaController);
         }
 
         System.out.println("✓ Controllers conectados");
@@ -132,6 +136,11 @@ public class EstoqueController {
         if (dashboardController != null) {
             dashboardController.setSupabaseService(service);
             dashboardController.setEstoqueAtual(estoqueId, estoqueNome);
+        }
+
+        if (menuController != null) {
+            menuController.setSupabaseService(service, estoqueId);
+
         }
 
         // garantir que a tabela seja atualizada no Platform.runLater

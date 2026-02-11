@@ -261,6 +261,8 @@ public class MenuController {
                 salvarNoSupabase();
             } else {
                 new Alert(Alert.AlertType.INFORMATION, "Estoque salvo localmente.").showAndWait();
+                mostrarInfo(Alert.AlertType.INFORMATION, "Debug", null,
+                        "Supabase: " + supabaseService + "estoque" + estoqueId);
                 Produto.setUltimaAcao("s");
             }
 

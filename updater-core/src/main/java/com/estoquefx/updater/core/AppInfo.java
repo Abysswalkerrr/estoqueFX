@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.1.10";
+            "3.1.10.2";
     public static String UPDATE_CHANNEL = "stable";
 
     public static final String BUG_REPORT_URL =
@@ -31,6 +31,9 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.1.10.1
+            Correção de um erro que fazia com que o histórico de movimentações fosse duplicado no primeiro carregamento.
+            \s
             3.1.10
             Opção de mostrar/esconder senha implementada.
             \s

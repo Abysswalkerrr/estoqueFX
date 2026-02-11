@@ -26,8 +26,6 @@ import java.util.HashSet;
 
 public class TabelaController {
 
-    // ========== FXML ELEMENTS ==========
-
     @FXML private TableView<Produto> tabela;
     @FXML private TableColumn<Produto, String> colCodigo;
     @FXML private TableColumn<Produto, String> colNome;
@@ -48,7 +46,6 @@ public class TabelaController {
     @FXML private Label lblSaldoTotal;
     @FXML private Label lblResultados;
 
-    // ========== PROPRIEDADES ==========
 
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
     private StringProperty saldoTotal = new SimpleStringProperty();
@@ -61,7 +58,6 @@ public class TabelaController {
     private String busca = "";
     private HashSet<Produto> urgentes = new HashSet<>();
 
-    // ========== CALLBACKS ==========
 
     private HistoricoController historicoController;
     private Runnable onDataChanged;
@@ -117,7 +113,6 @@ public class TabelaController {
         });
     }
 
-    // ========== CONFIGURAÇÃO DE COLUNAS ==========
 
     private void configurarColunas() {
         tabela.setEditable(true);
@@ -169,7 +164,6 @@ public class TabelaController {
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    // ========== CONFIGURAÇÃO DE EDIÇÃO ==========
 
     private void configurarEdicao() {
         configurarEdicaoNome();
@@ -383,7 +377,6 @@ public class TabelaController {
         });
     }
 
-    // ========== CONFIGURAÇÃO DE ESTILO ==========
 
     private void configurarEstilo() {
         tabela.setRowFactory(_ -> new TableRow<>() {
@@ -403,7 +396,6 @@ public class TabelaController {
         });
     }
 
-    // ========== CONFIGURAÇÃO DE FILTROS ==========
 
     private void configurarFiltros() {
         boxCategorias.valueProperty().addListener((_, _, _) -> {
@@ -558,7 +550,6 @@ public class TabelaController {
         setUltimaAlteracao("Salvo em: " + ultimaAlt);
     }
 
-    // MÉTODOS PÚBLICOS
 
     public void refresh() {
         dados.setAll(Estoque.getProdutos());
