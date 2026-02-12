@@ -41,7 +41,7 @@ public class EstoqueController {
     public void initialize() {
         System.out.println("🎬 Inicializando EstoqueController principal...");
 
-        carregarMenuController();
+
         carregarHistoricoController();
         carregarDashboardController();
 
@@ -92,22 +92,6 @@ public class EstoqueController {
             System.err.println("⚠ Erro ao carregar DashboardController: " + e.getMessage());
             mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
                     "Erro ao carregar dashboard.", e.getMessage());
-        }
-    }
-
-    private void carregarMenuController() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/estoquefx/menu-view.fxml")
-            );
-            MenuBar menuView = loader.load();
-            menuViewController = loader.getController();
-
-            System.out.println("✓ MenuController carregado");
-        } catch (Exception e) {
-            System.err.println("⚠ Erro ao carregar MenuController: " + e.getMessage());
-            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                    "Erro ao carregar menu.", e.getMessage());
         }
     }
 

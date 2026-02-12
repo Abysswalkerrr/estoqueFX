@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.1.10.2";
+            "3.1.10.3";
     public static String UPDATE_CHANNEL = "stable";
 
     public static final String BUG_REPORT_URL =
