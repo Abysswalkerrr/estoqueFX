@@ -47,7 +47,7 @@
                 <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação"/>
                 <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo"/>
                 <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter"/>
-                <TableColumn fx:id="colDescricao" text="Descrição"/>
+                <TableColumn fx:id="colDescricao" text="Localização "/>
             </columns>
         </TableView>
     </center>
