@@ -4,8 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.1.10.3";
-    public static String UPDATE_CHANNEL = "stable";
+            "3.2.0.0";
 
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
@@ -24,15 +23,12 @@ public class AppInfo {
         return LATEST_RELEASES_URL;
     }
 
-    public static void setUpdateChannel(String updateChannel) {
-        if (updateChannel.equalsIgnoreCase("beta") || updateChannel.equalsIgnoreCase("stable")) {
-            UPDATE_CHANNEL = updateChannel;
-        }
-    }
-
     public static String novidades = """
-            3.1.10.1
-            Correção de um erro que fazia com que o histórico de movimentações fosse duplicado no primeiro carregamento.
+            3.2.0.0
+            Salvamento ao fechar o app implementado.
+            \s
+            3.1.10. 1-3
+            Correções de diversas falhas e melhorias na interface.
             \s
             3.1.10
             Opção de mostrar/esconder senha implementada.
