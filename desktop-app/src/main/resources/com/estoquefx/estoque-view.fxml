@@ -18,7 +18,7 @@
             <Tab fx:id="tabTabela" closable="false" text="Tabela">
                 <VBox>
                     <fx:include source="menu-view.fxml" fx:id="menuView"/>
-                    <fx:include source="tabela-view.fxml" fx:id="tabelaView"/>
+                    <fx:include source="tabela-view.fxml" fx:id="tabelaView" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </Tab>
 
