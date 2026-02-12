@@ -249,7 +249,7 @@ public class MenuController {
         }
     }
 
-    // ========== AÇÕES DO MENU - ARQUIVO ==========
+    //AÇÕES DO MENU
 
     @FXML
     private void onSalvar() {
@@ -435,8 +435,6 @@ public class MenuController {
         }
     }
 
-    // ========== AÇÕES DO MENU - NAVEGAÇÃO ==========
-
     @FXML
     private void onTrocarEstoque() {
         if (!"s".equals(Produto.getUltimaAcao()) && !"i".equals(Produto.getUltimaAcao())) {
@@ -577,8 +575,6 @@ public class MenuController {
         tabela.setFixedCellSize(Region.USE_COMPUTED_SIZE);
     }
 
-    // ========== AÇÕES DO MENU - VERSÃO ==========
-
     @FXML
     private void onVerificarAtualizacoes() {
         servicoUpdater();
@@ -707,8 +703,6 @@ public class MenuController {
     private void onVersoesAnteriores() {
         EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.RELEASES_URL);
     }
-
-    // ========== AÇÕES DO MENU - AJUDA ==========
 
     @FXML
     private void onSobre() {

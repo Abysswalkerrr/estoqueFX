@@ -22,8 +22,8 @@ public class EstoqueController {
 
     @FXML private Tab tabTabela;
 
-    private TabelaController tabelaController;
-    private MenuController menuController;
+    @FXML private TabelaController tabelaViewController;
+    @FXML private MenuController menuViewController;
 
     @FXML private Tab tabHistorico;
     private HistoricoController historicoController;
@@ -41,9 +41,9 @@ public class EstoqueController {
     public void initialize() {
         System.out.println("🎬 Inicializando EstoqueController principal...");
 
+        carregarMenuController();
         carregarHistoricoController();
         carregarDashboardController();
-
 
         Platform.runLater(() -> {
             conectarControllers();
@@ -95,21 +95,41 @@ public class EstoqueController {
         }
     }
 
+    private void carregarMenuController() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/estoquefx/menu-view.fxml")
+            );
+            MenuBar menuView = loader.load();
+            menuViewController = loader.getController();
+
+            System.out.println("✓ MenuController carregado");
+        } catch (Exception e) {
+            System.err.println("⚠ Erro ao carregar MenuController: " + e.getMessage());
+            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao carregar menu.", e.getMessage());
+        }
+    }
+
+
     // CONEXÃO ENTRE CONTROLLERS
 
     private void conectarControllers() {
 
-        if (tabelaController != null && historicoController != null) {
-            tabelaController.setHistoricoController(historicoController);
+        if (tabelaViewController != null && historicoController != null) {
+            tabelaViewController.setHistoricoController(historicoController);
         }
-        if (tabelaController != null){
-            tabelaController.setOnUltimaAlteracaoChanged(this::atualizarUltimaAlteracao);
+        if (tabelaViewController != null){
+            tabelaViewController.setOnUltimaAlteracaoChanged(this::atualizarUltimaAlteracao);
         }
-        if (menuController != null && historicoController != null) {
-            menuController.setHistoricoController(historicoController);
+        if (menuViewController != null && historicoController != null) {
+            menuViewController.setHistoricoController(historicoController);
         }
-        if  (menuController != null) {
-            menuController.setTabelaController(tabelaController);
+        if  (menuViewController != null && tabelaViewController != null) {
+            menuViewController.setTabelaController(tabelaViewController);
+        }
+        if (menuViewController != null) {
+
         }
 
         System.out.println("✓ Controllers conectados");
@@ -140,18 +160,15 @@ public class EstoqueController {
             dashboardController.setEstoqueAtual(estoqueId, estoqueNome);
         }
 
-        if (menuController != null) {
-            menuController.setSupabaseService(service, estoqueId);
-
+        if (menuViewController != null) {
+            menuViewController.setSupabaseService(service, estoqueId);
         }
 
-        // garantir que a tabela seja atualizada no Platform.runLater
-        // para que todos os bindings estejam prontos
-        if (tabelaController != null) {
+        if (tabelaViewController != null) {
             Platform.runLater(() -> {
                 System.out.println("📊 Atualizando tabela com " + Estoque.getProdutos().size() + " produtos");
-                tabelaController.refresh();
-                tabelaController.carregarUltimaAlteracao();
+                tabelaViewController.refresh();
+                tabelaViewController.carregarUltimaAlteracao();
             });
         }
     }
@@ -160,8 +177,8 @@ public class EstoqueController {
 
     private void atualizarUltimaAlteracao() {
         Time.updateTime();
-        if (tabelaController != null) {
-            tabelaController.carregarUltimaAlteracao();
+        if (tabelaViewController != null) {
+            tabelaViewController.carregarUltimaAlteracao();
         }
     }
 
