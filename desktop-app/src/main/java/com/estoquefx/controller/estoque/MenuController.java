@@ -437,23 +437,8 @@ public class MenuController {
 
     @FXML
     private void onTrocarEstoque() {
-        if (!"s".equals(Produto.getUltimaAcao()) && !"i".equals(Produto.getUltimaAcao())) {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Trocar de Estoque");
-            confirm.setHeaderText("Existem alterações não salvas");
-            confirm.setContentText("Deseja salvar antes de trocar?");
-            confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-
-            confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
-                    salvarAntesDeVoltarParaSelecao();
-                } else if (response == ButtonType.NO) {
-                    voltarParaSelecao();
-                }
-            });
-        } else {
-            voltarParaSelecao();
-        }
+        salvarSilenciosamente();
+        voltarParaSelecao();
     }
 
     private void salvarAntesDeVoltarParaSelecao() {
@@ -512,6 +497,7 @@ public class MenuController {
 
     @FXML
     private void onSair() {
+        salvarSilenciosamente();
         Stage stage = (Stage) tabelaController.getTabela().getScene().getWindow();
         stage.close();
     }
@@ -758,5 +744,28 @@ public class MenuController {
 
         alert.getDialogPane().setContent(textArea);
         alert.showAndWait();
+    }
+
+    void salvarSilenciosamente() {
+        try {
+            atualizarUltimaAlteracao();
+            Leitor.salvarEstoque(Estoque.getProdutos());
+
+            if (supabaseService != null && estoqueId != null) {
+                try {
+                    supabaseService.deletarProdutosEstoque(estoqueId);
+                    for (Produto p : Estoque.getProdutos()) {
+                        supabaseService.salvarProduto(p, estoqueId);
+                    }
+                    System.out.println("✓ Sincronizado ao trocar estoque");
+                } catch (Exception e) {
+                    System.err.println("⚠ Erro ao sincronizar: " + e.getMessage());
+                }
+            }
+
+            Produto.setUltimaAcao("s");
+        } catch (IOException e) {
+            System.err.println("❌ Erro ao salvar: " + e.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.estoquefx.controller.estoque;
 
+import com.estoquefx.EstoqueAppFX;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.model.*;
 import com.estoquefx.service.*;
@@ -14,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 
 public class EstoqueController {
@@ -48,10 +51,11 @@ public class EstoqueController {
         Platform.runLater(() -> {
             conectarControllers();
             Produto.setUltimaAcao("s");
+            setEstoqueAppController();
         });
     }
 
-    // CARREGAMENTO DE SUB-CONTROLLERS
+    // SUB-CONTROLLERS
 
     private void carregarHistoricoController() {
         try {
@@ -94,7 +98,6 @@ public class EstoqueController {
                     "Erro ao carregar dashboard.", e.getMessage());
         }
     }
-
 
     // CONEXÃO ENTRE CONTROLLERS
 
@@ -166,7 +169,7 @@ public class EstoqueController {
         }
     }
 
-    // VERIFICAR ATT SEM APARECER NA TELA
+    // VERIFICAR ATT SILENCIOSA
 
     public static void verificarAtualizacaoSilenciosa() {
         UpdateService service = new UpdateService();
@@ -215,7 +218,7 @@ public class EstoqueController {
         }
     }
 
-    // MÉTODOS AUXILIARES - DIALOGS(top 10 funções de todo o código)
+    // DIALOGS(top 10 funções de todo o código)
 
     public static void mostrarInfoStatic(Alert.AlertType tipo, String title, String header, String message) {
         Alert alert = new Alert(tipo);
@@ -223,6 +226,12 @@ public class EstoqueController {
         alert.setHeaderText(header);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // SALVAR SHHHHHH
+
+    public void salvarSilencioso(){
+        menuViewController.salvarSilenciosamente();
     }
 
     // SETTERS
@@ -239,4 +248,7 @@ public class EstoqueController {
         EstoqueController.stage = stage;
     }
 
+    public void setEstoqueAppController(){
+        EstoqueAppFX.setController(this);
+    }
 }

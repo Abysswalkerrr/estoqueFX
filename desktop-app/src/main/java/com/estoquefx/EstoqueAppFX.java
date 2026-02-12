@@ -21,6 +21,7 @@ import java.util.Optional;
 
 public class EstoqueAppFX extends Application {
     private static HostServices hostServicesRef;
+    private static EstoqueController controller;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -43,27 +44,11 @@ public class EstoqueAppFX extends Application {
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {
-            if ("i".equals(Produto.getUltimaAcao()) || "s".equals(Produto.getUltimaAcao())) {
-                return;
+            if (!"i".equals(Produto.getUltimaAcao()) && !"s".equals(Produto.getUltimaAcao())) {
+                System.out.println("🔄 Salvando antes de fechar...");
+                controller.salvarSilencioso();
             }
-
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Sair do Sistema");
-            alert.setHeaderText("Atenção!");
-            alert.setContentText("""
-                    Existem alterações não salvas.
-                    
-                    Para salvar, vá para Arquivo -> Salvar.
-                    Deseja realmente sair?""");
-
-            ButtonType btnSair = new ButtonType("Sair mesmo assim");
-            ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(btnSair, btnCancelar);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isEmpty() || result.get() == btnCancelar) {
-                event.consume(); // Não fecha
-            }
+            System.exit(0);
         });
 
         if (!Misc.getNegouAtualizacao()) {
@@ -87,5 +72,9 @@ public class EstoqueAppFX extends Application {
     }
 
     public static HostServices getHostServicesStatic() {return hostServicesRef;}
+
+    public static void setController(EstoqueController controller) {
+        EstoqueAppFX.controller = controller;
+    }
 
 }
