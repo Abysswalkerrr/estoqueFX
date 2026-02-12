@@ -44,9 +44,11 @@ public class EstoqueController {
         carregarHistoricoController();
         carregarDashboardController();
 
-        conectarControllers();
 
-        Platform.runLater(() -> Produto.setUltimaAcao("s"));
+        Platform.runLater(() -> {
+            conectarControllers();
+            Produto.setUltimaAcao("s");
+        });
     }
 
     // CARREGAMENTO DE SUB-CONTROLLERS
