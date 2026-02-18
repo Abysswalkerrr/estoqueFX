@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController"
-            prefHeight="400.0" prefWidth="600.0">
-    <center>
-        <TableView fx:id="tabela">
-            <columns>
-                <TableColumn fx:id="colCodigo" prefWidth="45.0" text="Código"/>
-                <TableColumn fx:id="colNome" prefWidth="111.4" text="Nome"/>
-            </columns>
-        </TableView>
-    </center>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController"
+      spacing="10" style="-fx-padding: 10;">
 
+    <HBox spacing="10">
+        <TextField fx:id="txtBusca" promptText="Buscar patrimônio..." prefWidth="250"/>
+        <Label fx:id="lblResultados"/>
+    </HBox>
 
+    <TableView fx:id="tabela" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCodigo"      text="Código" prefWidth="55" />
+            <TableColumn fx:id="colNome"         text="Nome"         prefWidth="200"/>
+            <TableColumn fx:id="colLocalizacao"  text="Localização"  prefWidth="150"/>
+            <TableColumn fx:id="colEstado"       text="Estado"       prefWidth="100"/>
+            <TableColumn fx:id="colDescricao"    text="Descrição"    prefWidth="250"/>
+            <TableColumn fx:id="colHora"         text="Última Alt."  prefWidth="150"/>
+        </columns>
+    </TableView>
 
-</BorderPane>
+    <HBox spacing="10">
+        <Button text="Adicionar" onAction="#adicionarPatrimonio"/>
+        <Button text="Remover"   onAction="#removerPatrimonio"/>
+    </HBox>
+</VBox>

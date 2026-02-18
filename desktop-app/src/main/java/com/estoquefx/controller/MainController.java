@@ -55,13 +55,11 @@ public class MainController {
         carregarHistoricoController();
         carregarDashboardController();
         carregarPatrimonioController();
-        PatrimonioService.addP(12345, "teste");
 
         Platform.runLater(() -> {
             conectarControllers();
             Produto.setUltimaAcao("s");
             setEstoqueAppController();
-            patrimonioController.refresh();
         });
     }
 

@@ -1,98 +1,63 @@
 package com.estoquefx.model.patrimonio;
 
-import java.util.HashSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Patrimonio {
-    int codigo;
-    String nome;
-    String marca;
-    String dataCompra;
-    String fornecedor;
-    double valorCompra;
-    String localizacao;
-    String status;
-    String lastManutencao;
-    String garantia;
-    String obs;
+    private String codigo;
+    private String nome;
+    private String descricao;
+    private String localizacao;
+    private String estado; // BOM, REGULAR, RUIM
+    private String alterHora;
 
-    private static HashSet<Patrimonio> patrimonios = new HashSet<>();
+    private static int proximoCodigo = 1;
+    private static final List<Patrimonio> patrimonios = new ArrayList<>();
 
-    public Patrimonio(String codigo, String nome) {
-        this.codigo = Integer.parseInt(codigo);
+    public Patrimonio(String nome, String descricao, String localizacao, String estado, String alterHora) {
+        this.codigo = String.valueOf(proximoCodigo++);
         this.nome = nome;
-    }
-    public void addPatrimonio(Patrimonio p) {
-        patrimonios.add(p);
-    }
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public void  setMarca(String marca) {
-        this.marca = marca;
-    }
-    public void setDataCompra(String dataCompra) {
-        this.dataCompra = dataCompra;
-    }
-    public void setFornecedor(String fornecedor) {
-        this.fornecedor = fornecedor;
-    }
-    public void setValorCompra(double valorCompra) {
-        this.valorCompra = valorCompra;
-    }
-    public void setLocalizacao(String localizacao) {
+        this.descricao = descricao;
         this.localizacao = localizacao;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    public void setLastManutencao(String lastManutencao) {
-        this.lastManutencao = lastManutencao;
-    }
-    public void setGarantia(String garantia) {
-        this.garantia = garantia;
-    }
-    public void setObs(String obs) {
-        this.obs = obs;
-    }
-    public int getCodigo() {
-        return codigo;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public String getMarca() {
-        return marca;
-    }
-    public String getDataCompra() {
-        return dataCompra;
-    }
-    public String getFornecedor() {
-        return fornecedor;
-    }
-    public double getValorCompra() {
-        return valorCompra;
-    }
-    public String getLocalizacao() {
-        return localizacao;
-    }
-    public String getStatus() {
-        return status;
-    }
-    public String getLastManutencao() {
-        return lastManutencao;
-    }
-    public String getGarantia() {
-        return garantia;
-    }
-    public String getObs() {
-        return obs;
+        this.estado = estado;
+        this.alterHora = alterHora;
     }
 
-    public static HashSet<Patrimonio> getPatrimonios() {
-        return patrimonios;
+    // Construtor para carga de arquivo
+    public Patrimonio(String codigo, String nome, String descricao,
+                      String localizacao, String estado, String alterHora) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.localizacao = localizacao;
+        this.estado = estado;
+        this.alterHora = alterHora;
+
+        int num = Integer.parseInt(codigo);
+        if (num >= proximoCodigo) proximoCodigo = num + 1;
     }
 
+    public static void addPatrimonio(Patrimonio p) { patrimonios.add(p); }
+    public static List<Patrimonio> getPatrimonios() { return patrimonios; }
+    public static void removePatrimonio(Patrimonio p) { patrimonios.remove(p); }
+
+    public String getCodigo()      { return codigo; }
+    public String getNome()        { return nome; }
+    public String getDescricao()   { return descricao; }
+    public String getLocalizacao() { return localizacao; }
+    public String getEstado()      { return estado; }
+    public String getAlterHora()   { return alterHora; }
+
+    public void setNome(String nome)               { this.nome = nome; }
+    public void setDescricao(String descricao)     { this.descricao = descricao; }
+    public void setLocalizacao(String loc)         { this.localizacao = loc; }
+    public void setEstado(String estado)           { this.estado = estado; }
+    public void setAlterHora(String alterHora)     { this.alterHora = alterHora; }
+
+    @Override
+    public String toString() {
+        return codigo + "|" + nome + "|" + descricao + "|"
+                + localizacao + "|" + estado + "|" + alterHora;
+    }
 }
