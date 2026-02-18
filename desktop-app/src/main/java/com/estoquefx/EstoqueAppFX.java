@@ -1,6 +1,7 @@
 package com.estoquefx;
 
 import com.estoquefx.controller.MainController;
+import com.estoquefx.controller.patrimonio.PatrimonioController;
 import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.updater.core.*;
@@ -41,7 +42,8 @@ public class EstoqueAppFX extends Application {
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {
-            if (!"i".equals(Produto.getUltimaAcao()) && !"s".equals(Produto.getUltimaAcao())) {
+            if ((!"i".equals(Produto.getUltimaAcao()) && !"s".equals(Produto.getUltimaAcao())
+                    || PatrimonioController.isPatrimonioAlterado())) {
                 System.out.println("🔄 Salvando antes de fechar...");
                 controller.salvarSilencioso();
             }

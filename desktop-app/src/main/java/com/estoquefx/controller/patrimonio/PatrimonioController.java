@@ -33,6 +33,8 @@ public class PatrimonioController {
     private PatrimonioService patrimonioService;
     private String estoqueId;
 
+    private static boolean patrimonioAlterado = false;
+
     @FXML
     public void initialize() {
         // Configurar colunas
@@ -48,11 +50,13 @@ public class PatrimonioController {
         colNome.setOnEditCommit(e -> {
             e.getRowValue().setNome(e.getNewValue().trim().toUpperCase());
             tabela.refresh();
+            patrimonioAlterado = true;
         });
         colLocalizacao.setCellFactory(TextFieldTableCell.forTableColumn());
         colLocalizacao.setOnEditCommit(e -> {
             e.getRowValue().setLocalizacao(e.getNewValue().trim());
             tabela.refresh();
+            patrimonioAlterado = true;
         });
         colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
                 "BOM", "REGULAR", "RUIM"
@@ -61,6 +65,7 @@ public class PatrimonioController {
             e.getRowValue().setEstado(e.getNewValue());
             e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
             tabela.refresh();
+            patrimonioAlterado = true;
         });
 
         tabela.setRowFactory(_ -> new TableRow<>() {
@@ -117,6 +122,7 @@ public class PatrimonioController {
                 atualizarResultado();
             }
         });
+        patrimonioAlterado = true;
     }
 
     @FXML
@@ -134,6 +140,7 @@ public class PatrimonioController {
                 }
             });
         }
+        patrimonioAlterado = true;
     }
 
     private void atualizarResultado() {
@@ -153,6 +160,10 @@ public class PatrimonioController {
         } catch (Exception e) {
             System.err.println("Erro ao salvar patrimônios: " + e.getMessage());
         }
+    }
+
+    public static boolean isPatrimonioAlterado() {
+        return patrimonioAlterado;
     }
 
     public void refresh() {

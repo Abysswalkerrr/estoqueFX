@@ -9,6 +9,7 @@ import com.estoquefx.controller.patrimonio.PatrimonioController;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.model.estoque.Estoque;
 import com.estoquefx.model.estoque.Produto;
+import com.estoquefx.model.patrimonio.Patrimonio;
 import com.estoquefx.service.*;
 import com.estoquefx.service.patrimonio.PatrimonioService;
 import com.estoquefx.updater.core.*;
@@ -23,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 
 public class MainController {
@@ -182,6 +185,18 @@ public class MainController {
 
         if (patrimonioController != null) {
             patrimonioController.setSupabaseService(service,  estoqueId);
+            new Thread(() -> {
+                try {
+                    PatrimonioService ps = new PatrimonioService(service);
+                    List<Patrimonio> lista = ps.carregarPatrimonios(estoqueId);
+                    lista.forEach(Patrimonio::addPatrimonio);
+                    Platform.runLater(() -> patrimonioController.refresh());
+                    System.out.println("✓ Patrimônios carregados: " + lista.size());
+                } catch (Exception e) {
+                    System.err.println("Erro ao carregar patrimônios: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }).start();
         }
     }
 
