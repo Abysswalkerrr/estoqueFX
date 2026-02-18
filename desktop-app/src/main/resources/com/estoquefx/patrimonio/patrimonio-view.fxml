@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController"
-      spacing="10" style="-fx-padding: 10;">
-
-    <HBox spacing="10">
-        <TextField fx:id="txtBusca" promptText="Buscar patrimônio..." prefWidth="250"/>
-        <Label fx:id="lblResultados"/>
-    </HBox>
-
+<BorderPane style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController">
+    <top>
+        <HBox spacing="10" prefHeight="50">
+            <Button onAction="#adicionarPatrimonio" text="Adicionar" />
+            <Button onAction="#removerPatrimonio" text="Remover" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtBusca" prefWidth="250" promptText="Buscar patrimônio..." />
+        </HBox>
+    </top>
+    <center>
     <TableView fx:id="tabela" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colCodigo"      text="Código" prefWidth="55" />
-            <TableColumn fx:id="colNome"         text="Nome"         prefWidth="200"/>
-            <TableColumn fx:id="colLocalizacao"  text="Localização"  prefWidth="150"/>
-            <TableColumn fx:id="colEstado"       text="Estado"       prefWidth="100"/>
-            <TableColumn fx:id="colDescricao"    text="Descrição"    prefWidth="250"/>
-            <TableColumn fx:id="colHora"         text="Última Alt."  prefWidth="150"/>
+            <TableColumn fx:id="colCodigo" prefWidth="55" text="Código" />
+            <TableColumn fx:id="colNome" prefWidth="200" text="Nome" />
+            <TableColumn fx:id="colLocalizacao" prefWidth="150" text="Localização" />
+            <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
+            <TableColumn fx:id="colDescricao" prefWidth="250" text="Descrição" />
+            <TableColumn fx:id="colHora" prefWidth="150" text="Última Alt." />
         </columns>
     </TableView>
-
-    <HBox spacing="10">
-        <Button text="Adicionar" onAction="#adicionarPatrimonio"/>
-        <Button text="Remover"   onAction="#removerPatrimonio"/>
+    </center>
+    <bottom>
+    <HBox maxHeight="25" style="-fx-background-color: #f0f0f0;           -fx-padding: 3 10 3 10;">
+        <Label fx:id="lblResultados" style="-fx-font-size: 11px;" text="mostrando x de y" />
     </HBox>
-</VBox>
+    </bottom>
+</BorderPane>
