@@ -4,6 +4,7 @@ import com.estoquefx.data.Leitor;
 import java.io.IOException;
 
 // revisar botões
+//todo histórico com qtdmin
 //todo reabrir app
 //todo ícones
 //todo calendário?
@@ -41,7 +42,7 @@ public class Misc {
 
 
 
-    //muito provavelmente não vai ser mais usado
+    //muito provavelmente ~~não~~ vai ser mais usado
     public static boolean isNumeric(String n) {
         try{
             Double.parseDouble(n);
