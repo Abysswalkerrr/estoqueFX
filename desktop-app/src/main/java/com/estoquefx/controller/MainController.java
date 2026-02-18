@@ -179,6 +179,10 @@ public class MainController {
                 tabelaViewController.carregarUltimaAlteracao();
             });
         }
+
+        if (patrimonioController != null) {
+            patrimonioController.setSupabaseService(service,  estoqueId);
+        }
     }
 
     // MÉTODOS AUXILIARES
@@ -253,6 +257,7 @@ public class MainController {
 
     public void salvarSilencioso(){
         menuViewController.salvarSilenciosamente();
+        patrimonioController.salvarNuvem();
     }
 
     // SETTERS

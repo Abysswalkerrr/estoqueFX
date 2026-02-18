@@ -37,8 +37,7 @@
             <Tab text="Patrimônio" closable="false">
                 <TabPane>
                     <Tab fx:id="tabPatrimonio" closable="false" text="Patrimônio">
-                        <fx:include source="patrimonio/patrimonio-view.fxml" fx:id="patrimonioView"
-                                    />
+                        <fx:include source="patrimonio/patrimonio-view.fxml" fx:id="patrimonioView"/>
                     </Tab>
                 </TabPane>
             </Tab>

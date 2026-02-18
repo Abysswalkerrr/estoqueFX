@@ -1,6 +1,8 @@
 package com.estoquefx.controller.patrimonio;
 
 import com.estoquefx.model.patrimonio.Patrimonio;
+import com.estoquefx.service.SupabaseService;
+import com.estoquefx.service.patrimonio.PatrimonioService;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,6 +29,9 @@ public class PatrimonioController {
 
     private ObservableList<Patrimonio> dados;
     private FilteredList<Patrimonio> filtrados;
+
+    private PatrimonioService patrimonioService;
+    private String estoqueId;
 
     @FXML
     public void initialize() {
@@ -134,6 +139,20 @@ public class PatrimonioController {
     private void atualizarResultado() {
         lblResultados.setText("Mostrando " + filtrados.size()
                 + " de " + dados.size() + " patrimônios");
+    }
+
+    public void setSupabaseService(SupabaseService service, String estoqueId) {
+        this.patrimonioService = new PatrimonioService(service);
+        this.estoqueId = estoqueId;
+    }
+
+    public void salvarNuvem() {
+        if (patrimonioService == null || estoqueId == null) return;
+        try {
+            patrimonioService.salvarTodos(Patrimonio.getPatrimonios(), estoqueId);
+        } catch (Exception e) {
+            System.err.println("Erro ao salvar patrimônios: " + e.getMessage());
+        }
     }
 
     public void refresh() {
