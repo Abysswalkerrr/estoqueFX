@@ -5,15 +5,15 @@
 
 <BorderPane style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController">
     <top>
-        <HBox spacing="10" prefHeight="50">
-            <Button onAction="#adicionarPatrimonio" text="Adicionar" />
+        <HBox spacing="10" style="-fx-padding: 8;" prefHeight="50">
+        <Button onAction="#adicionarPatrimonio" text="Adicionar" />
             <Button onAction="#removerPatrimonio" text="Remover" />
             <Region HBox.hgrow="ALWAYS" />
             <TextField fx:id="txtBusca" prefWidth="250" promptText="Buscar patrimônio..." />
         </HBox>
     </top>
     <center>
-    <TableView fx:id="tabela" VBox.vgrow="ALWAYS">
+    <TableView fx:id="tabela">
         <columns>
             <TableColumn fx:id="colCodigo" prefWidth="55" text="Código" />
             <TableColumn fx:id="colNome" prefWidth="200" text="Nome" />

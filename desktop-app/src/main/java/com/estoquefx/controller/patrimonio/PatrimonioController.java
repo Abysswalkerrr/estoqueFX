@@ -9,6 +9,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -48,6 +49,29 @@ public class PatrimonioController {
             e.getRowValue().setLocalizacao(e.getNewValue().trim());
             tabela.refresh();
         });
+        colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
+                "BOM", "REGULAR", "RUIM"
+        ));
+        colEstado.setOnEditCommit(e -> {
+            e.getRowValue().setEstado(e.getNewValue());
+            e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
+            tabela.refresh();
+        });
+
+        tabela.setRowFactory(_ -> new TableRow<>() {
+            @Override
+            protected void updateItem(Patrimonio item, boolean empty) {
+                super.updateItem(item, empty);
+                getStyleClass().removeAll("estado-ruim", "estado-regular");
+                if (!empty && item != null) {
+                    if ("RUIM".equals(item.getEstado()))
+                        getStyleClass().add("estado-ruim");
+                    else if ("REGULAR".equals(item.getEstado()))
+                        getStyleClass().add("estado-regular");
+                }
+            }
+        });
+
 
         dados = FXCollections.observableArrayList(Patrimonio.getPatrimonios());
         filtrados = new FilteredList<>(dados, _ -> true);
