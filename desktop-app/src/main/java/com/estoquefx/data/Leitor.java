@@ -1,8 +1,8 @@
 package com.estoquefx.data;
 
-import com.estoquefx.controller.estoque.EstoqueController;
-import com.estoquefx.model.Produto;
-import com.estoquefx.service.ProdutoService;
+import com.estoquefx.controller.MainController;
+import com.estoquefx.model.estoque.Produto;
+import com.estoquefx.service.estoque.ProdutoService;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 import javafx.scene.control.Alert;
@@ -175,7 +175,7 @@ public class Leitor {
                     }
                 }
             } catch (Exception e) {
-                EstoqueController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro " +  e.getMessage());
+                MainController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro " +  e.getMessage());
             }
         }
     }

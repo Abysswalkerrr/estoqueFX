@@ -1,7 +1,7 @@
 package com.estoquefx.service;
 
 import com.estoquefx.util.SupabaseConfig;
-import com.estoquefx.model.Produto;
+import com.estoquefx.model.estoque.Produto;
 import okhttp3.*;
 import com.google.gson.*;
 import java.io.IOException;

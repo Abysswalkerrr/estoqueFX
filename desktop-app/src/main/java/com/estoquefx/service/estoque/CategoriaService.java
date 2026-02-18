@@ -1,6 +1,6 @@
-package com.estoquefx.service;
+package com.estoquefx.service.estoque;
 
-import com.estoquefx.model.Categoria;
+import com.estoquefx.model.estoque.Categoria;
 
 import java.util.HashMap;
 import java.util.Map;

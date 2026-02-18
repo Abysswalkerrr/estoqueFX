@@ -1,4 +1,4 @@
-package com.estoquefx.model;
+package com.estoquefx.model.estoque;
 
 import java.util.HashMap;
 import java.util.Map;

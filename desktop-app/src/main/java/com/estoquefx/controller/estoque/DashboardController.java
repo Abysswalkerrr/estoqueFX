@@ -1,8 +1,8 @@
 package com.estoquefx.controller.estoque;
 
-import com.estoquefx.model.Categoria;
-import com.estoquefx.model.Estoque;
-import com.estoquefx.model.Produto;
+import com.estoquefx.model.estoque.Categoria;
+import com.estoquefx.model.estoque.Estoque;
+import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.service.SupabaseService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 
-import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+import static com.estoquefx.controller.MainController.mostrarInfoStatic;
 
 public class DashboardController {
 

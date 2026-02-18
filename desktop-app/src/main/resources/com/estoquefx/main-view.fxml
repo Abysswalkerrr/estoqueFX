@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.estoquefx.controller.MainController"
+            stylesheets="@style.css">
+
+    <!-- Menu no topo de TUDO -->
+    <top>
+    </top>
+
+    <!-- Tabs no centro -->
+    <center>
+        <TabPane>
+            <Tab text="Estoque" closable="false">
+                <TabPane>
+                    <Tab fx:id="tabTabela" closable="false" text="Tabela">
+                        <VBox>
+                            <fx:include source="estoque/menu-view.fxml" fx:id="menuView"/>
+                            <fx:include source="estoque/tabela-view.fxml" fx:id="tabelaView" VBox.vgrow="ALWAYS"/>
+                        </VBox>
+                    </Tab>
+
+                    <Tab fx:id="tabDashboard" closable="false" text="Dashboard">
+                        <fx:include source="estoque/dashboard-view.fxml" fx:id="dashboardView"/>
+                    </Tab>
+
+                    <Tab fx:id="tabHistorico" closable="false" text="Histórico">
+                        <fx:include source="estoque/historico-view.fxml" fx:id="historicoView"/>
+                    </Tab>
+                </TabPane>
+            </Tab>
+
+            <Tab text="Patrimônio" closable="false">
+                <TabPane>
+                    <Tab fx:id="tabPatrimonio" closable="false" text="Patrimônio">
+                        <fx:include source="patrimonio/patrimonio-view.fxml" fx:id="patrimonioView"/>
+                    </Tab>
+                </TabPane>
+            </Tab>
+        </TabPane>
+    </center>
+
+</BorderPane>

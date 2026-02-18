@@ -1,14 +1,12 @@
 package com.estoquefx.controller;
 
 import com.estoquefx.EstoqueAppFX;
-import com.estoquefx.controller.estoque.EstoqueController;
-import com.estoquefx.controller.estoque.HistoricoController;
-import com.estoquefx.service.EstoqueService;
-import com.estoquefx.service.ProdutoService;
+import com.estoquefx.service.estoque.EstoqueService;
+import com.estoquefx.service.estoque.ProdutoService;
 import com.estoquefx.service.SupabaseService;
-import com.estoquefx.model.Categoria;
-import com.estoquefx.model.Estoque;
-import com.estoquefx.model.Produto;
+import com.estoquefx.model.estoque.Categoria;
+import com.estoquefx.model.estoque.Estoque;
+import com.estoquefx.model.estoque.Produto;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -173,11 +171,11 @@ public class SelecaoEstoqueController {
 
         Stage stage = (Stage) btnAbrir.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(
-                EstoqueAppFX.class.getResource("estoque-view.fxml")
+                EstoqueAppFX.class.getResource("main-view.fxml")
         );
         Scene scene = new Scene(loader.load(), 1000, 600);
 
-        EstoqueController controller = loader.getController();
+        MainController controller = loader.getController();
         controller.setEstoqueAtual(estoqueId, estoqueNome, supabaseService);
 
 

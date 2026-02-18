@@ -9,11 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 
-import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+import static com.estoquefx.controller.MainController.mostrarInfoStatic;
 
 public class LoginController {
 

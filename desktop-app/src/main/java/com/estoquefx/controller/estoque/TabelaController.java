@@ -1,7 +1,10 @@
 package com.estoquefx.controller.estoque;
 
-import com.estoquefx.model.*;
-import com.estoquefx.service.EstoqueService;
+import com.estoquefx.model.estoque.Categoria;
+import com.estoquefx.model.estoque.Estoque;
+import com.estoquefx.model.estoque.Movimento;
+import com.estoquefx.model.estoque.Produto;
+import com.estoquefx.service.estoque.EstoqueService;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;

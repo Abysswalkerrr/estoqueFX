@@ -1,9 +1,16 @@
-package com.estoquefx.controller.estoque;
+package com.estoquefx.controller;
 
 import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.controller.estoque.DashboardController;
+import com.estoquefx.controller.estoque.HistoricoController;
+import com.estoquefx.controller.estoque.MenuController;
+import com.estoquefx.controller.estoque.TabelaController;
+import com.estoquefx.controller.patrimonio.PatrimonioController;
 import com.estoquefx.data.Leitor;
-import com.estoquefx.model.*;
+import com.estoquefx.model.estoque.Estoque;
+import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.service.*;
+import com.estoquefx.service.patrimonio.PatrimonioService;
 import com.estoquefx.updater.core.*;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
@@ -13,13 +20,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
-
-public class EstoqueController {
+public class MainController {
 
     // SUB-CONTROLLERS
 
@@ -34,7 +40,8 @@ public class EstoqueController {
     @FXML private Tab tabDashboard;
     private DashboardController dashboardController;
 
-    // VARIÁVEIS DE ESTADO
+    @FXML private Tab tabPatrimonio;
+    private PatrimonioController patrimonioController;
 
     private SupabaseService supabaseService;
     private String estoqueId;
@@ -47,11 +54,14 @@ public class EstoqueController {
 
         carregarHistoricoController();
         carregarDashboardController();
+        carregarPatrimonioController();
+        PatrimonioService.addP(12345, "teste");
 
         Platform.runLater(() -> {
             conectarControllers();
             Produto.setUltimaAcao("s");
             setEstoqueAppController();
+            patrimonioController.refresh();
         });
     }
 
@@ -63,7 +73,7 @@ public class EstoqueController {
 
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/estoquefx/historico-view.fxml")
+                        getClass().getResource("/com/estoquefx/estoque/historico-view.fxml")
                 );
                 VBox historicoView = loader.load();
                 historicoController = loader.getController();
@@ -84,7 +94,7 @@ public class EstoqueController {
 
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/estoquefx/dashboard-view.fxml")
+                        getClass().getResource("/com/estoquefx/estoque/dashboard-view.fxml")
                 );
                 AnchorPane dashboardView = loader.load();
                 dashboardController = loader.getController();
@@ -96,6 +106,22 @@ public class EstoqueController {
             System.err.println("⚠ Erro ao carregar DashboardController: " + e.getMessage());
             mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
                     "Erro ao carregar dashboard.", e.getMessage());
+        }
+    }
+
+    private void carregarPatrimonioController() {
+        try {
+            Object includeContent = tabPatrimonio.getContent();
+            if (includeContent != null) {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/estoquefx/patrimonio/patrimonio-view.fxml")
+                );
+                BorderPane PatrimonioView = loader.load();
+                patrimonioController = loader.getController();
+                tabPatrimonio.setContent(PatrimonioView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -114,9 +140,6 @@ public class EstoqueController {
         }
         if  (menuViewController != null && tabelaViewController != null) {
             menuViewController.setTabelaController(tabelaViewController);
-        }
-        if (menuViewController != null) {
-
         }
 
         System.out.println("✓ Controllers conectados");
@@ -245,7 +268,7 @@ public class EstoqueController {
     }
 
     public static void setStage(Stage stage) {
-        EstoqueController.stage = stage;
+        MainController.stage = stage;
     }
 
     public void setEstoqueAppController(){

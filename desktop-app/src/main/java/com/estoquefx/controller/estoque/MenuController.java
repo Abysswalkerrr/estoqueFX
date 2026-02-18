@@ -1,10 +1,15 @@
 package com.estoquefx.controller.estoque;
 
 import com.estoquefx.EstoqueAppFX;
+import com.estoquefx.controller.MainController;
 import com.estoquefx.controller.SelecaoEstoqueController;
 import com.estoquefx.data.Leitor;
-import com.estoquefx.model.*;
+import com.estoquefx.model.estoque.Categoria;
+import com.estoquefx.model.estoque.Estoque;
+import com.estoquefx.model.estoque.Movimento;
+import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.service.*;
+import com.estoquefx.service.estoque.ProdutoService;
 import com.estoquefx.updater.core.*;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
@@ -726,7 +731,7 @@ public class MenuController {
     }
 
     public void mostrarInfo(Alert.AlertType tipo, String titulo, String header, String msg) {
-        EstoqueController.mostrarInfoStatic(tipo, titulo, header, msg);
+        MainController.mostrarInfoStatic(tipo, titulo, header, msg);
     }
 
     public void mostrarChangelog(String changelog) {
@@ -746,7 +751,7 @@ public class MenuController {
         alert.showAndWait();
     }
 
-    void salvarSilenciosamente() {
+    public void salvarSilenciosamente() {
         try {
             atualizarUltimaAlteracao();
             Leitor.salvarEstoque(Estoque.getProdutos());

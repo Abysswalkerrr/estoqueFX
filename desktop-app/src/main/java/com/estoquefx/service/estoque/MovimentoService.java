@@ -1,7 +1,7 @@
-package com.estoquefx.service;
+package com.estoquefx.service.estoque;
 
-import com.estoquefx.model.Movimento;
-import com.estoquefx.model.Historico;
+import com.estoquefx.model.estoque.Movimento;
+import com.estoquefx.model.estoque.Historico;
 import com.google.gson.*;
 import okhttp3.*;
 

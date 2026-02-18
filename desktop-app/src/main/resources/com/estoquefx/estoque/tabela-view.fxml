@@ -7,7 +7,6 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.estoquefx.controller.estoque.TabelaController">
 
-    <!-- Topo: filtros e status de saldo/última alteração -->
     <top>
         <HBox spacing="8" style="-fx-padding: 8;">
             <VBox>
@@ -34,7 +33,6 @@
         </HBox>
     </top>
 
-    <!-- Centro: tabela ocupa todo o espaço disponível -->
     <center>
         <TableView fx:id="tabela">
             <columns>
@@ -52,7 +50,6 @@
         </TableView>
     </center>
 
-    <!-- Bottom: barra de status com altura fixa -->
     <bottom>
         <HBox alignment="CENTER_LEFT"
               spacing="15"

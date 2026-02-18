@@ -1,4 +1,4 @@
-package com.estoquefx.model;
+package com.estoquefx.model.estoque;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

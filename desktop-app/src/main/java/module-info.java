@@ -16,9 +16,11 @@ module com.estoquefx {
 
     opens com.estoquefx to javafx.fxml;
     exports com.estoquefx;
-    exports com.estoquefx.model;
-    opens com.estoquefx.model to javafx.fxml;
+    exports com.estoquefx.model.estoque;
+    opens com.estoquefx.model.estoque to javafx.fxml;
     exports com.estoquefx.controller;
+    exports com.estoquefx.model.patrimonio;
+    opens com.estoquefx.model.patrimonio to javafx.fxml;
     opens com.estoquefx.controller to javafx.fxml;
     exports com.estoquefx.service;
     opens com.estoquefx.service to javafx.fxml;
@@ -28,4 +30,10 @@ module com.estoquefx {
     opens com.estoquefx.data to javafx.fxml;
     exports com.estoquefx.controller.estoque;
     opens com.estoquefx.controller.estoque to javafx.fxml;
+    exports com.estoquefx.controller.patrimonio;
+    opens com.estoquefx.controller.patrimonio to javafx.fxml;
+    exports com.estoquefx.service.estoque;
+    opens com.estoquefx.service.estoque to javafx.fxml;
+    exports com.estoquefx.service.patrimonio;
+    opens com.estoquefx.service.patrimonio to javafx.fxml;
 }

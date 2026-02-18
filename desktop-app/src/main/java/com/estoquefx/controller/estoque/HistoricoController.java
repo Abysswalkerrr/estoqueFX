@@ -1,9 +1,9 @@
 package com.estoquefx.controller.estoque;
 
-import com.estoquefx.model.Movimento;
-import com.estoquefx.model.Historico;
-import com.estoquefx.service.MovimentoExtraService;
-import com.estoquefx.service.MovimentoService;
+import com.estoquefx.model.estoque.Movimento;
+import com.estoquefx.model.estoque.Historico;
+import com.estoquefx.service.estoque.MovimentoExtraService;
+import com.estoquefx.service.estoque.MovimentoService;
 import com.estoquefx.service.SupabaseService;
 import com.estoquefx.util.SupabaseConfig;
 
@@ -17,7 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+import static com.estoquefx.controller.MainController.mostrarInfoStatic;
 
 public class HistoricoController {
 

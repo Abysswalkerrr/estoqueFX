@@ -1,7 +1,7 @@
 package com.estoquefx;
 
-import com.estoquefx.controller.estoque.EstoqueController;
-import com.estoquefx.model.Produto;
+import com.estoquefx.controller.MainController;
+import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.updater.core.*;
 
@@ -12,16 +12,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class EstoqueAppFX extends Application {
     private static HostServices hostServicesRef;
-    private static EstoqueController controller;
+    private static MainController controller;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -52,7 +49,7 @@ public class EstoqueAppFX extends Application {
         });
 
         if (!Misc.getNegouAtualizacao()) {
-            EstoqueController.verificarAtualizacaoSilenciosa();
+            MainController.verificarAtualizacaoSilenciosa();
         }
 
         if (UpdateService.deveReabrir()) {
@@ -65,7 +62,7 @@ public class EstoqueAppFX extends Application {
             });
         }
 
-        EstoqueController.setStage(stage);
+        MainController.setStage(stage);
 
         stage.show();
 
@@ -73,7 +70,7 @@ public class EstoqueAppFX extends Application {
 
     public static HostServices getHostServicesStatic() {return hostServicesRef;}
 
-    public static void setController(EstoqueController controller) {
+    public static void setController(MainController controller) {
         EstoqueAppFX.controller = controller;
     }
 

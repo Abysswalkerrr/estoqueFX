@@ -1,9 +1,9 @@
-package com.estoquefx.service;
+package com.estoquefx.service.estoque;
 
-import com.estoquefx.controller.estoque.EstoqueController;
-import com.estoquefx.model.Categoria;
-import com.estoquefx.model.Produto;
-import com.estoquefx.model.Estoque;
+import com.estoquefx.controller.MainController;
+import com.estoquefx.model.estoque.Categoria;
+import com.estoquefx.model.estoque.Produto;
+import com.estoquefx.model.estoque.Estoque;
 import javafx.scene.control.Alert;
 
 import java.util.*;
@@ -54,7 +54,7 @@ public class ProdutoService {
                 existente.setVlrUnd(prod.getVlrUnd());
                 existente.atualizaCompra();
             } catch (Exception ex) {
-                EstoqueController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro importar " + prod.getNome() + ": " + ex.getMessage());
+                MainController.mostrarInfoStatic(Alert.AlertType.ERROR, "Erro", null, "Erro importar " + prod.getNome() + ": " + ex.getMessage());
             }
             Produto.setUltimaAcao("c");
         }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static com.estoquefx.controller.estoque.EstoqueController.mostrarInfoStatic;
+import static com.estoquefx.controller.MainController.mostrarInfoStatic;
 
 public class SupabaseConfig {
     private static final Properties props = new Properties();
