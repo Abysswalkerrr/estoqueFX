@@ -22,7 +22,7 @@ public class Movimento {
     public Movimento(Produto produto, String tipo, int diff){
         this.codigo = produto.getCodigo();
         this.nome = produto.getNome();
-        this.quantidadeNova = produto.getQtd();
+        this.quantidadeNova = tipo.equals("AJUSTE") ? produto.getVlrMin() : produto.getQtd();
         this.tempo = Time.getTime(true);
         this.tipo = tipo;
         this.diff = diff;

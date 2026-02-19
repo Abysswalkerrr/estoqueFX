@@ -80,10 +80,6 @@ public class MovimentoExtraService {
             json.addProperty("valor_novo", movimento.getValorNovo());
             json.addProperty("delta_valor", movimento.getDelta());
         }
-        else if (tipo.equals("AJUSTE_QTDMIN")) {
-            json.addProperty("qtd_min_antiga", movimento.getQuantidadeAnterior());
-            json.addProperty("qtd_min_nova", movimento.getQuantidadeNova());
-        }
         return json;
     }
 
@@ -137,8 +133,6 @@ public class MovimentoExtraService {
                 } catch (Exception e) {
                     dataHora = LocalDateTime.now();
                 }
-
-                // criar movimento baseado no tipo
                 if (tipo.equals("ALTERACAO_VALOR")) {
                     double valorAntigo = obj.get("valor_antigo").getAsDouble();
                     double valorNovo = obj.get("valor_novo").getAsDouble();
@@ -146,14 +140,6 @@ public class MovimentoExtraService {
 
                     new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                             delta, valorNovo, valorAntigo);
-                }
-                else if (tipo.equals("AJUSTE_QTDMIN")) {
-                    int qtdMinAntiga = obj.get("qtd_min_antiga").getAsInt();
-                    int qtdMinNova = obj.get("qtd_min_nova").getAsInt();
-
-                    // codigo, nome, tempo, tipo, qtdNova, diff, qtdAntiga
-                    new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
-                            qtdMinNova, qtdMinNova - qtdMinAntiga, qtdMinAntiga);
                 }
             }
 

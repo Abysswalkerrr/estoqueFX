@@ -34,10 +34,8 @@ public class MovimentoService {
             throw new IllegalStateException("Usuário não autenticado");
         }
 
-        // todo investigar pq ajuste saida e vlrUnd não estão indo
         String tipo = movimento.getTipo().toUpperCase();
-        if (!tipo.equals("ENTRADA") && !tipo.equals("SAIDA") &&
-                !tipo.equals("AJUSTE") && !tipo.equals("ALTERACAO_VALOR")) {
+        if (!tipo.equals("ENTRADA") && !tipo.equals("SAIDA") && !tipo.equals("AJUSTE")) {
             System.out.println("Movimento do tipo '" + tipo + "' não será salvo no Supabase");
             return;
         }
@@ -72,7 +70,6 @@ public class MovimentoService {
             System.out.println("✓ Movimento salvo no Supabase: " + movimento.getTipo());
         }
     }
-
 
     public void carregarMovimentos(String estoqueId) throws IOException {
         if (authToken == null) {
@@ -131,7 +128,6 @@ public class MovimentoService {
                 }
 
                 // código, nome, tempo, tipo, quantidadeNova, diff, velhaQuantidade
-                //todo ver se vlrUnd e vlrMin funcionam com isso - talvez ignorar zeros no fim?
                 new Movimento(produtoCodigo, produtoNome, dataHora, tipo,
                         qtdNova, qtdAlterada, qtdAnterior);
             }
