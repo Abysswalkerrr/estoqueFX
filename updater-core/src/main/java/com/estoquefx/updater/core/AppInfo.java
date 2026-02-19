@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.2.0.1";
+            "3.3.0.2";
 
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
@@ -24,13 +24,19 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.3.0.x
+            Correções da tabela de patrimônios e do histórico de movimentações
+            \s
+            3.3.0.0
+            Aba de controle de patrimônios disponibilizada.
+            \s
             3.2.0.1
             Troca da descrição por localização.
             \s
             3.2.0.0
             Salvamento ao fechar o app implementado.
             \s
-            3.1.10. 1-3
+            3.1.10.x
             Correções de diversas falhas e melhorias na interface.
             \s
             3.1.10

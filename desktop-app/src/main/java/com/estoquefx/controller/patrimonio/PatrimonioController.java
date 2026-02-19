@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Text;
 
 public class PatrimonioController {
 
@@ -67,6 +68,22 @@ public class PatrimonioController {
             tabela.refresh();
             patrimonioAlterado = true;
         });
+        colDescricao.setCellFactory(col -> new TableCell<>() {
+                    private final Text text = new Text();
+                    {
+                        setGraphic(text);
+                        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                        setPrefHeight(Control.USE_COMPUTED_SIZE);
+                        text.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
+
+                        setOnMouseClicked(event -> {
+                            if (event.getClickCount() == 2 && !isEmpty()) {
+                                Patrimonio p = getTableView().getItems().get(getIndex());
+                                abrirDialogoDescricao(p);
+                            }
+                        });
+                    }
+                });
 
         tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
@@ -160,6 +177,44 @@ public class PatrimonioController {
         } catch (Exception e) {
             System.err.println("Erro ao salvar patrimônios: " + e.getMessage());
         }
+    }
+
+    private void abrirDialogoDescricao(Patrimonio p) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Editar descrição");
+
+        ButtonType okButtonType = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        TextArea area = new TextArea(p.getDescricao());
+        area.setWrapText(true);
+        area.setPrefRowCount(6);
+        area.setPrefColumnCount(40);
+
+        area.setStyle(
+                "-fx-control-inner-background: #ffffff;" +
+                        "-fx-background-color: #f0f0f0;" +
+                        "-fx-text-fill: black;"
+        );
+
+        dialog.getDialogPane().setContent(area);
+        dialog.getDialogPane().setStyle(
+                "-fx-background-color: #e0e0e0;" +
+                        "-fx-text-fill: black;"
+        );
+
+        dialog.setResultConverter(button -> {
+            if (button == okButtonType) {
+                return area.getText();
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(novaDesc -> {
+            novaDesc = novaDesc.trim();
+            p.setDescricao(novaDesc);
+            refresh();
+        });
     }
 
     public static boolean isPatrimonioAlterado() {

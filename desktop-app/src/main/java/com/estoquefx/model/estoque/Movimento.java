@@ -108,7 +108,7 @@ public class Movimento {
 
     public String getDiferencaFormatada() {
         String toReturn = "";
-        if (tipo.equals("ENTRADA") ||  tipo.equals("SAIDA")) {
+        if (tipo.equals("ENTRADA") ||  tipo.equals("SAIDA") || tipo.equals("AJUSTE")) {
             if (diff > 0) {
                 toReturn = "+" + diff;
             } else{
