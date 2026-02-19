@@ -195,7 +195,7 @@ public class MenuController {
 
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
-            if (qtd == 0) return;
+            if (qtd <= 0) return;
 
             ProdutoService.entrada(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
@@ -232,7 +232,7 @@ public class MenuController {
 
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
-            if (qtd == 0) return;
+            if (qtd <= 0) return;
 
             ProdutoService.saida(qtd, nome);
             String codigo = Produto.getCodigoPorNome(nome);
@@ -266,8 +266,6 @@ public class MenuController {
                 salvarNoSupabase();
             } else {
                 new Alert(Alert.AlertType.INFORMATION, "Estoque salvo localmente.").showAndWait();
-                mostrarInfo(Alert.AlertType.INFORMATION, "Debug", null,
-                        "Supabase: " + supabaseService + "estoque" + estoqueId);
                 Produto.setUltimaAcao("s");
             }
 

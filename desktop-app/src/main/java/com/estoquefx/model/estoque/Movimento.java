@@ -128,19 +128,6 @@ public class Movimento {
     public String getQtdNovaMostrar() {return qtdNovaMostrar;}
 
 
-
-    public String getObservacao() {
-        String tipoUpper = tipo.toUpperCase();
-
-        if (tipoUpper.equals("AJUSTE_VALOR")) {
-            return String.format("R$ %.2f → R$ %.2f (Δ R$ %.2f)",
-                    velhoValor, valorNovo, delta);
-        }
-
-        return "";
-    }
-
-
     public String getTipoDescricao() {
         return switch (tipo.toUpperCase()) {
             case "ENTRADA" -> "Entrada";

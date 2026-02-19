@@ -272,7 +272,11 @@ public class MainController {
 
     public void salvarSilencioso(){
         menuViewController.salvarSilenciosamente();
-        patrimonioController.salvarNuvem();
+        if (patrimonioController != null) {
+            patrimonioController.salvarNuvem();
+        } else {
+            System.out.println("Patrimonio controller é null, não salvo");
+        }
     }
 
     // SETTERS

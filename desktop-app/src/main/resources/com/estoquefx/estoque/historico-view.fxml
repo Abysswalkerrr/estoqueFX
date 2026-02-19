@@ -1,93 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.estoquefx.controller.estoque.HistoricoController"
-      spacing="15" style="-fx-background-color: #f5f5f5;">
+<VBox spacing="15" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.estoque.HistoricoController">
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
     <!-- Cabeçalho -->
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label text="📜 Histórico de Movimentações" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="btnAtualizar" text="🔄 Atualizar" onAction="#onAtualizar"
-                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 15;"/>
+        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="📜 Histórico de Movimentações" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnAtualizar" onAction="#onAtualizar" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 15;" text="🔄 Atualizar" />
     </HBox>
 
     <!-- Filtros -->
-    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
 
         <VBox spacing="5">
-            <Label text="Tipo:" style="-fx-font-weight: bold;"/>
-            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="Todos"/>
+            <Label style="-fx-font-weight: bold;" text="Tipo:" />
+            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="Todos" />
         </VBox>
 
         <VBox spacing="5">
-            <Label text="Produto:" style="-fx-font-weight: bold;"/>
-            <TextField fx:id="txtFiltroProduto" promptText="Buscar produto..." prefWidth="200"/>
+            <Label style="-fx-font-weight: bold;" text="Produto:" />
+            <TextField fx:id="txtFiltroProduto" prefWidth="200" promptText="Buscar produto..." />
         </VBox>
 
-        <Region HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS" />
 
-        <VBox spacing="5" alignment="BOTTOM_CENTER">
-            <Label text=" "/>
-            <Button fx:id="btnFiltrar" text="🔍 Filtrar" onAction="#onFiltrar"
-                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"/>
+        <VBox alignment="BOTTOM_CENTER" spacing="5">
+            <Label text=" " />
+            <Button fx:id="btnFiltrar" onAction="#onFiltrar" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;" text="🔍 Filtrar" />
         </VBox>
 
-        <VBox spacing="5" alignment="BOTTOM_CENTER">
-            <Label text=" "/>
-            <Button fx:id="btnLimpar" text="✖ Limpar" onAction="#onLimparFiltros"
-                    style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"/>
+        <VBox alignment="BOTTOM_CENTER" spacing="5">
+            <Label text=" " />
+            <Button fx:id="btnLimpar" onAction="#onLimparFiltros" style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;" text="✖ Limpar" />
         </VBox>
     </HBox>
 
-    <!-- Estatísticas -->
-    <HBox spacing="15" alignment="CENTER">
+    <!-- Labels grandes -->
+    <HBox alignment="CENTER" spacing="15">
         <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #4CAF50; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalEntradas" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-            <Label text="Entradas" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+            <Label fx:id="lblTotalEntradas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Entradas" />
         </VBox>
 
         <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #F44336; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalSaidas" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-            <Label text="Saídas" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+            <Label fx:id="lblTotalSaidas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Saídas" />
         </VBox>
 
         <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #2196F3; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalMovimentacoes" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-            <Label text="Alterações de valor" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+            <Label fx:id="lblTotalMovimentacoes" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Alterações de valor" />
         </VBox>
     </HBox>
 
-    <!-- Tabela -->
-    <TableView fx:id="tabelaMovimentacoes" VBox.vgrow="ALWAYS"
-               style="-fx-background-color: white; -fx-background-radius: 5;">
+    <HBox alignment="CENTER">
+    <TableView fx:id="tabelaMovimentacoes" maxWidth="835.0" prefWidth="840.0" style="-fx-background-color: white; -fx-background-radius: 5;" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colDataHora" text="Data/Hora" prefWidth="140"/>
-            <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
-            <TableColumn fx:id="colCodigo" text="Código" prefWidth="60"/>
-            <TableColumn fx:id="colProduto" text="Produto" prefWidth="200"/>
-            <TableColumn fx:id="colQtdAnterior" text="Qtd Anterior" prefWidth="100" style="-fx-alignment: CENTER-LEFT;"/>
-            <TableColumn fx:id="colQtdNova" text="Qtd Nova" prefWidth="100" style="-fx-alignment: CENTER-LEFT;"/>
-            <TableColumn fx:id="colDiferenca" text="Diferença" prefWidth="100" style="-fx-alignment: CENTER;"/>
-            <TableColumn fx:id="colObservacao" text="Observação" prefWidth="0"/>
+            <TableColumn fx:id="colDataHora" maxWidth="140" prefWidth="140.0" text="Data/Hora" />
+            <TableColumn fx:id="colTipo" maxWidth="120" prefWidth="120.0" text="Tipo" />
+            <TableColumn fx:id="colCodigo" maxWidth="60" prefWidth="60.0" text="Código" />
+            <TableColumn fx:id="colProduto" maxWidth="200" prefWidth="200.0" text="Produto" />
+            <TableColumn fx:id="colQtdAnterior" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;" text="Qtd Anterior" />
+            <TableColumn fx:id="colQtdNova" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;" text="Qtd Nova" />
+            <TableColumn fx:id="colDiferenca" maxWidth="100" prefWidth="100" style="-fx-alignment: CENTER;" text="Diferença" />
         </columns>
 
         <placeholder>
-            <Label text="Nenhuma movimentação encontrada" style="-fx-font-size: 16px; -fx-text-fill: #999;"/>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #999;" text="Nenhuma movimentação encontrada" />
         </placeholder>
     </TableView>
+    </HBox>
 
     <!-- Info -->
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label fx:id="lblInfo" text="Carregando..." style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+        <Label fx:id="lblInfo" style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Carregando..." />
     </HBox>
 
 </VBox>

@@ -29,7 +29,6 @@ public class HistoricoController {
     @FXML private TableColumn<Movimento, String> colQtdAnterior;
     @FXML private TableColumn<Movimento, String> colQtdNova;
     @FXML private TableColumn<Movimento, String> colDiferenca;
-    @FXML private TableColumn<Movimento, String> colObservacao;
 
     @FXML private ComboBox<String> comboTipo;
     @FXML private TextField txtFiltroProduto;
@@ -67,7 +66,6 @@ public class HistoricoController {
         colQtdAnterior.setCellValueFactory(new PropertyValueFactory<>("qtdVelhaMostrar"));
         colQtdNova.setCellValueFactory(new PropertyValueFactory<>("qtdNovaMostrar"));
         colDiferenca.setCellValueFactory(new PropertyValueFactory<>("diferencaFormatada"));
-        colObservacao.setCellValueFactory(new PropertyValueFactory<>("observacao"));
 
         // Colorir coluna de diferença
         colDiferenca.setCellFactory(_ -> new TableCell<>() {
