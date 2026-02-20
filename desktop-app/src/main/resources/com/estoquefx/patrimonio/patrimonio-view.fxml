@@ -3,7 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController">
+<BorderPane style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController">
     <top>
         <HBox spacing="10" style="-fx-padding: 8;" prefHeight="50">
         <Button onAction="#adicionarPatrimonio" text="Adicionar" />

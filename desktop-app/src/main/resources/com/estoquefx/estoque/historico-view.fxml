@@ -4,84 +4,109 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.estoque.HistoricoController">
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<VBox spacing="15" style="-fx-background-color: #f5f5f5;"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.estoquefx.controller.estoque.HistoricoController">
 
     <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
+        <Insets bottom="20" left="20" right="20" top="20"/>
     </padding>
 
     <!-- Cabeçalho -->
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="📜 Histórico de Movimentações" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnAtualizar" onAction="#onAtualizar" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 15;" text="🔄 Atualizar" />
+        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="📜 Histórico de Movimentações"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnAtualizar" onAction="#onAtualizar"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 15;"
+                text="Atualizar">
+            <graphic>
+                <FontIcon iconLiteral="fas-sync-alt" iconSize="14" fill="white"/>
+            </graphic>
+        </Button>
+
     </HBox>
 
     <!-- Filtros -->
-    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
 
         <VBox spacing="5">
-            <Label style="-fx-font-weight: bold;" text="Tipo:" />
-            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="Todos" />
+            <Label style="-fx-font-weight: bold;" text="Tipo:"/>
+            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="Todos"/>
         </VBox>
 
         <VBox spacing="5">
-            <Label style="-fx-font-weight: bold;" text="Produto:" />
-            <TextField fx:id="txtFiltroProduto" prefWidth="200" promptText="Buscar produto..." />
+            <Label style="-fx-font-weight: bold;" text="Produto:"/>
+            <TextField fx:id="txtFiltroProduto" prefWidth="200" promptText="Buscar produto..."/>
         </VBox>
 
-        <Region HBox.hgrow="ALWAYS" />
+        <Region HBox.hgrow="ALWAYS"/>
 
         <VBox alignment="BOTTOM_CENTER" spacing="5">
-            <Label text=" " />
-            <Button fx:id="btnFiltrar" onAction="#onFiltrar" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;" text="🔍 Filtrar" />
+            <Label text=" "/>
+            <Button fx:id="btnFiltrar" onAction="#onFiltrar"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"
+                    text="🔍 Filtrar"/>
         </VBox>
 
         <VBox alignment="BOTTOM_CENTER" spacing="5">
-            <Label text=" " />
-            <Button fx:id="btnLimpar" onAction="#onLimparFiltros" style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;" text="✖ Limpar" />
+            <Label text=" "/>
+            <Button fx:id="btnLimpar" onAction="#onLimparFiltros"
+                    style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"
+                    text="✖ Limpar"/>
         </VBox>
     </HBox>
 
     <!-- Labels grandes -->
     <HBox alignment="CENTER" spacing="15">
-        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #4CAF50; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalEntradas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Entradas" />
+        <VBox alignment="CENTER" spacing="5"
+              style="-fx-background-color: #4CAF50; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTotalEntradas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"
+                   text="0"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Entradas"/>
         </VBox>
 
-        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #F44336; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalSaidas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Saídas" />
+        <VBox alignment="CENTER" spacing="5"
+              style="-fx-background-color: #F44336; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTotalSaidas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"
+                   text="0"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Saídas"/>
         </VBox>
 
-        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #2196F3; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
-            <Label fx:id="lblTotalMovimentacoes" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Alterações de valor" />
+        <VBox alignment="CENTER" spacing="5"
+              style="-fx-background-color: #2196F3; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTotalMovimentacoes"
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Alterações de valor"/>
         </VBox>
     </HBox>
 
     <HBox alignment="CENTER">
-    <TableView fx:id="tabelaMovimentacoes" maxWidth="835.0" prefWidth="840.0" style="-fx-background-color: white; -fx-background-radius: 5;" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colDataHora" maxWidth="140" prefWidth="140.0" text="Data/Hora" />
-            <TableColumn fx:id="colTipo" maxWidth="120" prefWidth="120.0" text="Tipo" />
-            <TableColumn fx:id="colCodigo" maxWidth="60" prefWidth="60.0" text="Código" />
-            <TableColumn fx:id="colProduto" maxWidth="200" prefWidth="200.0" text="Produto" />
-            <TableColumn fx:id="colQtdAnterior" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;" text="Qtd Anterior" />
-            <TableColumn fx:id="colQtdNova" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;" text="Qtd Nova" />
-            <TableColumn fx:id="colDiferenca" maxWidth="100" prefWidth="100" style="-fx-alignment: CENTER;" text="Diferença" />
-        </columns>
+        <TableView fx:id="tabelaMovimentacoes" maxWidth="835.0" prefWidth="840.0"
+                   style="-fx-background-color: white; -fx-background-radius: 5;" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colDataHora" maxWidth="140" prefWidth="140.0" text="Data/Hora"/>
+                <TableColumn fx:id="colTipo" maxWidth="120" prefWidth="120.0" text="Tipo"/>
+                <TableColumn fx:id="colCodigo" maxWidth="60" prefWidth="60.0" text="Código"/>
+                <TableColumn fx:id="colProduto" maxWidth="200" prefWidth="200.0" text="Produto"/>
+                <TableColumn fx:id="colQtdAnterior" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;"
+                             text="Qtd Anterior"/>
+                <TableColumn fx:id="colQtdNova" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;"
+                             text="Qtd Nova"/>
+                <TableColumn fx:id="colDiferenca" maxWidth="100" prefWidth="100" style="-fx-alignment: CENTER;"
+                             text="Diferença"/>
+            </columns>
 
-        <placeholder>
-            <Label style="-fx-font-size: 16px; -fx-text-fill: #999;" text="Nenhuma movimentação encontrada" />
-        </placeholder>
-    </TableView>
+            <placeholder>
+                <Label style="-fx-font-size: 16px; -fx-text-fill: #999;" text="Nenhuma movimentação encontrada"/>
+            </placeholder>
+        </TableView>
     </HBox>
 
     <!-- Info -->
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label fx:id="lblInfo" style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Carregando..." />
+        <Label fx:id="lblInfo" style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Carregando..."/>
     </HBox>
 
 </VBox>

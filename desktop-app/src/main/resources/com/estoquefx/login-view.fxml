@@ -76,7 +76,8 @@
 
         <Button fx:id="btnRegistrar" text="Criar Nova Conta" onAction="#onRegistrar"
                 prefWidth="300" prefHeight="35"
-                style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-border-color: #3498db; -fx-border-width: 2;"/>
+                style="-fx-background-color: transparent;
+                -fx-text-fill: #3498db; -fx-border-color: #3498db; -fx-border-width: 2;"/>
 
         <Label fx:id="lblStatus" style="-fx-text-fill: #e74c3c;"
                wrapText="true" alignment="CENTER"/>

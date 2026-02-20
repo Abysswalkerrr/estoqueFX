@@ -9,26 +9,26 @@
     <top>
         <HBox spacing="8" style="-fx-padding: 8;">
             <VBox>
-                <Label fx:id="lblUltimaAlteracao" text="Salvo às" />
-                <Label fx:id="lblSaldoTotal" text="Saldo total" />
+                <Label fx:id="lblUltimaAlteracao" text="Salvo às"/>
+                <Label fx:id="lblSaldoTotal" text="Saldo total"/>
             </VBox>
             <HBox spacing="5" style="-fx-padding: 4 8 2 8;">
                 <VBox spacing="3">
                     <Button onAction="#onAdicionarProduto" text="Adicionar">
                         <graphic>
-                            <FontIcon iconLiteral="fas-plus-circle" iconSize="14" />
+                            <FontIcon iconLiteral="fas-plus-circle" iconSize="14"/>
                         </graphic>
                     </Button>
                     <Button onAction="#onRemoverProduto" text="Remover">
                         <graphic>
-                            <FontIcon iconLiteral="fas-trash-alt" iconSize="14" />
+                            <FontIcon iconLiteral="fas-trash-alt" iconSize="14"/>
                         </graphic>
                     </Button>
                 </VBox>
                 <VBox spacing="3">
                     <Button onAction="#onEntrada" text="Entrada">
                         <graphic>
-                            <FontIcon iconLiteral="fas-arrow-circle-up" iconSize="14" />
+                            <FontIcon iconLiteral="fas-arrow-circle-up" iconSize="14"/>
                         </graphic>
                     </Button>
                     <Button onAction="#onSaida" text="Saída">
@@ -37,37 +37,44 @@
                         </graphic>
                     </Button>
                 </VBox>
-                <Button onAction="#onAtualizar" text="Atualizar">
-                    <graphic>
-                        <FontIcon iconLiteral="fas-sync-alt" iconSize="14" />
-                    </graphic>
-                </Button>
-
             </HBox>
-            <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS"/>
             <VBox prefHeight="46.0" prefWidth="173.0" spacing="3.0">
-                <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0"
-                          prefWidth="174.0" promptText="Escolher categoria" />
-                <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes" />
+                <ComboBox fx:id="boxCategorias" editable="true" prefHeight="26.0" prefWidth="174.0"
+                          promptText="Escolher categoria"/>
+                <CheckBox fx:id="boxApenasUrgente" mnemonicParsing="false" text="Apenas urgentes"/>
             </VBox>
-            <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0"
-                       promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES" />
+
+            <VBox spacing="3.0">
+                <TextField fx:id="txtBusca" maxWidth="300" prefHeight="26.0" prefWidth="222.0"
+                           promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES"/>
+                <HBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button alignment="CENTER_RIGHT" onAction="#onAtualizar"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 5 15;"
+                            text="Atualizar">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-sync-alt" iconSize="14" fill="white"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </VBox>
         </HBox>
     </top>
 
     <center>
         <TableView fx:id="tabela">
             <columns>
-                <TableColumn fx:id="colCodigo" prefWidth="45.0" text="Código" />
-                <TableColumn fx:id="colNome" prefWidth="111.4" text="Nome" />
-                <TableColumn fx:id="colCategoria" prefWidth="103.0" text="Categoria" />
-                <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín" />
-                <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und" />
-                <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd" />
-                <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação" />
-                <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo" />
-                <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter" />
-                <TableColumn fx:id="colDescricao" text="Localização " />
+                <TableColumn fx:id="colCodigo" prefWidth="45.0" text="Código"/>
+                <TableColumn fx:id="colNome" prefWidth="111.4" text="Nome"/>
+                <TableColumn fx:id="colCategoria" prefWidth="103.0" text="Categoria"/>
+                <TableColumn fx:id="colQtdMin" prefWidth="62.0" text="Qtd Mín"/>
+                <TableColumn fx:id="colValorUnd" prefWidth="93.0" text="Valor Und"/>
+                <TableColumn fx:id="colQtd" prefWidth="67.0" text="Qtd"/>
+                <TableColumn fx:id="colOrientacao" prefWidth="96.0" text="Orientação"/>
+                <TableColumn fx:id="colSaldo" prefWidth="64.0" text="Saldo"/>
+                <TableColumn fx:id="colHora" prefWidth="75.0" text="últ. Alter"/>
+                <TableColumn fx:id="colDescricao" text="Localização "/>
             </columns>
         </TableView>
     </center>
@@ -75,8 +82,8 @@
     <bottom>
         <HBox alignment="CENTER_LEFT" maxHeight="25" spacing="15"
               style="-fx-background-color: #f0f0f0; -fx-padding: 3 10 3 10;">
-            <Label fx:id="lblResultados" style="-fx-font-size: 11px;" text="Mostrando 0 de 0 produtos" />
-            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblResultados" style="-fx-font-size: 11px;" text="Mostrando 0 de 0 produtos"/>
+            <Region HBox.hgrow="ALWAYS"/>
         </HBox>
     </bottom>
 

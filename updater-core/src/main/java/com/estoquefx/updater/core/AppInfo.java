@@ -4,13 +4,14 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.3.2.0";
+            "3.3.3.0";
 
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
 
     public static final String SUGGESTIONS_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSdbPIgxiZlIa5eCqGVBFEs1BI2vEEjZvDG-zoP6pcg59yVlFw/viewform";
+
     public static final String UPDATE_URL = getUpdateUrl();
 
     public static final String RELEASES_URL =
@@ -24,6 +25,8 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.3.3.0
+            Botões de atualizar reimaginados.\n
             3.3.2.0
             Descrição funcional na aba de patrimônio.\n
             3.3.1.0
