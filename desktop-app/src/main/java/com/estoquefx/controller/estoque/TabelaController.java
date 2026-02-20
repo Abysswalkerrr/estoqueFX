@@ -61,6 +61,7 @@ public class TabelaController {
     private String busca = "";
     private HashSet<Produto> urgentes = new HashSet<>();
 
+    private MenuController menuController;
 
     private HistoricoController historicoController;
     private Runnable onDataChanged;
@@ -116,7 +117,6 @@ public class TabelaController {
         });
     }
 
-
     private void configurarColunas() {
         tabela.setEditable(true);
 
@@ -166,7 +166,6 @@ public class TabelaController {
 
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
-
 
     private void configurarEdicao() {
         configurarEdicaoNome();
@@ -380,7 +379,6 @@ public class TabelaController {
         });
     }
 
-
     private void configurarEstilo() {
         tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
@@ -398,7 +396,6 @@ public class TabelaController {
             }
         });
     }
-
 
     private void configurarFiltros() {
         boxCategorias.valueProperty().addListener((_, _, _) -> {
@@ -444,8 +441,61 @@ public class TabelaController {
         });
     }
 
-    // DIALOGS
+    @FXML
+    private void onAdicionarProduto() {
+        if (menuController != null) menuController.onCriarProduto();
+    }
 
+    @FXML
+    private void onRemoverProduto() {
+        Produto selecionado = tabela.getSelectionModel().getSelectedItem();
+        if (selecionado == null) {
+            new Alert(Alert.AlertType.INFORMATION, "Selecione um produto na tabela.")
+                    .showAndWait();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Remover produto");
+        confirm.setHeaderText("Remover \"" + selecionado.getNome() + "\"?");
+        confirm.setContentText("Esta ação não pode ser desfeita.");
+        confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        confirm.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.YES) {
+                Estoque.getProdutos().remove(selecionado);
+                Estoque.getNomes().remove(selecionado.getNome());
+                Categoria cat = Categoria.getCategoria(selecionado.getCategoria());
+                if (cat != null) cat.removeProduto(selecionado);
+
+                if (historicoController != null) {
+                    historicoController.registrarMovimento(
+                            new Movimento(selecionado, "REMOCAO")
+                    );
+                }
+                refresh();
+                notificarAlteracao();
+            }
+        });
+    }
+
+    @FXML
+    private void onEntrada() {
+        if (menuController != null) menuController.onEntrada();
+    }
+
+    @FXML
+    private void onSaida() {
+        if (menuController != null) menuController.onSaida();
+    }
+
+    @FXML
+    private void onAtualizar() {
+        refresh();
+    }
+
+
+    // DIALOGS
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Editar descrição");
@@ -553,7 +603,6 @@ public class TabelaController {
         setUltimaAlteracao("Salvo em: " + ultimaAlt);
     }
 
-
     public void refresh() {
         dados.setAll(Estoque.getProdutos());
         atualizarTotal();
@@ -566,6 +615,10 @@ public class TabelaController {
     public void setHistoricoController(HistoricoController historicoController) {
         this.historicoController = historicoController;
         System.out.println("✓ HistoricoController conectado ao TabelaController");
+    }
+
+    public void setMenuController(MenuController menuController) {
+        this.menuController = menuController;
     }
 
     public void setOnDataChanged(Runnable callback) {
@@ -592,5 +645,4 @@ public class TabelaController {
     public TableView<Produto> getTabela() {
         return tabela;
     }
-
 }

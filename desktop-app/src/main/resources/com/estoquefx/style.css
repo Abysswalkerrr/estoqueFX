@@ -83,4 +83,13 @@
 }
 
 .icon-button {
+    -fx-font-size: 11px;
+    -fx-padding: 3 9 3 9;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 5;
+}
+
+.icon-button:hover {
+    -fx-background-color: derive(-fx-base, -10%);
 }

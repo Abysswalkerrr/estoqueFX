@@ -117,9 +117,9 @@ public class MainController {
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/estoquefx/patrimonio/patrimonio-view.fxml")
                 );
-                BorderPane PatrimonioView = loader.load();
+                BorderPane patrimonioView = loader.load();
                 patrimonioController = loader.getController();
-                tabPatrimonio.setContent(PatrimonioView);
+                tabPatrimonio.setContent(patrimonioView);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,6 +141,7 @@ public class MainController {
         }
         if  (menuViewController != null && tabelaViewController != null) {
             menuViewController.setTabelaController(tabelaViewController);
+            tabelaViewController.setMenuController(menuViewController);
         }
 
         System.out.println("✓ Controllers conectados");

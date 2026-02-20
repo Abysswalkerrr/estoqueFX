@@ -68,7 +68,7 @@ public class MenuController {
     // AÇÕES DO MENU - ESTOQUE
 
     @FXML
-    private void onCriarProduto() {
+    void onCriarProduto() {
         String nome;
         String categoria;
 
@@ -181,7 +181,7 @@ public class MenuController {
     }
 
     @FXML
-    private void onEntrada() {
+    void onEntrada() {
         if (tabelaController == null) return;
 
         String nome = tabelaController.pedirProduto(Estoque.getNomes(), "Entrada de produto");
@@ -218,7 +218,7 @@ public class MenuController {
     }
 
     @FXML
-    private void onSaida() {
+    void onSaida() {
         if (tabelaController == null) return;
 
         String nome = tabelaController.pedirProduto(Estoque.getNomes(), "Saída de produto");
@@ -511,17 +511,20 @@ public class MenuController {
             Categoria.categorias.clear();
             Estoque.getNomes().clear();
 
-            Stage stage = (Stage) tabelaController.getTabela().getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(
-                    EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
-            );
-            Scene scene = new Scene(loader.load(), 500, 400);
+            if (tabelaController != null) {
 
-            SelecaoEstoqueController controller = loader.getController();
-            controller.setSupabaseService(supabaseService);
+                Stage stage = (Stage) tabelaController.getTabela().getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(
+                        EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
+                );
+                Scene scene = new Scene(loader.load(), 500, 400);
 
-            stage.setScene(scene);
-            stage.setTitle("Selecionar Estoque");
+                SelecaoEstoqueController controller = loader.getController();
+                controller.setSupabaseService(supabaseService);
+
+                stage.setScene(scene);
+                stage.setTitle("Selecionar Estoque");
+            }
 
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR,
@@ -529,7 +532,7 @@ public class MenuController {
         }
     }
 
-    // ========== AÇÕES DO MENU - IMPRIMIR ==========
+    // AÇÕES DO MENU - IMPRIMIR
 
     @FXML
     private void onImprimir() {
@@ -719,7 +722,7 @@ public class MenuController {
         EstoqueAppFX.getHostServicesStatic().showDocument(AppInfo.SUGGESTIONS_URL);
     }
 
-    // ========== MÉTODOS AUXILIARES ==========
+    // MÉTODOS AUXILIARES
 
     private void atualizarUltimaAlteracao() {
         Time.updateTime();
