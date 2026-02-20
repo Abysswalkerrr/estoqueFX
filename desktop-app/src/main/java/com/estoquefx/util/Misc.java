@@ -3,10 +3,8 @@ package com.estoquefx.util;
 import com.estoquefx.data.Leitor;
 import java.io.IOException;
 
-// revisar botões
-//todo histórico com qtdmin
-//todo reabrir app
-//todo ícones
+//todo reabrir app - verificar inconsistência
+//todo ícone do app!!!
 //todo calendário?
 //todo 2FA ou email
 //todo FAQ
