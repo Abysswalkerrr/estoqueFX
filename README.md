@@ -162,15 +162,13 @@ Menu → Trocar Estoque → Selecione outro estoque da lista
 - [x] Melhorias de qualidade de vida
 - [x] Inúmeras correções de falhas
 
-### ✅ Versão 3.0 (Atual)
+### ✅ Versão 3.0
 - [x] Sincronização com nuvem
-- [x] Sistema de login(múltiplas contas)
-
-### 🚧 Versão 3.1+ (Em breve)
+- [x] Sistema de login(múltiplas contas e estoques)
+- [x] Relatórios
 - [x] Histórico de movimentações
-- [ ] Relatórios
-- [x] Backup automático
-- [ ] Autenticação de dois fatores
+- [x] Salvamento automático
+- [x] Aba de controle patrimonial
 
 ### 🔮 Versão 4.0+ (Futuro)
 - [ ] Módulo de fornecedores
@@ -178,6 +176,7 @@ Menu → Trocar Estoque → Selecione outro estoque da lista
 - [ ] Permissões de usuário (admin/operador)
 - [ ] App mobile
 - [ ] Configurações robustas
+- [ ] Autenticação de dois fatores
 
 ---
 
