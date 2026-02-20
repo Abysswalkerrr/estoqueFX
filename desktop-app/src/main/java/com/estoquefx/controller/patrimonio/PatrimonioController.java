@@ -69,21 +69,34 @@ public class PatrimonioController {
             patrimonioAlterado = true;
         });
         colDescricao.setCellFactory(col -> new TableCell<>() {
-                    private final Text text = new Text();
-                    {
-                        setGraphic(text);
-                        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                        setPrefHeight(Control.USE_COMPUTED_SIZE);
-                        text.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
+            private final Text text = new Text();
 
-                        setOnMouseClicked(event -> {
-                            if (event.getClickCount() == 2 && !isEmpty()) {
-                                Patrimonio p = getTableView().getItems().get(getIndex());
-                                abrirDialogoDescricao(p);
-                            }
-                        });
+            {
+                setGraphic(text);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setPrefHeight(Control.USE_COMPUTED_SIZE);
+                text.wrappingWidthProperty().bind(col.widthProperty().subtract(10));
+
+                setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && !isEmpty()) {
+                        Patrimonio p = getTableView().getItems().get(getIndex());
+                        abrirDialogoDescricao(p);
                     }
                 });
+            }
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (text.fillProperty().isBound()) {
+                    text.fillProperty().unbind();
+                }
+                if (empty || item == null) {
+                    text.setText("");
+                    return;
+                }
+                text.setText(item);
+            }
+        });
 
         tabela.setRowFactory(_ -> new TableRow<>() {
             @Override
@@ -179,14 +192,14 @@ public class PatrimonioController {
         }
     }
 
-    private void abrirDialogoDescricao(Patrimonio p) {
+    private void abrirDialogoDescricao(Patrimonio patrimonio) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Editar descrição");
 
         ButtonType okButtonType = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
-        TextArea area = new TextArea(p.getDescricao());
+        TextArea area = new TextArea(patrimonio.getDescricao());
         area.setWrapText(true);
         area.setPrefRowCount(6);
         area.setPrefColumnCount(40);
@@ -212,7 +225,7 @@ public class PatrimonioController {
 
         dialog.showAndWait().ifPresent(novaDesc -> {
             novaDesc = novaDesc.trim();
-            p.setDescricao(novaDesc);
+            patrimonio.setDescricao(novaDesc);
             refresh();
         });
     }
