@@ -54,7 +54,7 @@
                 <version>1.6.6</version>
                 <configuration>
                     <name>SistemaEstoqueFX</name>
-                    <appVersion>3.3.3.0</appVersion>
+                    <appVersion>3.3.4.0</appVersion>
                     <vendor>Valube</vendor>
                     <copyright>© 2026 Valube</copyright>
                     <description>Sistema de Estoque FX</description>
@@ -63,6 +63,7 @@
                     <input>${project.build.directory}/libs</input>
                     <mainJar>desktop-app-1.0.0.jar</mainJar>
                     <mainClass>com.estoquefx.Launcher</mainClass>
+                    <icon>src/packaging/i.ico</icon>
 
                     <winShortcut>true</winShortcut>
                     <winMenu>true</winMenu>

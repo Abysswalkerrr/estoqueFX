@@ -13,9 +13,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class EstoqueAppFX extends Application {
     private static HostServices hostServicesRef;
@@ -23,6 +25,12 @@ public class EstoqueAppFX extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        stage.getIcons().addAll(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/estoquefx/icons/i16.png"))),
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/estoquefx/icons/i32.png"))),
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/estoquefx/icons/i256.png")))
+        );
+
         hostServicesRef = getHostServices();
 
         try{
