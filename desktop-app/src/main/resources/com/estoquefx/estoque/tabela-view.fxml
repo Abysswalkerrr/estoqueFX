@@ -50,7 +50,7 @@
                            promptText="Buscar por nome ou código" HBox.hgrow="SOMETIMES"/>
                 <HBox>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button alignment="CENTER_RIGHT" onAction="#onAtualizar"
+                    <Button fx:id="btnAtualizar" alignment="CENTER_RIGHT" onAction="#onAtualizar"
                             style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 5 15;"
                             text="Atualizar">
                         <graphic>

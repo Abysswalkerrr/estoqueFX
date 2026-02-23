@@ -260,7 +260,6 @@ public class MainController {
     }
 
     // DIALOGS(top 10 funções de todo o código)
-
     public static void mostrarInfoStatic(Alert.AlertType tipo, String title, String header, String message) {
         Alert alert = new Alert(tipo);
         alert.setTitle(title);
@@ -270,7 +269,6 @@ public class MainController {
     }
 
     // SALVAR SHHHHHH
-
     public void salvarSilencioso(){
         menuViewController.salvarSilenciosamente();
         if (patrimonioController != null) {
@@ -281,7 +279,6 @@ public class MainController {
     }
 
     // SETTERS
-
     public void setHistoricoController(HistoricoController historicoController) {
         this.historicoController = historicoController;
     }

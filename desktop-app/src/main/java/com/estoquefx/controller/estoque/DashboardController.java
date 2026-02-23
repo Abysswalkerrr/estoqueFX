@@ -68,9 +68,6 @@ public class DashboardController {
         atualizarDashboard();
     }
 
-    /**
-     * ✅ ADICIONAR: Método chamado pelo botão Atualizar no FXML
-     */
     @FXML
     private void onAtualizar() {
         System.out.println("🔄 Atualizando dashboard manualmente...");

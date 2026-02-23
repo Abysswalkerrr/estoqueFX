@@ -49,6 +49,7 @@ public class TabelaController {
     @FXML private Label lblSaldoTotal;
     @FXML private Label lblResultados;
 
+    @FXML private Button btnAtualizar;
 
     private final StringProperty ultimaAlteracao = new SimpleStringProperty("Salvo em: ");
     private StringProperty saldoTotal = new SimpleStringProperty();
@@ -491,9 +492,17 @@ public class TabelaController {
 
     @FXML
     private void onAtualizar() {
+        btnAtualizar.setDisable(true);
         refresh();
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            Platform.runLater(() -> btnAtualizar.setDisable(false));
+        }).start();
     }
-
 
     // DIALOGS
     private void abrirDialogoDescricao(Produto p) {
@@ -557,7 +566,6 @@ public class TabelaController {
     }
 
     // MÉTODOS AUXILIARES
-
     public void carregarCategorias() {
         ObservableList<String> categorias = FXCollections.observableArrayList();
         for (Categoria categoria : Categoria.getCategorias()) {
