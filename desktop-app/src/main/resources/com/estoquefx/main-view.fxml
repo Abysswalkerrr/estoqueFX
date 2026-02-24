@@ -15,28 +15,28 @@
     <!-- Tabs no centro -->
     <center>
         <TabPane>
-            <Tab text="Estoque" closable="false">
+            <Tab text="%tab.estoque" closable="false">
                 <TabPane>
-                    <Tab fx:id="tabTabela" closable="false" text="Tabela">
+                    <Tab fx:id="tabTabela" closable="false" text="%tab.tabela">
                         <VBox>
                             <fx:include source="estoque/menu-view.fxml" fx:id="menuView"/>
                             <fx:include source="estoque/tabela-view.fxml" fx:id="tabelaView" VBox.vgrow="ALWAYS"/>
                         </VBox>
                     </Tab>
 
-                    <Tab fx:id="tabDashboard" closable="false" text="Dashboard">
+                    <Tab fx:id="tabDashboard" closable="false" text="%tab.dashboard">
                         <fx:include source="estoque/dashboard-view.fxml" fx:id="dashboardView"/>
                     </Tab>
 
-                    <Tab fx:id="tabHistorico" closable="false" text="Histórico">
+                    <Tab fx:id="tabHistorico" closable="false" text="%tab.historico">
                         <fx:include source="estoque/historico-view.fxml" fx:id="historicoView"/>
                     </Tab>
                 </TabPane>
             </Tab>
 
-            <Tab text="Patrimônio" closable="false">
+            <Tab text="%tab.patrimonio" closable="false">
                 <TabPane>
-                    <Tab fx:id="tabPatrimonio" closable="false" text="Patrimônio">
+                    <Tab fx:id="tabPatrimonio" closable="false" text="%tab.tabela">
                         <fx:include source="patrimonio/patrimonio-view.fxml" fx:id="patrimonioView"/>
                     </Tab>
                 </TabPane>

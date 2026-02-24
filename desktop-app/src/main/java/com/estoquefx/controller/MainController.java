@@ -228,15 +228,15 @@ public class MainController {
 
             Platform.runLater(() -> {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-                confirm.setTitle("Atualização disponível");
+                confirm.setTitle(I18n.t("update.available.title"));
                 confirm.setHeaderText("Versão atual: " + info.getVersaoAtual() +
                         "\nNova versão: " + info.getVersaoRemota());
                 confirm.setContentText("Novidades: " + info.getChangeLog() +
                         "\nDeseja baixar agora?");
 
-                ButtonType BT_ATUALIZAR = new ButtonType("Atualizar agora", ButtonBar.ButtonData.YES);
-                ButtonType BT_DEPOIS = new ButtonType("Lembrar depois", ButtonBar.ButtonData.CANCEL_CLOSE);
-                ButtonType BT_IGNORAR = new ButtonType("Não perguntar nesta versão", ButtonBar.ButtonData.NO);
+                ButtonType BT_ATUALIZAR = new ButtonType(I18n.t("update.btn.now"), ButtonBar.ButtonData.YES);
+                ButtonType BT_DEPOIS = new ButtonType(I18n.t("update.btn.later"), ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType BT_IGNORAR = new ButtonType(I18n.t("update.btn.ignore"), ButtonBar.ButtonData.NO);
                 confirm.getButtonTypes().setAll(BT_ATUALIZAR, BT_DEPOIS, BT_IGNORAR);
 
                 confirm.showAndWait().ifPresent(result -> {
