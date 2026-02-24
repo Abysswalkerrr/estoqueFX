@@ -11,6 +11,7 @@ import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.service.*;
 import com.estoquefx.service.estoque.ProdutoService;
 import com.estoquefx.updater.core.*;
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 
@@ -515,7 +516,8 @@ public class MenuController {
 
                 Stage stage = (Stage) tabelaController.getTabela().getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(
-                        EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
+                        EstoqueAppFX.class.getResource("selecao-estoque-view.fxml"),
+                        I18n.getBundle()
                 );
                 Scene scene = new Scene(loader.load(), 500, 400);
 

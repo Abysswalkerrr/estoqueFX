@@ -2,6 +2,7 @@ package com.estoquefx.controller;
 
 import com.estoquefx.EstoqueAppFX;
 import com.estoquefx.service.SupabaseService;
+import com.estoquefx.util.I18n;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -162,7 +163,8 @@ public class LoginController {
             Stage stage = (Stage) btnLogin.getScene().getWindow();
 
             FXMLLoader loader = new FXMLLoader(
-                    EstoqueAppFX.class.getResource("selecao-estoque-view.fxml")
+                    EstoqueAppFX.class.getResource("selecao-estoque-view.fxml"),
+                    I18n.getBundle()
             );
             Scene scene = new Scene(loader.load(), 600, 600);
 

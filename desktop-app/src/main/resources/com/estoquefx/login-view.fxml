@@ -23,7 +23,7 @@
         </font>
     </Label>
 
-    <Label text="Sistema de Gestão de Estoque" style="-fx-text-fill: #7f8c8d;">
+    <Label text="%login.subtitle" style="-fx-text-fill: #7f8c8d;">
         <font>
             <Font size="14"/>
         </font>
@@ -34,15 +34,15 @@
     <!-- Formulário -->
     <VBox spacing="15" alignment="CENTER" maxWidth="300">
 
-        <Label text="Email:" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="txtEmail" promptText="seu@email.com"
+        <Label text="%login.email" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtEmail" promptText="%login.email.prompt"
                    style="-fx-pref-height: 35;"/>
 
-        <Label text="Senha:" style="-fx-font-weight: bold;"/>
+        <Label text="%login.password" style="-fx-font-weight: bold;"/>
         <StackPane>
             <HBox fx:id="hboxSenhaOculta" spacing="5">
                 <PasswordField fx:id="txtSenha"
-                               promptText="Senha"
+                               promptText="%login.password.prompt"
                                HBox.hgrow="ALWAYS"
                                style="-fx-pref-height: 35;"/>
                 <Button focusTraversable="false"
@@ -56,7 +56,7 @@
 
             <HBox fx:id="hboxSenhaVisivel" spacing="5" visible="false" managed="false">
                 <TextField fx:id="txtSenhaVisivel"
-                           promptText="Senha"
+                           promptText="%login.password.prompt"
                            HBox.hgrow="ALWAYS"
                            style="-fx-pref-height: 35;"/>
                 <Button focusTraversable="false"
@@ -70,11 +70,11 @@
         </StackPane>
         <Region minHeight="10"/>
 
-        <Button fx:id="btnLogin" text="Entrar" onAction="#onLogin"
+        <Button fx:id="btnLogin" text="%login.enter" onAction="#onLogin"
                 prefWidth="300" prefHeight="40"
                 style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
 
-        <Button fx:id="btnRegistrar" text="Criar Nova Conta" onAction="#onRegistrar"
+        <Button fx:id="btnRegistrar" text="%login.register" onAction="#onRegistrar"
                 prefWidth="300" prefHeight="35"
                 style="-fx-background-color: transparent;
                 -fx-text-fill: #3498db; -fx-border-color: #3498db; -fx-border-width: 2;"/>

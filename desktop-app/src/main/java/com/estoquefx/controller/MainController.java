@@ -13,6 +13,7 @@ import com.estoquefx.model.patrimonio.Patrimonio;
 import com.estoquefx.service.*;
 import com.estoquefx.service.patrimonio.PatrimonioService;
 import com.estoquefx.updater.core.*;
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 
@@ -74,7 +75,8 @@ public class MainController {
 
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/estoquefx/estoque/historico-view.fxml")
+                        getClass().getResource("/com/estoquefx/estoque/historico-view.fxml"),
+                        I18n.getBundle()
                 );
                 VBox historicoView = loader.load();
                 historicoController = loader.getController();
@@ -95,7 +97,8 @@ public class MainController {
 
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/estoquefx/estoque/dashboard-view.fxml")
+                        getClass().getResource("/com/estoquefx/estoque/dashboard-view.fxml"),
+                        I18n.getBundle()
                 );
                 AnchorPane dashboardView = loader.load();
                 dashboardController = loader.getController();
@@ -115,7 +118,8 @@ public class MainController {
             Object includeContent = tabPatrimonio.getContent();
             if (includeContent != null) {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/estoquefx/patrimonio/patrimonio-view.fxml")
+                        getClass().getResource("/com/estoquefx/patrimonio/patrimonio-view.fxml"),
+                        I18n.getBundle()
                 );
                 BorderPane patrimonioView = loader.load();
                 patrimonioController = loader.getController();

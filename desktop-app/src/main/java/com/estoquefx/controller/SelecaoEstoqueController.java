@@ -7,6 +7,7 @@ import com.estoquefx.service.SupabaseService;
 import com.estoquefx.model.estoque.Categoria;
 import com.estoquefx.model.estoque.Estoque;
 import com.estoquefx.model.estoque.Produto;
+import com.estoquefx.util.I18n;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -171,7 +172,8 @@ public class SelecaoEstoqueController {
 
         Stage stage = (Stage) btnAbrir.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(
-                EstoqueAppFX.class.getResource("main-view.fxml")
+                EstoqueAppFX.class.getResource("main-view.fxml"),
+                I18n.getBundle()
         );
         Scene scene = new Scene(loader.load(), 1000, 600);
 

@@ -2,11 +2,16 @@ package com.estoquefx;
 
 import com.estoquefx.controller.MainController;
 import com.estoquefx.controller.patrimonio.PatrimonioController;
+
 import com.estoquefx.model.estoque.Produto;
+
 import com.estoquefx.data.Leitor;
+
 import com.estoquefx.updater.core.*;
 
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Misc;
+
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -17,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 public class EstoqueAppFX extends Application {
@@ -31,6 +37,8 @@ public class EstoqueAppFX extends Application {
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/estoquefx/icons/i256.png")))
         );
 
+        I18n.init(Locale.getDefault());
+
         hostServicesRef = getHostServices();
 
         try{
@@ -44,7 +52,9 @@ public class EstoqueAppFX extends Application {
         }
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(EstoqueAppFX.class.getResource("login-view.fxml"),
+                I18n.getBundle()
+        );
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         stage.setTitle("EstoqueFX-login");
         stage.setScene(scene);
