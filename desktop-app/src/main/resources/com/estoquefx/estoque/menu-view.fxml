@@ -4,31 +4,31 @@
 
  <MenuBar xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.estoquefx.controller.estoque.MenuController">
-     <Menu text="Ajuda">
-         <MenuItem onAction="#onReportarBug" text="Relatar problema" />
-         <MenuItem onAction="#onSugestoes" text="Enviar sugestões" />
-         <MenuItem onAction="#onTrocarEstoque" text="Trocar estoque" />
-         <MenuItem onAction="#onSair" text="Sair" />
-         <MenuItem onAction="#onSobre" text="Sobre" />
+     <Menu text="%menu.help">
+         <MenuItem onAction="#onReportarBug" text="%menu.help.report" />
+         <MenuItem onAction="#onSugestoes" text="%menu.help.suggest" />
+         <MenuItem onAction="#onTrocarEstoque" text="%menu.help.switch" />
+         <MenuItem onAction="#onSair" text="%menu.help.exit" />
+         <MenuItem onAction="#onSobre" text="%menu.help.about" />
      </Menu>
-     <Menu text="Arquivo">
-         <MenuItem onAction="#onAbrirArquivo" text="Abrir pasta de dados" />
-         <MenuItem onAction="#onExportarCsv" text="Exportar CSV" />
-         <MenuItem onAction="#onImportarCSV" text="Importar CSV" />
-         <MenuItem onAction="#onSalvar" text="Salvar" />
+     <Menu text="%menu.file">
+         <MenuItem onAction="#onAbrirArquivo" text="%menu.file.open_folder" />
+         <MenuItem onAction="#onExportarCsv" text="%menu.file.export_csv" />
+         <MenuItem onAction="#onImportarCSV" text="%menu.file.import_csv" />
+         <MenuItem onAction="#onSalvar" text="%menu.file.save" />
      </Menu>
-     <Menu text="Estoque">
-         <MenuItem onAction="#onCriarProduto" text="Novo produto" />
-         <MenuItem onAction="#onEntrada" text="Entrada" />
-         <MenuItem onAction="#onSaida" text="Saída" />
+     <Menu text="%menu.inventory">
+         <MenuItem onAction="#onCriarProduto" text="%menu.inventory.new_product" />
+         <MenuItem onAction="#onEntrada" text="%menu.inventory.entry" />
+         <MenuItem onAction="#onSaida" text="%menu.inventory.exit" />
      </Menu>
-     <Menu text="Imprimir">
-         <MenuItem onAction="#onImprimir" text="Imprimir/Salvar PDF" />
+     <Menu text="%menu.print">
+         <MenuItem onAction="#onImprimir" text="%menu.print.print" />
      </Menu>
-     <Menu text="Versão">
-         <MenuItem onAction="#onAvisarAtualizacoes" text="Avisar atualizações" />
-         <MenuItem onAction="#onNovidades" text="Novidades" />
-         <MenuItem onAction="#onVerificarAtualizacoes" text="Verificar atualizações" />
-         <MenuItem onAction="#onVersoesAnteriores" text="Versões anteriores" />
+     <Menu text="%menu.version">
+         <MenuItem onAction="#onAvisarAtualizacoes" text="%menu.version.notify" />
+         <MenuItem onAction="#onNovidades" text="%menu.version.whats_new" />
+         <MenuItem onAction="#onVerificarAtualizacoes" text="%menu.version.check" />
+         <MenuItem onAction="#onVersoesAnteriores" text="%menu.version.previous" />
      </Menu>
  </MenuBar>

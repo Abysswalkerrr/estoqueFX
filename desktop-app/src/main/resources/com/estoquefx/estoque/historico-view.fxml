@@ -15,11 +15,11 @@
 
     <!-- Cabeçalho -->
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="📜 Histórico de Movimentações"/>
+        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="%historico.title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="btnAtualizar" onAction="#onAtualizar"
                 style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 15;"
-                text="Atualizar">
+                text="%historico.btn.refresh">
             <graphic>
                 <FontIcon iconLiteral="fas-sync-alt" iconSize="14" fill="white"/>
             </graphic>
@@ -32,13 +32,13 @@
           style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
 
         <VBox spacing="5">
-            <Label style="-fx-font-weight: bold;" text="Tipo:"/>
-            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="Todos"/>
+            <Label style="-fx-font-weight: bold;" text="%historico.filter.type"/>
+            <ComboBox fx:id="comboTipo" prefWidth="150" promptText="%historico.filter.type.prompt"/>
         </VBox>
 
         <VBox spacing="5">
-            <Label style="-fx-font-weight: bold;" text="Produto:"/>
-            <TextField fx:id="txtFiltroProduto" prefWidth="200" promptText="Buscar produto..."/>
+            <Label style="-fx-font-weight: bold;" text="%historico.filter.product"/>
+            <TextField fx:id="txtFiltroProduto" prefWidth="200" promptText="%historico.filter.product.prompt"/>
         </VBox>
 
         <Region HBox.hgrow="ALWAYS"/>
@@ -47,14 +47,14 @@
             <Label text=" "/>
             <Button fx:id="btnFiltrar" onAction="#onFiltrar"
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"
-                    text="🔍 Filtrar"/>
+                    text="%historico.btn.filter"/>
         </VBox>
 
         <VBox alignment="BOTTOM_CENTER" spacing="5">
             <Label text=" "/>
             <Button fx:id="btnLimpar" onAction="#onLimparFiltros"
                     style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20;"
-                    text="✖ Limpar"/>
+                    text="%historico.btn.clear"/>
         </VBox>
     </HBox>
 
@@ -64,21 +64,21 @@
               style="-fx-background-color: #4CAF50; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
             <Label fx:id="lblTotalEntradas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"
                    text="0"/>
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Entradas"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="%historico.stat.entries"/>
         </VBox>
 
         <VBox alignment="CENTER" spacing="5"
               style="-fx-background-color: #F44336; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
             <Label fx:id="lblTotalSaidas" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"
                    text="0"/>
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Saídas"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="%historico.stat.exits"/>
         </VBox>
 
         <VBox alignment="CENTER" spacing="5"
               style="-fx-background-color: #2196F3; -fx-padding: 15; -fx-background-radius: 5;" HBox.hgrow="ALWAYS">
             <Label fx:id="lblTotalMovimentacoes"
                    style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="0"/>
-            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="Alterações de valor"/>
+            <Label style="-fx-font-size: 14px; -fx-text-fill: white;" text="%historico.stat.changes"/>
         </VBox>
     </HBox>
 
@@ -86,27 +86,27 @@
         <TableView fx:id="tabelaMovimentacoes" maxWidth="835.0" prefWidth="840.0"
                    style="-fx-background-color: white; -fx-background-radius: 5;" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colDataHora" maxWidth="140" prefWidth="140.0" text="Data/Hora"/>
-                <TableColumn fx:id="colTipo" maxWidth="120" prefWidth="120.0" text="Tipo"/>
-                <TableColumn fx:id="colCodigo" maxWidth="60" prefWidth="60.0" text="Código"/>
-                <TableColumn fx:id="colProduto" maxWidth="200" prefWidth="200.0" text="Produto"/>
+                <TableColumn fx:id="colDataHora" maxWidth="140" prefWidth="140.0" text="%historico.col.datetime"/>
+                <TableColumn fx:id="colTipo" maxWidth="120" prefWidth="120.0" text="%historico.col.type"/>
+                <TableColumn fx:id="colCodigo" maxWidth="60" prefWidth="60.0" text="%historico.col.code"/>
+                <TableColumn fx:id="colProduto" maxWidth="200" prefWidth="200.0" text="%historico.col.product"/>
                 <TableColumn fx:id="colQtdAnterior" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;"
-                             text="Qtd Anterior"/>
+                             text="%historico.col.prev_qty"/>
                 <TableColumn fx:id="colQtdNova" maxWidth="100" prefWidth="100.0" style="-fx-alignment: CENTER-LEFT;"
-                             text="Qtd Nova"/>
+                             text="%historico.col.new_qty"/>
                 <TableColumn fx:id="colDiferenca" maxWidth="100" prefWidth="100" style="-fx-alignment: CENTER;"
-                             text="Diferença"/>
+                             text="%historico.col.diff"/>
             </columns>
 
             <placeholder>
-                <Label style="-fx-font-size: 16px; -fx-text-fill: #999;" text="Nenhuma movimentação encontrada"/>
+                <Label style="-fx-font-size: 16px; -fx-text-fill: #999;" text="%historico.empty"/>
             </placeholder>
         </TableView>
     </HBox>
 
     <!-- Info -->
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label fx:id="lblInfo" style="-fx-font-size: 12px; -fx-text-fill: #666;" text="Carregando..."/>
+        <Label fx:id="lblInfo" style="-fx-font-size: 12px; -fx-text-fill: #666;" text="%historico.loading"/>
     </HBox>
 
 </VBox>

@@ -17,9 +17,9 @@
           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
         <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 5;">
-            <Label text="📊 Dashboard" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Label text="%dashboard.title" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnAtualizar" text="Atualizar" onAction="#onAtualizar"
+            <Button fx:id="btnAtualizar" text="%dashboard.btn.refresh" onAction="#onAtualizar"
                     style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 5 15;">
                 <graphic>
                     <FontIcon iconLiteral="fas-sync-alt" iconSize="14" fill="white"/>
@@ -31,22 +31,22 @@
         <!-- Linha 1: cards de métricas -->
         <HBox spacing="10">
             <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                <Label style="-fx-font-size: 11;" text="Valor total em estoque"/>
+                <Label style="-fx-font-size: 11;" text="%dashboard.card.total_value"/>
                 <Label fx:id="lblValorTotalR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="R$ 0,00"/>
             </VBox>
 
             <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                <Label style="-fx-font-size: 11;" text="Produtos cadastrados"/>
+                <Label style="-fx-font-size: 11;" text="%dashboard.card.products"/>
                 <Label fx:id="lblQtdProdutosR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="0"/>
             </VBox>
 
             <VBox prefWidth="180" style="-fx-background-color: #eeeeee; -fx-padding: 10; -fx-border-color: #cccccc;">
-                <Label style="-fx-font-size: 11;" text="Categorias"/>
+                <Label style="-fx-font-size: 11;" text="%dashboard.card.categories"/>
                 <Label fx:id="lblQtdCategoriasR" style="-fx-font-size: 18; -fx-font-weight: bold;" text="0"/>
             </VBox>
 
             <VBox prefWidth="180" style="-fx-background-color: #ffeeee; -fx-padding: 10; -fx-border-color: #ffcccc;">
-                <Label style="-fx-font-size: 11;" text="Produtos em estoque baixo"/>
+                <Label style="-fx-font-size: 11;" text="%dashboard.card.low_stock"/>
                 <Label fx:id="lblQtdUrgentesR" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #c62828;"
                        text="0"/>
             </VBox>
@@ -55,20 +55,20 @@
         <!-- gráfico e tabela -->
         <HBox spacing="10" VBox.vgrow="ALWAYS">
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (gráfico)"/>
+                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="%dashboard.chart.by_category"/>
                 <PieChart fx:id="pieCategoriasR" prefHeight="300"/>
             </VBox>
 
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="Valor por categoria (tabela)"/>
+                <Label style="-fx-font-size: 13; -fx-font-weight: bold;" text="%dashboard.table.by_category"/>
                 <TableView fx:id="tabelaCategoriasR" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCategoriaR" prefWidth="150" text="Categoria">
+                        <TableColumn fx:id="colCategoriaR" prefWidth="150" text="%dashboard.col.category">
                             <cellValueFactory>
                                 <PropertyValueFactory property="key"/>
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="colValorR" prefWidth="150" text="Valor em estoque">
+                        <TableColumn fx:id="colValorR" prefWidth="150" text="%dashboard.col.value">
                             <cellValueFactory>
                                 <PropertyValueFactory property="value"/>
                             </cellValueFactory>

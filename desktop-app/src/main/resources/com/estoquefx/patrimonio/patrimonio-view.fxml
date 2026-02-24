@@ -8,21 +8,21 @@
             fx:controller="com.estoquefx.controller.patrimonio.PatrimonioController">
     <top>
         <HBox spacing="10" style="-fx-padding: 8;" prefHeight="50">
-        <Button onAction="#adicionarPatrimonio" text="Adicionar" />
-            <Button onAction="#removerPatrimonio" text="Remover" />
+        <Button onAction="#adicionarPatrimonio" text="%patrimonio.btn.add" />
+            <Button onAction="#removerPatrimonio" text="%patrimonio.btn.remove" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField fx:id="txtBusca" prefWidth="250" promptText="Buscar patrimônio..." />
+            <TextField fx:id="txtBusca" prefWidth="250" promptText="%patrimonio.search.prompt" />
         </HBox>
     </top>
     <center>
     <TableView fx:id="tabela">
         <columns>
-            <TableColumn fx:id="colCodigo" prefWidth="55" text="Código" />
-            <TableColumn fx:id="colNome" prefWidth="200" text="Nome" />
-            <TableColumn fx:id="colLocalizacao" prefWidth="150" text="Localização" />
-            <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
-            <TableColumn fx:id="colDescricao" prefWidth="250" text="Descrição" />
-            <TableColumn fx:id="colHora" prefWidth="150" text="Última Alt." />
+            <TableColumn fx:id="colCodigo" prefWidth="55" text="%patrimonio.col.code" />
+            <TableColumn fx:id="colNome" prefWidth="200" text="%patrimonio.col.name" />
+            <TableColumn fx:id="colLocalizacao" prefWidth="150" text="%patrimonio.col.location" />
+            <TableColumn fx:id="colEstado" prefWidth="100" text="%patrimonio.col.state" />
+            <TableColumn fx:id="colDescricao" prefWidth="250" text="%patrimonio.col.description" />
+            <TableColumn fx:id="colHora" prefWidth="150" text="%patrimonio.col.last_edit" />
         </columns>
     </TableView>
     </center>
