@@ -182,7 +182,6 @@ public class SelecaoEstoqueController {
 
 
         stage.setScene(scene);
-        stage.setTitle("EstoqueFX - " + estoqueNome);
+        stage.setTitle(I18n.t("app.title.main") + estoqueNome);
     }
-
 }

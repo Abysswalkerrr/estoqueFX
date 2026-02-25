@@ -26,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 
@@ -229,11 +230,10 @@ public class MainController {
             Platform.runLater(() -> {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setTitle(I18n.t("update.silent.title"));
-                confirm.setHeaderText(I18n.t("update.silent.header") + info.getVersaoAtual() + "\n" +
-                        I18n.t("update.silent.header2") + info.getVersaoRemota());
-                confirm.setContentText(I18n.t("update.available.body") + info.getChangeLog() +
-                        "\n" + I18n.t("update.available.body2"));
-
+                confirm.setHeaderText(MessageFormat.format(I18n.t("update.silent.header"),
+                        info.getVersaoAtual(), info.getVersaoRemota()));
+                confirm.setContentText(MessageFormat.format(I18n.t("update.available.body"),
+                        info.getChangeLog()));
                 ButtonType BT_ATUALIZAR = new ButtonType(I18n.t("update.silent.btn.now"), ButtonBar.ButtonData.YES);
                 ButtonType BT_DEPOIS = new ButtonType(I18n.t("update.silent.btn.later"), ButtonBar.ButtonData.CANCEL_CLOSE);
                 ButtonType BT_IGNORAR = new ButtonType(I18n.t("update.silent.btn.ignore"), ButtonBar.ButtonData.NO);

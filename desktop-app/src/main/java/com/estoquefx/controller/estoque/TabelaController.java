@@ -26,6 +26,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 
 public class TabelaController {
@@ -452,15 +453,15 @@ public class TabelaController {
     private void onRemoverProduto() {
         Produto selecionado = tabela.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            new Alert(Alert.AlertType.INFORMATION, "Selecione um produto na tabela.")
+            new Alert(Alert.AlertType.INFORMATION, I18n.t("tabela.select_product"))
                     .showAndWait();
             return;
         }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Remover produto");
-        confirm.setHeaderText("Remover \"" + selecionado.getNome() + "\"?");
-        confirm.setContentText("Esta ação não pode ser desfeita.");
+        confirm.setTitle(I18n.t("tabela.remove.title"));
+        confirm.setHeaderText(MessageFormat.format(I18n.t("tabela.remove.header"), selecionado.getNome()));
+        confirm.setContentText(I18n.t("tabela.remove.confirm"));
         confirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
         confirm.showAndWait().ifPresent(result -> {
@@ -593,11 +594,11 @@ public class TabelaController {
     public void atualizarTotal() {
         EstoqueService.atualizaTotal();
         String saldo = String.format("%.2f", Estoque.getSaldo());
-        saldoTotal.set("Saldo total: R$ " + saldo);
+        saldoTotal.set(I18n.t("tabela.total_balance") + ": R$ " + saldo);
     }
 
     public void atualizarResultado() {
-        resultado.set("Mostrando " + filtrados.size() + " de " + dados.size() + " produtos");
+        resultado.set(MessageFormat.format(I18n.t("tabela.status.showing"), filtrados.size(), dados.size()));
     }
 
     public void setUltimaAlteracao(String texto) {
@@ -607,7 +608,7 @@ public class TabelaController {
     public void carregarUltimaAlteracao() {
         String ultimaAlt = Misc.getUltimaAtualizacao();
         System.out.println("🕒 Carregando última alteração: " + ultimaAlt);
-        setUltimaAlteracao("Salvo em: " + ultimaAlt);
+        setUltimaAlteracao(I18n.t("tabela.saved_at") + ": " + ultimaAlt);
     }
 
     public void refresh() {

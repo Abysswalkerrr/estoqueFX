@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.LongConsumer;
 
@@ -74,22 +75,23 @@ public class MenuController {
         String categoria;
 
         TextInputDialog dialogNome = new TextInputDialog();
-        dialogNome.setTitle("Criar Produto");
+        dialogNome.setTitle(I18n.t("produto.dialog.title"));
         dialogNome.setHeaderText(null);
-        dialogNome.setContentText("Nome do produto:");
+        dialogNome.setContentText(I18n.t("produto.dialog.name"));
         nome = dialogNome.showAndWait().orElse(null);
         if (nome == null || nome.isBlank()) return;
         nome = nome.toUpperCase();
 
         if (Estoque.getNomes().contains(nome)) {
-            mostrarInfo(Alert.AlertType.ERROR, "Erro", null, "O produto " + nome + " já existe.");
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null,
+                    MessageFormat.format(I18n.t("produto.dialog.already_exists"), nome));
             return;
         }
 
         TextInputDialog dialogCategoria = new TextInputDialog();
-        dialogCategoria.setTitle("Criar Produto");
+        dialogCategoria.setTitle(I18n.t("produto.dialog.title"));
         dialogCategoria.setHeaderText(null);
-        dialogCategoria.setContentText("Categoria:");
+        dialogCategoria.setContentText(I18n.t("produto.dialog.category"));
         categoria = dialogCategoria.showAndWait().orElse(null);
         if (categoria == null || categoria.isBlank()) return;
         categoria = categoria.toUpperCase();
@@ -102,18 +104,19 @@ public class MenuController {
         do {
             try {
                 if (r == 1) {
-                    mostrarInfo(Alert.AlertType.NONE, "Criar Produto", null, "Quantidade mínima deve ser maior que zero.");
+                    mostrarInfo(Alert.AlertType.NONE, I18n.t("produto.dialog.title"), null,
+                            I18n.t("produto.dialog.min_qty_invalid"));
                 }
                 TextInputDialog dMin = new TextInputDialog();
-                dMin.setTitle("Criar Produto");
+                dMin.setTitle(I18n.t("produto.dialog.title"));
                 dMin.setHeaderText(null);
-                dMin.setContentText("Quantidade mínima:");
+                dMin.setContentText(I18n.t("produto.dialog.min_qty"));
                 String qtdMinStr = dMin.showAndWait().orElse("").trim();
                 if (qtdMinStr.isEmpty()) return;
                 qtdMin = Integer.parseInt(qtdMinStr);
                 r = 1;
             } catch (NumberFormatException ex) {
-                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                new Alert(Alert.AlertType.ERROR, I18n.t("produto.dialog.invalid_number")).showAndWait();
                 return;
             }
         } while (qtdMin < 0);
@@ -124,17 +127,18 @@ public class MenuController {
         do {
             try {
                 if (r == 1) {
-                    mostrarInfo(Alert.AlertType.NONE, "Criar Produto", null, "Valor unitário não pode ser menor que zero.");
+                    mostrarInfo(Alert.AlertType.NONE, I18n.t("produto.dialog.title"), null,
+                            I18n.t("produto.dialog.unit_value_invalid"));
                 }
                 TextInputDialog dVlr = new TextInputDialog();
-                dVlr.setTitle("Criar Produto");
+                dVlr.setTitle(I18n.t("produto.dialog.title"));
                 dVlr.setHeaderText(null);
-                dVlr.setContentText("Valor unitário:");
+                dVlr.setContentText(I18n.t("produto.dialog.unit_value"));
                 String vlrUndStr = dVlr.showAndWait().orElse("").replace(',', '.').trim();
                 if (vlrUndStr.isEmpty()) return;
                 vlrUnd = Double.parseDouble(vlrUndStr);
             } catch (NumberFormatException ex) {
-                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                new Alert(Alert.AlertType.ERROR, I18n.t("produto.dialog.invalid_number")).showAndWait();
                 return;
             }
             r = 1;
@@ -146,16 +150,16 @@ public class MenuController {
         do {
             try {
                 if (r == 1) {
-                    mostrarInfo(Alert.AlertType.NONE, "Criar Produto",
-                            null, "Estoque não pode ser menor que zero.");
+                    mostrarInfo(Alert.AlertType.NONE, I18n.t("produto.dialog.title"),
+                            null, I18n.t("produto.dialog.qty_invalid"));
                 }
                 TextInputDialog dQtd = new TextInputDialog();
-                dQtd.setTitle("Criar Produto");
+                dQtd.setTitle(I18n.t("produto.dialog.title"));
                 dQtd.setHeaderText(null);
-                dQtd.setContentText("Quantidade em estoque:");
+                dQtd.setContentText(I18n.t("produto.dialog.qty"));
                 qtd = Integer.parseInt(dQtd.showAndWait().orElse("0").trim());
             } catch (NumberFormatException ex) {
-                new Alert(Alert.AlertType.ERROR, "Valores numéricos inválidos.").showAndWait();
+                new Alert(Alert.AlertType.ERROR, I18n.t("produto.dialog.invalid_number")).showAndWait();
                 return;
             }
             r = 1;
@@ -185,14 +189,14 @@ public class MenuController {
     void onEntrada() {
         if (tabelaController == null) return;
 
-        String nome = tabelaController.pedirProduto(Estoque.getNomes(), "Entrada de produto");
+        String nome = tabelaController.pedirProduto(Estoque.getNomes(), I18n.t("produto.entry.title"));
         if (nome == null || nome.isEmpty()) return;
         nome = nome.trim().toUpperCase();
 
         TextInputDialog dialogQtd = new TextInputDialog();
-        dialogQtd.setTitle("Entrada de estoque");
-        dialogQtd.setHeaderText("Produto: " + nome);
-        dialogQtd.setContentText("Quantidade a entrar:");
+        dialogQtd.setTitle(I18n.t("produto.entry.title"));
+        dialogQtd.setHeaderText(MessageFormat.format(I18n.t("produto.entry.header"), nome));
+        dialogQtd.setContentText(I18n.t("produto.entry.qty"));
 
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
@@ -214,7 +218,7 @@ public class MenuController {
 
             tabelaController.refresh();
         } catch (NumberFormatException ex) {
-            new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, I18n.t("produto.entry.invalid_qty")).showAndWait();
         }
     }
 
@@ -222,14 +226,14 @@ public class MenuController {
     void onSaida() {
         if (tabelaController == null) return;
 
-        String nome = tabelaController.pedirProduto(Estoque.getNomes(), "Saída de produto");
+        String nome = tabelaController.pedirProduto(Estoque.getNomes(), I18n.t("produto.exit.title"));
         if (nome == null || nome.isEmpty()) return;
         nome = nome.toUpperCase();
 
         TextInputDialog dialogQtd = new TextInputDialog();
-        dialogQtd.setTitle("Saída de estoque");
-        dialogQtd.setHeaderText("Produto: " + nome);
-        dialogQtd.setContentText("Quantidade a retirar:");
+        dialogQtd.setTitle(I18n.t("produto.exit.title"));
+        dialogQtd.setHeaderText(MessageFormat.format(I18n.t("produto.exit.header"), nome));
+        dialogQtd.setContentText(I18n.t("produto.exit.qty"));
 
         try {
             int qtd = Integer.parseInt(dialogQtd.showAndWait().orElse("0").trim());
@@ -251,7 +255,7 @@ public class MenuController {
 
             tabelaController.refresh();
         } catch (NumberFormatException ex) {
-            new Alert(Alert.AlertType.ERROR, "Quantidade inválida.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, I18n.t("produto.exit.invalid_qty")).showAndWait();
         }
     }
 
@@ -266,20 +270,21 @@ public class MenuController {
             if (supabaseService != null && estoqueId != null) {
                 salvarNoSupabase();
             } else {
-                new Alert(Alert.AlertType.INFORMATION, "Estoque salvo localmente.").showAndWait();
+                new Alert(Alert.AlertType.INFORMATION, I18n.t("salvar.local_only")).showAndWait();
                 Produto.setUltimaAcao("s");
             }
 
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, "Erro ao salvar: " + e.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    MessageFormat.format(I18n.t("salvar.local.error"), e.getMessage())).showAndWait();
         }
     }
 
     private void salvarNoSupabase() {
         Alert progresso = new Alert(Alert.AlertType.INFORMATION);
-        progresso.setTitle("Salvando");
-        progresso.setHeaderText("Sincronizando com servidor...");
-        progresso.setContentText("Aguarde...");
+        progresso.setTitle(I18n.t("salvar.dialog.title"));
+        progresso.setHeaderText(I18n.t("salvar.dialog.header"));
+        progresso.setContentText(I18n.t("salvar.dialog.content"));
         progresso.show();
 
         new Thread(() -> {
@@ -293,8 +298,7 @@ public class MenuController {
 
                 Platform.runLater(() -> {
                     progresso.close();
-                    new Alert(Alert.AlertType.INFORMATION,
-                            "Estoque salvo localmente e sincronizado com servidor!").showAndWait();
+                    new Alert(Alert.AlertType.INFORMATION, I18n.t("salvar.success")).showAndWait();
                     Produto.setUltimaAcao("s");
                 });
 
@@ -302,10 +306,10 @@ public class MenuController {
                 Platform.runLater(() -> {
                     progresso.close();
                     Alert erro = new Alert(Alert.AlertType.WARNING);
-                    erro.setTitle("Erro na sincronização");
-                    erro.setHeaderText("Salvo localmente, mas falha no servidor");
-                    erro.setContentText("Erro: " + e.getMessage() +
-                            "\n\nSeus dados estão salvos localmente.");
+                    erro.setTitle(I18n.t("salvar.error.title"));
+                    erro.setHeaderText(I18n.t("salvar.error.header"));
+                    erro.setContentText(MessageFormat.format(I18n.t("error.generic"), e.getMessage()) +
+                            "\n\n" + I18n.t("salvar.error.body"));
                     erro.showAndWait();
                 });
             }
@@ -316,10 +320,10 @@ public class MenuController {
     private void onExportarCsv() {
         try {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Salvar");
+            fileChooser.setTitle(I18n.t("csv.export.chooser.title"));
             fileChooser.setInitialFileName("EstoqueCSV.csv");
             FileChooser.ExtensionFilter extFilter =
-                    new FileChooser.ExtensionFilter("Arquivos CSV (*.csv)", "*.csv");
+                    new FileChooser.ExtensionFilter(I18n.t("csv.export.filter"), "*.csv");
             fileChooser.getExtensionFilters().add(extFilter);
 
             File pastaInicial = new File(Leitor.pastaDocs, Leitor.nomePasta);
@@ -339,12 +343,12 @@ public class MenuController {
             Leitor.exportarEstoqueParaArquivo(Estoque.getProdutos(), arquivo);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Exportação Concluída");
-            alert.setHeaderText("CSV exportado com sucesso!");
-            alert.setContentText("Arquivo salvo em:\n" + arquivo.getAbsolutePath());
+            alert.setTitle(I18n.t("csv.export.done.title"));
+            alert.setHeaderText(I18n.t("csv.export.done.header"));
+            alert.setContentText(MessageFormat.format(I18n.t("csv.export.done.body"), arquivo.getAbsolutePath()));
 
-            ButtonType btnAbrirPasta = new ButtonType("Abrir Pasta", ButtonBar.ButtonData.OK_DONE);
-            ButtonType btnFechar = new ButtonType("Fechar", ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType btnAbrirPasta = new ButtonType(I18n.t("csv.export.btn.open_folder"), ButtonBar.ButtonData.OK_DONE);
+            ButtonType btnFechar = new ButtonType(I18n.t("csv.export.btn.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
             alert.getButtonTypes().setAll(btnAbrirPasta, btnFechar);
 
             File finalArquivo = arquivo;
@@ -360,9 +364,9 @@ public class MenuController {
 
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro na Exportação");
-            alert.setHeaderText("Falha ao exportar");
-            alert.setContentText("Erro: " + e.getMessage());
+            alert.setTitle(I18n.t("csv.export.error.title"));
+            alert.setHeaderText(I18n.t("csv.export.error.header"));
+            alert.setContentText(MessageFormat.format(I18n.t("error.generic"), e.getMessage()));
             alert.showAndWait();
         }
     }
@@ -371,27 +375,16 @@ public class MenuController {
     private void onImportarCSV() {
         try {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Importar");
-            alert.setHeaderText("ATENÇÃO");
-            alert.getDialogPane().setContent(new Label(
-                    """
-                            O arquivo precisa estar em uma das seguintes\
-                            
-                            ordens para que as informações sejam interpretadas como esperado:\
-                            
-                            
-                             codigo -> nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ...\
-                            
-                            
-                             nome -> categoria -> vlrMin -> vlrUnd -> qtd -> desc(opcional) -> tempo(opcional) -> ..."""
-            ));
+            alert.setTitle(I18n.t("csv.import.warning.title"));
+            alert.setHeaderText(I18n.t("csv.import.warning.header"));
+            alert.getDialogPane().setContent(new Label(I18n.t("csv.import.warning.body")));
             alert.showAndWait();
 
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Importar arquivo");
+            fileChooser.setTitle(I18n.t("csv.import.chooser.title"));
 
             FileChooser.ExtensionFilter extFilter =
-                    new FileChooser.ExtensionFilter("Arquivos CSV (*.csv)", "*.csv");
+                    new FileChooser.ExtensionFilter(I18n.t("csv.export.filter"), "*.csv");
             fileChooser.getExtensionFilters().add(extFilter);
 
             File pastaInicial = new File(Leitor.pastaDocs, Leitor.nomePasta);
@@ -410,10 +403,11 @@ public class MenuController {
                 tabelaController.refresh();
             }
 
-            mostrarInfo(Alert.AlertType.INFORMATION, "Importar", null, "Importado com sucesso!");
+            mostrarInfo(Alert.AlertType.INFORMATION, I18n.t("csv.import.warning.title"),
+                    null, I18n.t("csv.import.success"));
 
         } catch (Exception e) {
-            mostrarInfo(Alert.AlertType.ERROR, "Erro", null, e.getMessage());
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
         }
     }
 
@@ -429,12 +423,12 @@ public class MenuController {
             if (java.awt.Desktop.isDesktopSupported()) {
                 java.awt.Desktop.getDesktop().open(pastaApp);
             } else {
-                mostrarInfo(Alert.AlertType.INFORMATION, "Pasta de Dados", null,
-                        "Caminho da pasta:\n" + pastaApp.getAbsolutePath());
+                mostrarInfo(Alert.AlertType.INFORMATION, I18n.t("pasta.title"), null,
+                        MessageFormat.format(I18n.t("pasta.path"), pastaApp.getAbsolutePath()));
             }
 
         } catch (Exception e) {
-            mostrarInfo(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a pasta.",
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), I18n.t("pasta.error"),
                     "Caminho: " + Leitor.getPath() + "\n\nErro: " + e.getMessage());
         }
     }
@@ -452,9 +446,9 @@ public class MenuController {
 
             if (supabaseService != null && estoqueId != null) {
                 Alert progresso = new Alert(Alert.AlertType.INFORMATION);
-                progresso.setTitle("Salvando");
-                progresso.setHeaderText("Sincronizando com servidor...");
-                progresso.setContentText("Aguarde...");
+                progresso.setTitle(I18n.t("salvar.dialog.title"));
+                progresso.setHeaderText(I18n.t("salvar.dialog.header"));
+                progresso.setContentText(I18n.t("salvar.dialog.content"));
                 progresso.show();
 
                 List<Produto> produtosParaSalvar = new ArrayList<>(Estoque.getProdutos());
@@ -477,9 +471,8 @@ public class MenuController {
                         Platform.runLater(() -> {
                             progresso.close();
                             Alert erro = new Alert(Alert.AlertType.ERROR);
-                            erro.setTitle("Erro ao salvar");
-                            erro.setContentText("Não foi possível sincronizar: " + e.getMessage() +
-                                    "\n\nVoltando sem salvar no servidor.");
+                            erro.setTitle(I18n.t("salvar.back.error.title"));
+                            erro.setContentText(MessageFormat.format(I18n.t("salvar.back.error.body"), e.getMessage()));
                             erro.showAndWait();
                             voltarParaSelecao();
                         });
@@ -493,8 +486,8 @@ public class MenuController {
 
         } catch (IOException e) {
             Alert erro = new Alert(Alert.AlertType.ERROR);
-            erro.setTitle("Erro");
-            erro.setContentText("Erro ao salvar localmente: " + e.getMessage());
+            erro.setTitle(I18n.t("error"));
+            erro.setContentText(MessageFormat.format(I18n.t("salvar.local.error"), e.getMessage()));
             erro.showAndWait();
         }
     }
@@ -525,12 +518,12 @@ public class MenuController {
                 controller.setSupabaseService(supabaseService);
 
                 stage.setScene(scene);
-                stage.setTitle("Selecionar Estoque");
+                stage.setTitle(I18n.t("selecao.title"));
             }
 
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR,
-                    "Erro ao voltar: " + e.getMessage()).showAndWait();
+                    MessageFormat.format(I18n.t("error.generic"), e.getMessage())).showAndWait();
         }
     }
 
@@ -581,21 +574,23 @@ public class MenuController {
             UpdateInfo info = service.verificarUpdate();
 
             if (info.getVersaoRemota() == null || info.getUrlInstaller() == null) {
-                mostrarInfo(Alert.AlertType.INFORMATION, "Atualização", null, "Não foi possível ler informações do release.");
+                mostrarInfo(Alert.AlertType.INFORMATION, I18n.t("update.available.title"),
+                        null, I18n.t("update.read_error"));
                 return;
             }
 
             if (!info.hasUpdate()) {
-                mostrarInfo(Alert.AlertType.INFORMATION, "Atualização", null, "Você já está na versão mais recente (" + info.getVersaoAtual() + ").");
+                mostrarInfo(Alert.AlertType.INFORMATION, I18n.t("update.available.title"),
+                        null, MessageFormat.format(I18n.t("update.up_to_date"), info.getVersaoAtual()));
                 return;
             }
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Nova versão disponível");
-            alert.setHeaderText("Versão atual: " + info.getVersaoAtual() +
-                    "\nNova versão: " + info.getVersaoRemota());
-            alert.setContentText("Novidades: " + info.getChangeLog() +
-                    "\nDeseja baixar o novo instalador agora?");
+            alert.setTitle(I18n.t("update.available.title"));
+            alert.setHeaderText(MessageFormat.format(I18n.t("update.available.header"),
+                    info.getVersaoAtual(), info.getVersaoRemota()));
+            alert.setContentText(MessageFormat.format(I18n.t("update.available.body"),
+                    info.getChangeLog()));
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
             alert.showAndWait().ifPresent(bt -> {
@@ -603,24 +598,25 @@ public class MenuController {
                     try {
                         mostrarDialogDownloadComProgresso(info);
                     } catch (Exception e) {
-                        mostrarInfo(Alert.AlertType.ERROR, "Erro", null,
-                                "Erro ao baixar/iniciar instalador: " + e.getMessage());                    }
+                        mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null,
+                                MessageFormat.format(I18n.t("update.error.download"), e.getMessage()));
+                    }
                 }
             });
         } catch (Exception e) {
-            mostrarInfo(Alert.AlertType.ERROR, "Erro", null,
-                    "Erro ao verificar atualizações: "  + e.getMessage());
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null,
+                    MessageFormat.format(I18n.t("update.error.check"), e.getMessage()));
         }
     }
 
     public void mostrarDialogDownloadComProgresso(UpdateInfo info) {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Atualização disponível");
-        dialog.setHeaderText("Baixando nova versão " + info.getVersaoRemota());
+        dialog.setTitle(I18n.t("update.download.title"));
+        dialog.setHeaderText(MessageFormat.format(I18n.t("update.download.header"), info.getVersaoRemota()));
 
         ProgressBar progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
-        Label statusLabel = new Label("Preparando download...");
+        Label statusLabel = new Label(I18n.t("update.download.preparing"));
 
         VBox content = new VBox(10, statusLabel, progressBar);
         content.setAlignment(Pos.CENTER);
@@ -677,8 +673,8 @@ public class MenuController {
         }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Avisar atualizações");
-        alert.setContentText("Você será avisado de novas atualizações. Deseja verificar se há uma versão mais nova?");
+        alert.setTitle(I18n.t("update.notify.title"));
+        alert.setContentText(I18n.t("update.notify.body"));
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
         alert.showAndWait().ifPresent(response -> {
@@ -700,18 +696,9 @@ public class MenuController {
 
     @FXML
     private void onSobre() {
-
-        String msg = String.format("""
-        %s
-        Versão: %s
-
-        Autor: Arthur
-
-        Pasta de dados:
-        %s
-        """, AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath());
-
-        mostrarInfo(Alert.AlertType.INFORMATION, "Sobre SistemaEstoqueFX", "Sobre o sistema:", msg);
+        String msg = String.format(I18n.t("sobre.body"),
+                AppInfo.NOME_APP, AppInfo.VERSAO, Leitor.getPath());
+        mostrarInfo(Alert.AlertType.INFORMATION, I18n.t("sobre.title"), I18n.t("sobre.header"), msg);
     }
 
     @FXML
@@ -739,8 +726,8 @@ public class MenuController {
 
     public void mostrarChangelog(String changelog) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Novidades");
-        alert.setHeaderText("Novidades desta versão");
+        alert.setTitle(I18n.t("novidades.title"));
+        alert.setHeaderText(I18n.t("novidades.header"));
 
         TextArea textArea = new TextArea(changelog);
         textArea.setEditable(false);

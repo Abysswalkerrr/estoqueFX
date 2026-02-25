@@ -3,6 +3,7 @@ package com.estoquefx.controller.patrimonio;
 import com.estoquefx.model.patrimonio.Patrimonio;
 import com.estoquefx.service.SupabaseService;
 import com.estoquefx.service.patrimonio.PatrimonioService;
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,6 +16,9 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
+
+import java.text.MessageFormat;
 
 public class PatrimonioController {
 
@@ -38,7 +42,6 @@ public class PatrimonioController {
 
     @FXML
     public void initialize() {
-        // Configurar colunas
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colLocalizacao.setCellValueFactory(new PropertyValueFactory<>("localizacao"));
@@ -60,8 +63,35 @@ public class PatrimonioController {
             patrimonioAlterado = true;
         });
         colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
-                "BOM", "REGULAR", "RUIM"
-        ));
+                colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
+                        new StringConverter<>() {
+                            @Override
+                            public String toString(String object) {
+                                if (object == null) return "";
+                                return switch (object) {
+                                    case "BOM"     -> I18n.t("patrimonio.estado.bom");
+                                    case "REGULAR" -> I18n.t("patrimonio.estado.regular");
+                                    case "RUIM"    -> I18n.t("patrimonio.estado.ruim");
+                                    default        -> object;
+                                };
+                            }
+                            @Override
+                            public String fromString(String string) {
+                                // converte label traduzido de volta para constante interna
+                                if (string.equals(I18n.t("patrimonio.estado.bom")))     return "BOM";
+                                if (string.equals(I18n.t("patrimonio.estado.regular"))) return "REGULAR";
+                                if (string.equals(I18n.t("patrimonio.estado.ruim")))    return "RUIM";
+                                return string;
+                            }
+                        },
+                        "BOM", "REGULAR", "RUIM"   // ← valores internos reais
+                ));
+        colEstado.setOnEditCommit(e -> {
+            e.getRowValue().setEstado(e.getNewValue()); // e.getNewValue() já é "BOM"/"REGULAR"/"RUIM"
+            e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
+            tabela.refresh();
+            patrimonioAlterado = true;
+        });        ));
         colEstado.setOnEditCommit(e -> {
             e.getRowValue().setEstado(e.getNewValue());
             e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
@@ -104,14 +134,13 @@ public class PatrimonioController {
                 super.updateItem(item, empty);
                 getStyleClass().removeAll("estado-ruim", "estado-regular");
                 if (!empty && item != null) {
-                    if ("RUIM".equals(item.getEstado()))
+                    if ("RUIM".equals(item.getEstado()) || I18n.t("patrimonio.estado.ruim").equals(item.getEstado()))
                         getStyleClass().add("estado-ruim");
-                    else if ("REGULAR".equals(item.getEstado()))
+                    else if ("REGULAR".equals(item.getEstado()) || I18n.t("patrimonio.estado.regular").equals(item.getEstado()))
                         getStyleClass().add("estado-regular");
                 }
             }
         });
-
 
         dados = FXCollections.observableArrayList(Patrimonio.getPatrimonios());
         filtrados = new FilteredList<>(dados, _ -> true);
@@ -120,7 +149,6 @@ public class PatrimonioController {
         ordenados.comparatorProperty().bind(tabela.comparatorProperty());
         tabela.setItems(ordenados);
 
-        // Filtro busca
         txtBusca.textProperty().addListener((_, _, newVal) -> {
             String busca = newVal.toUpperCase();
             filtrados.setPredicate(p -> {
@@ -139,16 +167,14 @@ public class PatrimonioController {
     @FXML
     private void adicionarPatrimonio() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Novo Patrimônio");
-        dialog.setHeaderText("Nome do patrimônio:");
+        dialog.setTitle(I18n.t("patrimonio.dialog.add.title"));
+        dialog.setHeaderText(I18n.t("patrimonio.dialog.add.header"));
         dialog.showAndWait().ifPresent(nome -> {
             if (!nome.isBlank()) {
-                Patrimonio p = new Patrimonio(
-                        nome.trim().toUpperCase(), "", "SEM LOCALIZAÇÃO",
-                        "BOM", Time.getTempoFormatado(Time.getTime(true))
-                );
-                Patrimonio.addPatrimonio(p);
-                dados.add(p);
+                new Patrimonio(nome.trim().toUpperCase(), "",
+                        "SEM LOCALIZAÇÃO",   // localização é texto livre, não constante — pode ficar hardcoded ou traduzido
+                        // Patrimonio.addPatrimonio(p);
+                dados.add(p));
                 atualizarResultado();
             }
         });
@@ -160,7 +186,7 @@ public class PatrimonioController {
         Patrimonio selecionado = tabela.getSelectionModel().getSelectedItem();
         if (selecionado != null) {
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Remover \"" + selecionado.getNome() + "\"?",
+                    MessageFormat.format(I18n.t("patrimonio.dialog.remove.confirm"), selecionado.getNome()),
                     ButtonType.YES, ButtonType.NO);
             confirm.showAndWait().ifPresent(resp -> {
                 if (resp == ButtonType.YES) {
@@ -174,8 +200,11 @@ public class PatrimonioController {
     }
 
     private void atualizarResultado() {
-        lblResultados.setText("Mostrando " + filtrados.size()
-                + " de " + dados.size() + " patrimônios");
+        lblResultados.setText(MessageFormat.format(
+                I18n.t("patrimonio.status.showing"),
+                filtrados.size(),
+                dados.size()
+        ));
     }
 
     public void setSupabaseService(SupabaseService service, String estoqueId) {
@@ -194,9 +223,9 @@ public class PatrimonioController {
 
     private void abrirDialogoDescricao(Patrimonio patrimonio) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Editar descrição");
+        dialog.setTitle(I18n.t("tabela.edit_description.title"));
 
-        ButtonType okButtonType = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButtonType = new ButtonType(I18n.t("tabela.edit_description.save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
         TextArea area = new TextArea(patrimonio.getDescricao());

@@ -4,6 +4,7 @@ import com.estoquefx.data.Leitor;
 import java.io.IOException;
 
 //todo reabrir app - verificar inconsistência
+//todo patrimonio ta todo cagado
 //todo ícone do app!!!
 //todo calendário?
 //todo 2FA ou email

@@ -1,5 +1,6 @@
 package com.estoquefx.model.estoque;
 
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Time;
 
 import java.time.LocalDateTime;
@@ -51,7 +52,7 @@ public class Movimento {
         this.nome = produto.getNome();
         this.tempo = Time.getTime(true);
         this.tipo = tipo;
-        this.delta = delta;            // diferença de preço
+        this.delta = delta;
         this.valorNovo = produto.getVlrUnd();
         this.velhoValor = valorNovo - delta;
         this.quantidadeNova = produto.getQtd();
@@ -108,7 +109,7 @@ public class Movimento {
 
     public String getDiferencaFormatada() {
         String toReturn = "";
-        if (tipo.equals("ENTRADA") ||  tipo.equals("SAIDA") || tipo.equals("AJUSTE")) {
+        if (tipo.equals("ENTRADA") || tipo.equals("SAIDA") || tipo.equals("AJUSTE")) {
             if (diff > 0) {
                 toReturn = "+" + diff;
             } else{
@@ -127,17 +128,16 @@ public class Movimento {
     public String getQtdVelhaMostrar() {return qtdVelhaMostrar;}
     public String getQtdNovaMostrar() {return qtdNovaMostrar;}
 
-
     public String getTipoDescricao() {
         return switch (tipo.toUpperCase()) {
-            case "ENTRADA" -> "Entrada";
-            case "SAIDA" -> "Saída";
-            case "AJUSTE" -> "Ajuste";
-            case "CRIACAO" -> "Criação";
-            case "ALTERACAO_VALOR" -> "Alteração Valor";
-            case "ALTERACAO_DADOS" -> "Alteração Dados";
-            default -> tipo;
+            case "ENTRADA"          -> I18n.t("historico.tipo.entrada");
+            case "SAIDA"            -> I18n.t("historico.tipo.saida");
+            case "AJUSTE"           -> I18n.t("historico.tipo.ajuste");
+            case "CRIACAO"          -> I18n.t("historico.tipo.criacao");
+            case "ALTERACAO_VALOR"  -> I18n.t("historico.tipo.alteracao_valor");
+            case "ALTERACAO_DADOS"  -> I18n.t("historico.tipo.alteracao_dados");
+            case "REMOCAO"          -> I18n.t("historico.tipo.remocao");
+            default                 -> tipo;
         };
     }
-
 }

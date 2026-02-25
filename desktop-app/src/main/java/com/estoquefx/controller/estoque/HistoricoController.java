@@ -5,6 +5,7 @@ import com.estoquefx.model.estoque.Historico;
 import com.estoquefx.service.estoque.MovimentoExtraService;
 import com.estoquefx.service.estoque.MovimentoService;
 import com.estoquefx.service.SupabaseService;
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.SupabaseConfig;
 
 import javafx.application.Platform;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,11 +56,10 @@ public class HistoricoController {
         configurarFiltros();
         configurarComboTipo();
 
-        lblInfo.setText("Selecione um estoque para ver o histórico");
+        lblInfo.setText(I18n.t("historico.info.select"));
     }
 
     private void configurarTabela() {
-        // Configurar colunas
         colDataHora.setCellValueFactory(new PropertyValueFactory<>("tempoFormatado"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipoDescricao"));
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
@@ -90,7 +91,7 @@ public class HistoricoController {
             }
         });
 
-        // Colorir coluna de tipo
+        // Colorir coluna de tipo — compara com as chaves traduzidas
         colTipo.setCellFactory(_ -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -102,28 +103,20 @@ public class HistoricoController {
                 } else {
                     setText(item);
 
-                    switch (item) {
-                        case "Entrada":
-                            setStyle("-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-font-weight: bold;");
-                            break;
-                        case "Saída":
-                            setStyle("-fx-background-color: #FFEBEE; -fx-text-fill: #C62828; -fx-font-weight: bold;");
-                            break;
-                        case "Ajuste":
-                            setStyle("-fx-background-color: #E3F2FD; -fx-text-fill: #1565C0; -fx-font-weight: bold;");
-                            break;
-                        case "Criação":
-                            setStyle("-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-font-weight: bold;");
-                            break;
-                        case "Alteração Valor":
-                            setStyle("-fx-background-color: #E3F2FD; -fx-text-fill: #1565C0; -fx-font-weight: bold;");
-                            //setStyle("-fx-background-color: #F3E5F5; -fx-text-fill: #7B1FA2; -fx-font-weight: bold;");
-                            break;
-                        case "Alteração Dados":
-                            setStyle("-fx-background-color: #E0F2F1; -fx-text-fill: #00695C; -fx-font-weight: bold;");
-                            break;
-                        default:
-                            setStyle("-fx-background-color: #EEEEEE; -fx-text-fill: #424242;");
+                    if (item.equals(I18n.t("historico.tipo.entrada"))) {
+                        setStyle("-fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; -fx-font-weight: bold;");
+                    } else if (item.equals(I18n.t("historico.tipo.saida"))) {
+                        setStyle("-fx-background-color: #FFEBEE; -fx-text-fill: #C62828; -fx-font-weight: bold;");
+                    } else if (item.equals(I18n.t("historico.tipo.ajuste"))) {
+                        setStyle("-fx-background-color: #E3F2FD; -fx-text-fill: #1565C0; -fx-font-weight: bold;");
+                    } else if (item.equals(I18n.t("historico.tipo.criacao"))) {
+                        setStyle("-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-font-weight: bold;");
+                    } else if (item.equals(I18n.t("historico.tipo.alteracao_valor"))) {
+                        setStyle("-fx-background-color: #E3F2FD; -fx-text-fill: #1565C0; -fx-font-weight: bold;");
+                    } else if (item.equals(I18n.t("historico.tipo.alteracao_dados"))) {
+                        setStyle("-fx-background-color: #E0F2F1; -fx-text-fill: #00695C; -fx-font-weight: bold;");
+                    } else {
+                        setStyle("-fx-background-color: #EEEEEE; -fx-text-fill: #424242;");
                     }
                 }
             }
@@ -133,25 +126,23 @@ public class HistoricoController {
     }
 
     private void configurarFiltros() {
-        // Filtro automático ao digitar
         txtFiltroProduto.textProperty().addListener((_, _, _) ->
                 aplicarFiltros());
     }
 
     private void configurarComboTipo() {
         ObservableList<String> tipos = FXCollections.observableArrayList(
-                "Todos",
-                "Entrada",
-                "Saída",
-                "Ajuste",
-                "Criação",
-                "Alteração Valor",
-                "Alteração Dados"
+                I18n.t("historico.tipo.todos"),
+                I18n.t("historico.tipo.entrada"),
+                I18n.t("historico.tipo.saida"),
+                I18n.t("historico.tipo.ajuste"),
+                I18n.t("historico.tipo.criacao"),
+                I18n.t("historico.tipo.alteracao_valor"),
+                I18n.t("historico.tipo.alteracao_dados")
         );
         comboTipo.setItems(tipos);
-        comboTipo.setValue("Todos");
+        comboTipo.setValue(I18n.t("historico.tipo.todos"));
 
-        // Filtrar ao mudar tipo
         comboTipo.valueProperty().addListener((_, _, _) ->
                 aplicarFiltros());
     }
@@ -188,47 +179,44 @@ public class HistoricoController {
 
     @FXML
     private void onLimparFiltros() {
-        comboTipo.setValue("Todos");
+        comboTipo.setValue(I18n.t("historico.tipo.todos"));
         txtFiltroProduto.clear();
         aplicarFiltros();
     }
 
     public void carregarMovimentacoes() {
         if (estoqueAtualId == null || movimentoService == null) {
-            lblInfo.setText("Nenhum estoque selecionado");
+            lblInfo.setText(I18n.t("historico.info.none"));
             return;
         }
 
-        lblInfo.setText("Carregando movimentações...");
+        lblInfo.setText(I18n.t("historico.loading"));
         btnAtualizar.setDisable(true);
 
         new Thread(() -> {
             try {
                 Historico.limpar();
 
-                movimentoService.carregarMovimentos(estoqueAtualId); //qtd
-                movimentoExtraService.carregarAlteracoes(estoqueAtualId); //vlrUnd
+                movimentoService.carregarMovimentos(estoqueAtualId);
+                movimentoExtraService.carregarAlteracoes(estoqueAtualId);
 
                 Platform.runLater(() -> {
                     aplicarFiltros();
                     atualizarEstatisticas();
 
                     int total = Historico.getTotalMovimentacoes();
-                    lblInfo.setText(String.format("Total: %d movimentações", total));
+                    lblInfo.setText(MessageFormat.format(I18n.t("historico.info.total"), total));
                     btnAtualizar.setDisable(false);
                 });
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                            "Erro ao carregar movimentações.", e.getMessage());
+                    mostrarInfoStatic(Alert.AlertType.ERROR, I18n.t("error"),
+                            I18n.t("error.load.history"), e.getMessage());
 
-
-                    lblInfo.setText("Erro ao carregar movimentações");
+                    lblInfo.setText(I18n.t("historico.info.error"));
                     btnAtualizar.setDisable(false);
                 });
-                mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                        "Erro ao carregar movimentações.", e.getMessage());
             }
         }).start();
     }
@@ -243,8 +231,8 @@ public class HistoricoController {
 
         movimentacoesFiltradas.setAll(filtradas);
 
-        lblInfo.setText(String.format(
-                "Mostrando %d de %d movimentações",
+        lblInfo.setText(MessageFormat.format(
+                I18n.t("historico.info.showing"),
                 filtradas.size(),
                 todos.size()
         ));
@@ -252,7 +240,7 @@ public class HistoricoController {
 
     private boolean filtrarPorTipo(Movimento mov) {
         String tipoSelecionado = comboTipo.getValue();
-        if (tipoSelecionado == null || tipoSelecionado.equals("Todos")) {
+        if (tipoSelecionado == null || tipoSelecionado.equals(I18n.t("historico.tipo.todos"))) {
             return true;
         }
         return mov.getTipoDescricao().equals(tipoSelecionado);
@@ -287,7 +275,7 @@ public class HistoricoController {
 
         lblTotalEntradas.setText(String.valueOf(totalEntradas));
         lblTotalSaidas.setText(String.valueOf(totalSaidas));
-        lblTotalMovimentacoes.setText(String.valueOf(todos.size() -(totalEntradas + totalSaidas)));
+        lblTotalMovimentacoes.setText(String.valueOf(todos.size() - (totalEntradas + totalSaidas)));
     }
 
     public void registrarMovimento(Movimento movimento) {
@@ -302,10 +290,8 @@ public class HistoricoController {
             try {
                 if (tipo.equals("ENTRADA") || tipo.equals("SAIDA") ||
                         tipo.equals("AJUSTE") || tipo.equals("CRIACAO")) {
-                    // quantidade
                     movimentoService.salvarMovimento(movimento, estoqueAtualId);
                 } else {
-                    // valor/dados
                     if (movimentoExtraService != null) {
                         movimentoExtraService.salvarMovimento(movimento, estoqueAtualId);
                     }
@@ -318,8 +304,8 @@ public class HistoricoController {
 
             } catch (Exception e) {
                 System.err.println("⚠ Erro ao salvar movimento: " + e.getMessage());
-                mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                        "Erro ao salvar movimentação.", e.getMessage());
+                mostrarInfoStatic(Alert.AlertType.ERROR, I18n.t("error"),
+                        I18n.t("error.load.history"), e.getMessage());
             }
         }).start();
     }
