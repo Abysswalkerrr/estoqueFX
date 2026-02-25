@@ -45,7 +45,7 @@ public class SelecaoEstoqueController {
     }
 
     private void carregarEstoques() {
-        lblStatus.setText("Carregando estoques...");
+        lblStatus.setText(I18n.t("selecao.loading"));
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
         new Thread(() -> {
@@ -56,7 +56,7 @@ public class SelecaoEstoqueController {
                     listaEstoques.getItems().clear();
 
                     if (estoquesData.isEmpty()) {
-                        lblStatus.setText("Nenhum estoque encontrado. Crie um novo!"); //acho que sempre tem um inicial mas sla
+                        lblStatus.setText(I18n.t("selecao.empty")); //acho que sempre tem um inicial mas sla
                         lblStatus.setStyle("-fx-text-fill: #7f8c8d;");
                     } else {
                         estoquesData.forEach(estoque -> {
@@ -69,7 +69,7 @@ public class SelecaoEstoqueController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    lblStatus.setText("Erro ao carregar estoques: " + e.getMessage());
+                    lblStatus.setText(I18n.t("selecao.loading_error") + e.getMessage());
                     lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                 });
             }
@@ -79,19 +79,19 @@ public class SelecaoEstoqueController {
     @FXML
     private void onNovoEstoque() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Novo Estoque");
-        dialog.setHeaderText("Criar novo estoque");
-        dialog.setContentText("Nome do estoque:");
+        dialog.setTitle(I18n.t("selecao.dialog.new.title"));
+        dialog.setHeaderText(I18n.t("selecao.dialog.new.header"));
+        dialog.setContentText(I18n.t("selecao.dialog.new.content"));
 
         dialog.showAndWait().ifPresent(nome -> {
             if (nome.trim().isEmpty()) {
-                lblStatus.setText("Nome não pode ser vazio!");
+                lblStatus.setText(I18n.t("selecao.name_empty"));
                 lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                 return;
             }
 
             btnNovo.setDisable(true);
-            lblStatus.setText("Criando estoque...");
+            lblStatus.setText(I18n.t("selecao.creating"));
             lblStatus.setStyle("-fx-text-fill: #3498db;");
 
             new Thread(() -> {
@@ -100,7 +100,7 @@ public class SelecaoEstoqueController {
 
                     Platform.runLater(() -> {
                         btnNovo.setDisable(false);
-                        lblStatus.setText("Estoque criado com sucesso!");
+                        lblStatus.setText(I18n.t("selecao.created"));
                         lblStatus.setStyle("-fx-text-fill: #27ae60;");
                         carregarEstoques();
                     });
@@ -108,7 +108,7 @@ public class SelecaoEstoqueController {
                 } catch (Exception e) {
                     Platform.runLater(() -> {
                         btnNovo.setDisable(false);
-                        lblStatus.setText("Erro: " + e.getMessage());
+                        lblStatus.setText(I18n.t("error") + e.getMessage());
                         lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                     });
                 }
@@ -121,7 +121,7 @@ public class SelecaoEstoqueController {
         int selectedIndex = listaEstoques.getSelectionModel().getSelectedIndex();
 
         if (selectedIndex < 0) {
-            lblStatus.setText("Selecione um estoque!");
+            lblStatus.setText(I18n.t("selecao.select_one"));
             lblStatus.setStyle("-fx-text-fill: #e74c3c;");
             return;
         }
@@ -131,7 +131,7 @@ public class SelecaoEstoqueController {
         String estoqueNome = estoqueSelecionado.get("nome").getAsString();
 
         btnAbrir.setDisable(true);
-        lblStatus.setText("Carregando estoque...");
+        lblStatus.setText(I18n.t("selecao.opening"));
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
         new Thread(() -> {
@@ -143,7 +143,7 @@ public class SelecaoEstoqueController {
                     try {
                         abrirTelaEstoque(estoqueId, estoqueNome, produtos);
                     } catch (IOException e) {
-                        lblStatus.setText("Erro ao abrir tela: " + e.getMessage());
+                        lblStatus.setText(I18n.t("error") + e.getMessage());
                         lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                         btnAbrir.setDisable(false);
                     }
@@ -151,7 +151,7 @@ public class SelecaoEstoqueController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    lblStatus.setText("Erro: " + e.getMessage());
+                    lblStatus.setText(I18n.t("error") + e.getMessage());
                     lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                     btnAbrir.setDisable(false);
                 });

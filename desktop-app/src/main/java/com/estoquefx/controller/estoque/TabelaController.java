@@ -5,6 +5,7 @@ import com.estoquefx.model.estoque.Estoque;
 import com.estoquefx.model.estoque.Movimento;
 import com.estoquefx.model.estoque.Produto;
 import com.estoquefx.service.estoque.EstoqueService;
+import com.estoquefx.util.I18n;
 import com.estoquefx.util.Misc;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;
@@ -131,7 +132,7 @@ public class TabelaController {
 
         colOrientacao.setCellValueFactory(cellData -> {
             Produto p = cellData.getValue();
-            return new SimpleStringProperty(p.getCompra() ? "Compra urgente" : "Estoque suficiente");
+            return new SimpleStringProperty(p.getCompra() ? I18n.t("tabela.status.urgente") : I18n.t("tabela.status.suficiente"));
         });
 
         colSaldo.setCellValueFactory(cellData -> {
@@ -434,7 +435,7 @@ public class TabelaController {
 
             boolean categoriaVazia = finalCategoria.isEmpty() || cat.contains(finalCategoria);
 
-            if (busca.equalsIgnoreCase("urgente")) {
+            if (busca.equalsIgnoreCase("urgente") || busca.equalsIgnoreCase("urgent")) {
                 return categoriaVazia && nome.contains(busca);
             }
 
@@ -507,9 +508,9 @@ public class TabelaController {
     // DIALOGS
     private void abrirDialogoDescricao(Produto p) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Editar descrição");
+        dialog.setTitle(I18n.t("tabela.edit_description.title"));
 
-        ButtonType okButtonType = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButtonType = new ButtonType(I18n.t("tabela.edit_description.save"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
         TextArea area = new TextArea(p.getDescricao());
@@ -548,18 +549,16 @@ public class TabelaController {
         try {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle(title);
-            dialog.setHeaderText("Informe o nome do produto");
-
             TextField editor = dialog.getEditor();
-            editor.setPromptText("Nome do produto");
+            editor.setPromptText(I18n.t("produto.dialog.name"));
 
             TextFields.bindAutoCompletion(editor, produtos);
 
             return dialog.showAndWait().orElse("");
         } catch (RuntimeException ex) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Erro");
-            alert.setHeaderText("Erro: " + ex.getMessage());
+            alert.setTitle(I18n.t("error"));
+            alert.setHeaderText(I18n.t("error.generic") + ex.getMessage());
             alert.showAndWait();
             return "";
         }

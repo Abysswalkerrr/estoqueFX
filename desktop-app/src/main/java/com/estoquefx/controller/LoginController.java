@@ -79,12 +79,12 @@ public class LoginController {
         String senha = txtSenha.getText();
 
         if (email.isEmpty() || senha.isEmpty()) {
-            lblStatus.setText("Preencha todos os campos!");
+            lblStatus.setText(I18n.t("login.status.filling"));
             return;
         }
 
         btnLogin.setDisable(true);
-        lblStatus.setText("Entrando...");
+        lblStatus.setText(I18n.t("login.status.signing_in"));
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
         // Feito em outra thread pra n travar a ui
@@ -96,7 +96,7 @@ public class LoginController {
                     if (loginOk) {
                         abrirSelecaoEstoque();
                     } else {
-                        lblStatus.setText("Email ou senha incorretos!");
+                        lblStatus.setText(I18n.t("login.status.wrong_credentials"));
                         lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                         btnLogin.setDisable(false);
                     }
@@ -104,7 +104,7 @@ public class LoginController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    lblStatus.setText("Erro: " + e.getMessage());
+                    lblStatus.setText(e.getMessage());
                     lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                     btnLogin.setDisable(false);
                 });
@@ -118,17 +118,17 @@ public class LoginController {
         String senha = txtSenha.getText();
 
         if (email.isEmpty() || senha.isEmpty()) {
-            lblStatus.setText("Preencha todos os campos!");
+            lblStatus.setText(I18n.t("login.status.filling"));
             return;
         }
 
         if (senha.length() < 6) {
-            lblStatus.setText("Senha deve ter no mínimo 6 caracteres!");
+            lblStatus.setText(I18n.t("login.status.password_short"));
             return;
         }
 
         btnRegistrar.setDisable(true);
-        lblStatus.setText("Criando conta...");
+        lblStatus.setText(I18n.t("login.status.creating_account"));
         lblStatus.setStyle("-fx-text-fill: #3498db;");
 
         // em outra thread pra n travar
@@ -138,11 +138,11 @@ public class LoginController {
 
                 Platform.runLater(() -> {
                     if (registroOk) {
-                        lblStatus.setText("Conta criada! Fazendo login...");
+                        lblStatus.setText(I18n.t("login.status.account_created"));
                         // Fazer login automaticamente após registro
                         onLogin();
                     } else {
-                        lblStatus.setText("Erro ao criar conta.");
+                        lblStatus.setText(I18n.t("login.status.account_error"));
                         lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                         btnRegistrar.setDisable(false);
                     }
@@ -150,7 +150,7 @@ public class LoginController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    lblStatus.setText("Erro: " + e.getMessage());
+                    lblStatus.setText(e.getMessage());
                     lblStatus.setStyle("-fx-text-fill: #e74c3c;");
                     btnRegistrar.setDisable(false);
                 });
@@ -172,12 +172,10 @@ public class LoginController {
             controller.setSupabaseService(supabaseService);
 
             stage.setScene(scene);
-            stage.setTitle("Selecionar Estoque");
+            stage.setTitle(I18n.t("selecao.title"));
 
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                    "Erro ao abrir tela de seleção de estoque.", e.getMessage());
             lblStatus.setText("Erro ao abrir seleção de estoque. \n" + e.getMessage());
         }
     }

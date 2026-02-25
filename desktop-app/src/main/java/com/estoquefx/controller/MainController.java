@@ -161,8 +161,8 @@ public class MainController {
         try {
             Leitor.carregarMisc();
         } catch (Exception e) {
-            mostrarInfoStatic(Alert.AlertType.ERROR, "Erro",
-                    "Erro ao carregar preferências.", e.getMessage());
+            mostrarInfoStatic(Alert.AlertType.ERROR, I18n.t("error"),
+                    I18n.t("error.load.preferences"), e.getMessage());
         }
 
         // Inicializar sub-controllers ANTES de atualizar tabela
@@ -228,28 +228,23 @@ public class MainController {
 
             Platform.runLater(() -> {
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-                confirm.setTitle(I18n.t("update.available.title"));
-                confirm.setHeaderText("Versão atual: " + info.getVersaoAtual() +
-                        "\nNova versão: " + info.getVersaoRemota());
-                confirm.setContentText("Novidades: " + info.getChangeLog() +
-                        "\nDeseja baixar agora?");
+                confirm.setTitle(I18n.t("update.silent.title"));
+                confirm.setHeaderText(I18n.t("update.silent.header") + info.getVersaoAtual() + "\n" +
+                        I18n.t("update.silent.header2") + info.getVersaoRemota());
+                confirm.setContentText(I18n.t("update.available.body") + info.getChangeLog() +
+                        "\n" + I18n.t("update.available.body2"));
 
-                ButtonType BT_ATUALIZAR = new ButtonType(I18n.t("update.btn.now"), ButtonBar.ButtonData.YES);
-                ButtonType BT_DEPOIS = new ButtonType(I18n.t("update.btn.later"), ButtonBar.ButtonData.CANCEL_CLOSE);
-                ButtonType BT_IGNORAR = new ButtonType(I18n.t("update.btn.ignore"), ButtonBar.ButtonData.NO);
+                ButtonType BT_ATUALIZAR = new ButtonType(I18n.t("update.silent.btn.now"), ButtonBar.ButtonData.YES);
+                ButtonType BT_DEPOIS = new ButtonType(I18n.t("update.silent.btn.later"), ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType BT_IGNORAR = new ButtonType(I18n.t("update.silent.btn.ignore"), ButtonBar.ButtonData.NO);
                 confirm.getButtonTypes().setAll(BT_ATUALIZAR, BT_DEPOIS, BT_IGNORAR);
 
                 confirm.showAndWait().ifPresent(result -> {
                     if (result == BT_ATUALIZAR) {
                         new MenuController().mostrarDialogDownloadComProgresso(info);
                     } else if (result == BT_IGNORAR) {
-                        mostrarInfoStatic(Alert.AlertType.INFORMATION, "Ignorar atualização", null,
-                                """
-                                        O programa não irá mais avisar de novas versões. \
-                                        
-                                        Ainda será disponível atualizar em Versão -> Verificar atualizações. \
-                                        
-                                        Para reverter essa mudança, vá em Versão -> Avisar atualizações.""");
+                        mostrarInfoStatic(Alert.AlertType.INFORMATION, I18n.t("update.ignore.title"), null,
+                                I18n.t("update.ignore.body"));
                         try {
                             Misc.setNegouAtualizacao(true);
                         } catch (Exception ignored) {
