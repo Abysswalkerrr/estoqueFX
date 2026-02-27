@@ -20,14 +20,17 @@ import com.estoquefx.util.Time;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MainController {
@@ -51,6 +54,7 @@ public class MainController {
     private SupabaseService supabaseService;
     private String estoqueId;
     private static Stage stage;
+
 
     @FXML
     public void initialize() {
@@ -147,6 +151,9 @@ public class MainController {
         if  (menuViewController != null && tabelaViewController != null) {
             menuViewController.setTabelaController(tabelaViewController);
             tabelaViewController.setMenuController(menuViewController);
+        }
+        if (menuViewController != null) {
+            menuViewController.setMainController(this);
         }
 
         System.out.println("✓ Controllers conectados");

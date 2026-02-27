@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-
- <MenuBar xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.estoquefx.controller.estoque.MenuController">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.estoquefx.controller.estoque.MenuController">
+ <MenuBar >
      <Menu text="%menu.help">
          <MenuItem onAction="#onReportarBug" text="%menu.help.report" />
          <MenuItem onAction="#onSugestoes" text="%menu.help.suggest" />
@@ -32,3 +34,10 @@
          <MenuItem onAction="#onVersoesAnteriores" text="%menu.version.previous" />
      </Menu>
  </MenuBar>
+    <Region/>
+    <Button fx:id="btnIdioma"
+            onAction="#onTrocarIdioma"
+            style="-fx-font-size: 14px; -fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 6 2 6;"
+            text="🇧🇷" />
+
+</HBox>

@@ -40,17 +40,26 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.LongConsumer;
 
+import static com.estoquefx.controller.MainController.mostrarInfoStatic;
+
 public class MenuController {
 
+    private MainController mainController;
     private TabelaController tabelaController;
     private HistoricoController historicoController;
     private SupabaseService supabaseService;
     private String estoqueId;
 
+    @FXML private Button btnIdioma;
+
     @FXML
     public void initialize() {
         System.out.println("📋 Inicializando MenuController...");
-    }
+        Platform.runLater(() -> {
+            if (btnIdioma != null) {
+                btnIdioma.setText(I18n.isPt() ? "🇧🇷" : "🇺🇸");
+            }
+        });    }
 
     // SETTERS PARA DEPENDÊNCIAS
 
@@ -65,6 +74,10 @@ public class MenuController {
     public void setSupabaseService(SupabaseService service, String estoqueId) {
         this.supabaseService = service;
         this.estoqueId = estoqueId;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     // AÇÕES DO MENU - ESTOQUE
@@ -721,7 +734,35 @@ public class MenuController {
     }
 
     public void mostrarInfo(Alert.AlertType tipo, String titulo, String header, String msg) {
-        MainController.mostrarInfoStatic(tipo, titulo, header, msg);
+        mostrarInfoStatic(tipo, titulo, header, msg);
+    }
+
+    @FXML
+    public void onTrocarIdioma() {
+        // Salva silenciosamente antes de recarregar
+        mainController.salvarSilencioso();
+
+        // Alterna o locale
+        Locale novoLocale = I18n.isPt() ? Locale.ENGLISH : Locale.of("pt", "BR");
+        I18n.init(novoLocale);
+
+        // Recarrega a cena inteira com o novo bundle
+        try {
+            Stage stage = (Stage) btnIdioma.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(
+                    EstoqueAppFX.class.getResource("main-view.fxml"),
+                    I18n.getBundle()
+            );
+            Scene scene = new Scene(loader.load(), 1000, 600);
+
+            MainController novoController = loader.getController();
+            novoController.setEstoqueAtual(estoqueId, Leitor.getNomeEstoque(), supabaseService);
+
+            stage.setScene(scene);
+        } catch (IOException e) {
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
+        }
     }
 
     public void mostrarChangelog(String changelog) {
