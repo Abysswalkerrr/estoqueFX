@@ -73,37 +73,91 @@ public class PatrimonioController {
             patrimonioAlterado = true;
         });
 
-        colEstado.setCellFactory(col -> new ComboBoxTableCell<>(
-                new StringConverter<>() {
+        colEstado.setCellFactory(col -> new TableCell<Patrimonio, String>() {
+
+            private final ComboBox<String> combo = new ComboBox<>(
+                    FXCollections.observableArrayList("BOM", "REGULAR", "RUIM")
+            );
+
+            {
+                // StringConverter: BOM → "Good"/"Bom", etc.
+                combo.setConverter(new StringConverter<>() {
+                    @Override public String toString(String s) { return estadoToDisplay(s); }
+                    @Override public String fromString(String s) { return displayToEstado(s); }
+                });
+
+                // Forçar estilo diretamente no ComboBox e no seu ListCell interno
+                combo.setStyle(
+                        "-fx-background-color: white;" +
+                                "-fx-border-color: #999;" +
+                                "-fx-font-size: 12px;"
+                );
+
+                // Esse é o pulo do gato: pintar o ListCell do campo fechado
+                combo.setButtonCell(new ListCell<>() {
                     @Override
-                    public String toString(String object) {
-                        return estadoToDisplay(object);
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setStyle("-fx-background-color: white; -fx-text-fill: black;");
+                        setText(empty || item == null ? "" : estadoToDisplay(item));
                     }
+                });
+
+                // CellFactory do dropdown aberto
+                combo.setCellFactory(_ -> new ListCell<>() {
                     @Override
-                    public String fromString(String string) {
-                        return displayToEstado(string);
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty || item == null ? "" : estadoToDisplay(item));
+                        // Não seta style fixo aqui — deixa o CSS cuidar do hover/selected
+                        if (empty || item == null) {
+                            setStyle("-fx-background-color: white; -fx-text-fill: black;");
+                        }
+                        // célula com conteúdo: só garante texto preto, fundo fica com o tema
+                        // para que :hover e :selected do CSS funcionem normalmente
                     }
-                },
-                "BOM", "REGULAR", "RUIM"
-        ) {
+                });
+
+                combo.setOnAction(_ -> {
+                    if (isEditing()) {
+                        commitEdit(combo.getValue());
+                    }
+                });
+            }
+
             @Override
             public void startEdit() {
                 super.startEdit();
+                combo.setValue(getItem());
+                setGraphic(combo);
+                setText(null);
+            }
 
-                // Quando vira ComboBox, força cores visíveis (não mexe no resto do app).
-                if (getGraphic() instanceof ComboBox<?> cb) {
-                    cb.setStyle(
-                            "-fx-background-color: white;" +
-                                    "-fx-control-inner-background: white;" +
-                                    "-fx-text-fill: black;" +
-                                    "-fx-prompt-text-fill: #666666;"
-                    );
+            @Override
+            public void cancelEdit() {
+                super.cancelEdit();
+                setText(estadoToDisplay(getItem()));
+                setGraphic(null);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else if (isEditing()) {
+                    combo.setValue(item);
+                    setText(null);
+                    setGraphic(combo);
+                } else {
+                    setText(estadoToDisplay(item));
+                    setGraphic(null);
                 }
             }
         });
 
         colEstado.setOnEditCommit(e -> {
-            // e.getNewValue() vem como BOM/REGULAR/RUIM por causa do converter acima
             e.getRowValue().setEstado(e.getNewValue());
             e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
             tabela.refresh();
