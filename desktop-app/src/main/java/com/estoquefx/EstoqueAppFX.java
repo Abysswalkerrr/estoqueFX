@@ -56,7 +56,7 @@ public class EstoqueAppFX extends Application {
                 I18n.getBundle()
         );
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-        stage.setTitle("EstoqueFX-login");
+        stage.setTitle(I18n.t("app.title.login"));
         stage.setScene(scene);
 
         stage.setOnCloseRequest(event -> {

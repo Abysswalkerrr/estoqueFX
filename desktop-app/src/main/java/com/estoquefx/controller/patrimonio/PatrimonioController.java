@@ -6,6 +6,7 @@ import com.estoquefx.service.patrimonio.PatrimonioService;
 import com.estoquefx.util.I18n;
 import com.estoquefx.util.Time;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -42,62 +43,73 @@ public class PatrimonioController {
 
     @FXML
     public void initialize() {
+        // Configurar colunas
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colLocalizacao.setCellValueFactory(new PropertyValueFactory<>("localizacao"));
-        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        // Estado: manter internamente BOM/REGULAR/RUIM, mas exibir traduzido.
+        colEstado.setCellValueFactory(cellData -> {
+            String estado = cellData.getValue() == null ? null : cellData.getValue().getEstado();
+            return new SimpleStringProperty(estadoToDisplay(estado));
+        });
+
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colHora.setCellValueFactory(new PropertyValueFactory<>("alterHora"));
 
         tabela.setEditable(true);
+
         colNome.setCellFactory(TextFieldTableCell.forTableColumn());
         colNome.setOnEditCommit(e -> {
             e.getRowValue().setNome(e.getNewValue().trim().toUpperCase());
             tabela.refresh();
             patrimonioAlterado = true;
         });
+
         colLocalizacao.setCellFactory(TextFieldTableCell.forTableColumn());
         colLocalizacao.setOnEditCommit(e -> {
             e.getRowValue().setLocalizacao(e.getNewValue().trim());
             tabela.refresh();
             patrimonioAlterado = true;
         });
-        colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
-                colEstado.setCellFactory(ComboBoxTableCell.forTableColumn(
-                        new StringConverter<>() {
-                            @Override
-                            public String toString(String object) {
-                                if (object == null) return "";
-                                return switch (object) {
-                                    case "BOM"     -> I18n.t("patrimonio.estado.bom");
-                                    case "REGULAR" -> I18n.t("patrimonio.estado.regular");
-                                    case "RUIM"    -> I18n.t("patrimonio.estado.ruim");
-                                    default        -> object;
-                                };
-                            }
-                            @Override
-                            public String fromString(String string) {
-                                // converte label traduzido de volta para constante interna
-                                if (string.equals(I18n.t("patrimonio.estado.bom")))     return "BOM";
-                                if (string.equals(I18n.t("patrimonio.estado.regular"))) return "REGULAR";
-                                if (string.equals(I18n.t("patrimonio.estado.ruim")))    return "RUIM";
-                                return string;
-                            }
-                        },
-                        "BOM", "REGULAR", "RUIM"   // ← valores internos reais
-                ));
+
+        colEstado.setCellFactory(col -> new ComboBoxTableCell<>(
+                new StringConverter<>() {
+                    @Override
+                    public String toString(String object) {
+                        return estadoToDisplay(object);
+                    }
+                    @Override
+                    public String fromString(String string) {
+                        return displayToEstado(string);
+                    }
+                },
+                "BOM", "REGULAR", "RUIM"
+        ) {
+            @Override
+            public void startEdit() {
+                super.startEdit();
+
+                // Quando vira ComboBox, força cores visíveis (não mexe no resto do app).
+                if (getGraphic() instanceof ComboBox<?> cb) {
+                    cb.setStyle(
+                            "-fx-background-color: white;" +
+                                    "-fx-control-inner-background: white;" +
+                                    "-fx-text-fill: black;" +
+                                    "-fx-prompt-text-fill: #666666;"
+                    );
+                }
+            }
+        });
+
         colEstado.setOnEditCommit(e -> {
-            e.getRowValue().setEstado(e.getNewValue()); // e.getNewValue() já é "BOM"/"REGULAR"/"RUIM"
-            e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
-            tabela.refresh();
-            patrimonioAlterado = true;
-        });        ));
-        colEstado.setOnEditCommit(e -> {
+            // e.getNewValue() vem como BOM/REGULAR/RUIM por causa do converter acima
             e.getRowValue().setEstado(e.getNewValue());
             e.getRowValue().setAlterHora(Time.getTempoFormatado(Time.getTime(true)));
             tabela.refresh();
             patrimonioAlterado = true;
         });
+
         colDescricao.setCellFactory(col -> new TableCell<>() {
             private final Text text = new Text();
 
@@ -114,6 +126,7 @@ public class PatrimonioController {
                     }
                 });
             }
+
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -134,9 +147,9 @@ public class PatrimonioController {
                 super.updateItem(item, empty);
                 getStyleClass().removeAll("estado-ruim", "estado-regular");
                 if (!empty && item != null) {
-                    if ("RUIM".equals(item.getEstado()) || I18n.t("patrimonio.estado.ruim").equals(item.getEstado()))
+                    if ("RUIM".equals(item.getEstado()))
                         getStyleClass().add("estado-ruim");
-                    else if ("REGULAR".equals(item.getEstado()) || I18n.t("patrimonio.estado.regular").equals(item.getEstado()))
+                    else if ("REGULAR".equals(item.getEstado()))
                         getStyleClass().add("estado-regular");
                 }
             }
@@ -149,6 +162,7 @@ public class PatrimonioController {
         ordenados.comparatorProperty().bind(tabela.comparatorProperty());
         tabela.setItems(ordenados);
 
+        // Filtro busca
         txtBusca.textProperty().addListener((_, _, newVal) -> {
             String busca = newVal.toUpperCase();
             filtrados.setPredicate(p -> {
@@ -171,10 +185,15 @@ public class PatrimonioController {
         dialog.setHeaderText(I18n.t("patrimonio.dialog.add.header"));
         dialog.showAndWait().ifPresent(nome -> {
             if (!nome.isBlank()) {
-                new Patrimonio(nome.trim().toUpperCase(), "",
-                        "SEM LOCALIZAÇÃO",   // localização é texto livre, não constante — pode ficar hardcoded ou traduzido
-                        // Patrimonio.addPatrimonio(p);
-                dados.add(p));
+                Patrimonio p = new Patrimonio(
+                        nome.trim().toUpperCase(),
+                        "",
+                        "SEM LOCALIZAÇÃO",
+                        "BOM",
+                        Time.getTempoFormatado(Time.getTime(true))
+                );
+                Patrimonio.addPatrimonio(p);
+                dados.add(p);
                 atualizarResultado();
             }
         });
@@ -185,9 +204,11 @@ public class PatrimonioController {
     private void removerPatrimonio() {
         Patrimonio selecionado = tabela.getSelectionModel().getSelectedItem();
         if (selecionado != null) {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            Alert confirm = new Alert(
+                    Alert.AlertType.CONFIRMATION,
                     MessageFormat.format(I18n.t("patrimonio.dialog.remove.confirm"), selecionado.getNome()),
-                    ButtonType.YES, ButtonType.NO);
+                    ButtonType.YES, ButtonType.NO
+            );
             confirm.showAndWait().ifPresent(resp -> {
                 if (resp == ButtonType.YES) {
                     Patrimonio.removePatrimonio(selecionado);
@@ -257,6 +278,24 @@ public class PatrimonioController {
             patrimonio.setDescricao(novaDesc);
             refresh();
         });
+    }
+
+    private String estadoToDisplay(String estado) {
+        if (estado == null) return "";
+        return switch (estado) {
+            case "BOM" -> I18n.t("patrimonio.estado.bom");
+            case "REGULAR" -> I18n.t("patrimonio.estado.regular");
+            case "RUIM" -> I18n.t("patrimonio.estado.ruim");
+            default -> estado;
+        };
+    }
+
+    private String displayToEstado(String display) {
+        if (display == null) return null;
+        if (display.equals(I18n.t("patrimonio.estado.bom"))) return "BOM";
+        if (display.equals(I18n.t("patrimonio.estado.regular"))) return "REGULAR";
+        if (display.equals(I18n.t("patrimonio.estado.ruim"))) return "RUIM";
+        return display;
     }
 
     public static boolean isPatrimonioAlterado() {

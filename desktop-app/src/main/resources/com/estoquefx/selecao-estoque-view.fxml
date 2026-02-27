@@ -15,7 +15,7 @@
         <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
-    <Label text="Selecione um Estoque" style="-fx-text-fill: #2c3e50;">
+    <Label text="%selecao.title" style="-fx-text-fill: #2c3e50;">
         <font>
             <Font name="System Bold" size="24"/>
         </font>
@@ -28,11 +28,11 @@
               style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-width: 1;"/>
 
     <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="btnAbrir" text="Abrir Estoque" onAction="#onAbrirEstoque"
+        <Button fx:id="btnAbrir" text="%selecao.open" onAction="#onAbrirEstoque"
                 prefWidth="150" prefHeight="40"
                 style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
-        <Button fx:id="btnNovo" text="Criar Novo Estoque" onAction="#onNovoEstoque"
+        <Button fx:id="btnNovo" text="%selecao.create" onAction="#onNovoEstoque"
                 prefWidth="150" prefHeight="40"
                 style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"/>
     </HBox>
