@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -42,18 +43,19 @@
                 </Tab>
             </TabPane>
 
-            <!-- Botão de idioma flutuando sobre a header do TabPane -->
-            <HBox StackPane.alignment="TOP_RIGHT"
-                  pickOnBounds="false"
-                  style="-fx-padding: 3 6 0 0;">
+            <!-- Botão de idioma flutuando - anchor no canto superior direito absoluto -->
+            <AnchorPane pickOnBounds="false" mouseTransparent="true">
                 <Button fx:id="btnIdioma" onAction="#onTrocarIdioma"
-                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 4 2 4;">
+                        mouseTransparent="false"
+                        AnchorPane.topAnchor="2.0"
+                        AnchorPane.rightAnchor="6.0"
+                        style="-fx-background-color: rgba(240,240,240,0.9); -fx-cursor: hand; -fx-padding: 2 4 2 4; -fx-border-radius: 3; -fx-background-radius: 3;">
                     <graphic>
                         <ImageView fx:id="imgBandeira" fitWidth="24" fitHeight="16" preserveRatio="true"/>
                     </graphic>
                     <tooltip><Tooltip text="Switch language / Trocar idioma"/></tooltip>
                 </Button>
-            </HBox>
+            </AnchorPane>
 
         </StackPane>
     </center>
