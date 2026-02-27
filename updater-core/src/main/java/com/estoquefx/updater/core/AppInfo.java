@@ -4,7 +4,7 @@ public class AppInfo {
     public static final String NOME_APP =
             "SistemaEstoqueFX";
     public static final String VERSAO   =
-            "3.4.0.0";
+            "3.4.1.0";
 
     public static final String BUG_REPORT_URL =
             "https://docs.google.com/forms/d/e/1FAIpQLSd_phUkuqlleT4CsKnvZPnEruQDdZK7qeCkvGU3HXa8D6ruWw/viewform?usp=dialog";
@@ -25,6 +25,10 @@ public class AppInfo {
     }
 
     public static String novidades = """
+            3.4.1.0
+            Agora é possível trocar de língua dentro da tela principal do app.\n
+            3.4.0.0
+            Suporte a inglês adicionado.\n
             3.3.4.0
             Ícones adicionados.\n
             3.3.3.0

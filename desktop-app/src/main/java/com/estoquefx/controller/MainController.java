@@ -22,6 +22,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -29,6 +31,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,6 +58,11 @@ public class MainController {
     private String estoqueId;
     private static Stage stage;
 
+    private static final String FLAG_BR = "https://flagcdn.com/24x18/br.png";
+    private static final String FLAG_US = "https://flagcdn.com/24x18/us.png";
+    @FXML private Button btnIdioma;
+    @FXML private ImageView imgBandeira;
+
 
     @FXML
     public void initialize() {
@@ -66,6 +74,7 @@ public class MainController {
         carregarPatrimonioController();
 
         Platform.runLater(() -> {
+            atualizarBandeira();
             conectarControllers();
             Produto.setUltimaAcao("s");
             setEstoqueAppController();
@@ -282,6 +291,64 @@ public class MainController {
         } else {
             System.out.println("Patrimonio controller é null, não salvo");
         }
+    }
+
+    @FXML
+    public void onTrocarIdioma() {
+        // Captura antes de qualquer coisa
+        LinkedHashSet<Produto> snapshot = new LinkedHashSet<>(Estoque.getProdutos());
+        String estoqueIdLocal = this.estoqueId;
+        SupabaseService serviceLocal = this.supabaseService;
+
+        // 1. Salva local — rápido, síncrono, sem problema
+        try {
+            Time.updateTime();
+            Leitor.salvarEstoque(snapshot);
+            Produto.setUltimaAcao("s");
+        } catch (IOException e) {
+            mostrarInfoStatic(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
+            return;
+        }
+
+        // 2. Supabase em background — dispara e esquece, igual ao salvarSilenciosamente()
+        if (serviceLocal != null && estoqueIdLocal != null) {
+            new Thread(() -> {
+                try {
+                    serviceLocal.deletarProdutosEstoque(estoqueIdLocal);
+                    for (Produto p : snapshot) {
+                        serviceLocal.salvarProduto(p, estoqueIdLocal);
+                    }
+                    System.out.println("✓ Supabase sincronizado após troca de idioma");
+                } catch (Exception e) {
+                    System.err.println("⚠ Erro ao sincronizar Supabase: " + e.getMessage());
+                }
+            }).start();
+        }
+
+        // 3. Troca idioma e recarrega cena imediatamente — sem esperar Supabase
+        Locale novoLocale = I18n.isPt() ? Locale.ENGLISH : Locale.of("pt", "BR");
+        I18n.init(novoLocale);
+
+        try {
+            Stage stage = (Stage) btnIdioma.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(
+                    EstoqueAppFX.class.getResource("main-view.fxml"),
+                    I18n.getBundle()
+            );
+            Scene scene = new Scene(loader.load(), 1000, 600);
+            MainController novoController = loader.getController();
+            stage.setScene(scene);
+            novoController.setEstoqueAtual(estoqueIdLocal, Leitor.getNomeEstoque(), serviceLocal);
+        } catch (IOException e) {
+            mostrarInfoStatic(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
+        }
+    }
+
+    private void atualizarBandeira() {
+        if (imgBandeira == null) return;
+        String url = I18n.isPt() ? FLAG_BR : FLAG_US;
+        Image img = new Image(url, 24, 16, true, true, true); // true = background loading
+        imgBandeira.setImage(img);
     }
 
     // SETTERS

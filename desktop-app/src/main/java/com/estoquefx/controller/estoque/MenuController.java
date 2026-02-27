@@ -52,9 +52,8 @@ public class MenuController {
     private SupabaseService supabaseService;
     private String estoqueId;
 
-    private static final String FLAG_BR = "https://flagicons.lipis.dev/flags/4x3/br.png";
-    private static final String FLAG_US = "https://flagicons.lipis.dev/flags/4x3/us.png";
-
+    private static final String FLAG_BR = "https://flagcdn.com/24x18/br.png";
+    private static final String FLAG_US = "https://flagcdn.com/24x18/us.png";
     @FXML private Button btnIdioma;
     @FXML private ImageView imgBandeira;
 
@@ -742,27 +741,50 @@ public class MenuController {
 
     @FXML
     public void onTrocarIdioma() {
-        // Salva silenciosamente antes de recarregar
-        mainController.salvarSilencioso();
+        // Captura antes de qualquer coisa
+        LinkedHashSet<Produto> snapshot = new LinkedHashSet<>(Estoque.getProdutos());
+        String estoqueIdLocal = this.estoqueId;
+        SupabaseService serviceLocal = this.supabaseService;
 
-        // Alterna o locale
+        // 1. Salva local — rápido, síncrono, sem problema
+        try {
+            Time.updateTime();
+            Leitor.salvarEstoque(snapshot);
+            Produto.setUltimaAcao("s");
+        } catch (IOException e) {
+            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
+            return;
+        }
+
+        // 2. Supabase em background — dispara e esquece, igual ao salvarSilenciosamente()
+        if (serviceLocal != null && estoqueIdLocal != null) {
+            new Thread(() -> {
+                try {
+                    serviceLocal.deletarProdutosEstoque(estoqueIdLocal);
+                    for (Produto p : snapshot) {
+                        serviceLocal.salvarProduto(p, estoqueIdLocal);
+                    }
+                    System.out.println("✓ Supabase sincronizado após troca de idioma");
+                } catch (Exception e) {
+                    System.err.println("⚠ Erro ao sincronizar Supabase: " + e.getMessage());
+                }
+            }).start();
+        }
+
+        // 3. Troca idioma e recarrega cena imediatamente — sem esperar Supabase
         Locale novoLocale = I18n.isPt() ? Locale.ENGLISH : Locale.of("pt", "BR");
         I18n.init(novoLocale);
 
-        // Recarrega a cena inteira com o novo bundle
         try {
             Stage stage = (Stage) btnIdioma.getScene().getWindow();
-
             FXMLLoader loader = new FXMLLoader(
                     EstoqueAppFX.class.getResource("main-view.fxml"),
                     I18n.getBundle()
             );
             Scene scene = new Scene(loader.load(), 1000, 600);
-
             MainController novoController = loader.getController();
-            novoController.setEstoqueAtual(estoqueId, Leitor.getNomeEstoque(), supabaseService);
-
             stage.setScene(scene);
+            novoController.setEstoqueAtual(estoqueIdLocal, Leitor.getNomeEstoque(), serviceLocal);
         } catch (IOException e) {
             mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
         }
