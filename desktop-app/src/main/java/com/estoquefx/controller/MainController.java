@@ -161,9 +161,6 @@ public class MainController {
             menuViewController.setTabelaController(tabelaViewController);
             tabelaViewController.setMenuController(menuViewController);
         }
-        if (menuViewController != null) {
-            menuViewController.setMainController(this);
-        }
 
         System.out.println("✓ Controllers conectados");
     }

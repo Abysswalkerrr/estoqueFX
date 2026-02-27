@@ -1,7 +1,6 @@
 package com.estoquefx.controller.estoque;
 
 import com.estoquefx.EstoqueAppFX;
-import com.estoquefx.controller.MainController;
 import com.estoquefx.controller.SelecaoEstoqueController;
 import com.estoquefx.data.Leitor;
 import com.estoquefx.model.estoque.Categoria;
@@ -24,8 +23,6 @@ import javafx.geometry.Pos;
 import javafx.print.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
@@ -46,21 +43,14 @@ import static com.estoquefx.controller.MainController.mostrarInfoStatic;
 
 public class MenuController {
 
-    private MainController mainController;
     private TabelaController tabelaController;
     private HistoricoController historicoController;
     private SupabaseService supabaseService;
     private String estoqueId;
 
-    private static final String FLAG_BR = "https://flagcdn.com/24x18/br.png";
-    private static final String FLAG_US = "https://flagcdn.com/24x18/us.png";
-    @FXML private Button btnIdioma;
-    @FXML private ImageView imgBandeira;
-
     @FXML
     public void initialize() {
         System.out.println("📋 Inicializando MenuController...");
-        Platform.runLater(this::atualizarBandeira);
     }
 
     // SETTERS PARA DEPENDÊNCIAS
@@ -76,10 +66,6 @@ public class MenuController {
     public void setSupabaseService(SupabaseService service, String estoqueId) {
         this.supabaseService = service;
         this.estoqueId = estoqueId;
-    }
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
     }
 
     // AÇÕES DO MENU - ESTOQUE
@@ -739,56 +725,6 @@ public class MenuController {
         mostrarInfoStatic(tipo, titulo, header, msg);
     }
 
-    @FXML
-    public void onTrocarIdioma() {
-        // Captura antes de qualquer coisa
-        LinkedHashSet<Produto> snapshot = new LinkedHashSet<>(Estoque.getProdutos());
-        String estoqueIdLocal = this.estoqueId;
-        SupabaseService serviceLocal = this.supabaseService;
-
-        // 1. Salva local — rápido, síncrono, sem problema
-        try {
-            Time.updateTime();
-            Leitor.salvarEstoque(snapshot);
-            Produto.setUltimaAcao("s");
-        } catch (IOException e) {
-            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
-            return;
-        }
-
-        // 2. Supabase em background — dispara e esquece, igual ao salvarSilenciosamente()
-        if (serviceLocal != null && estoqueIdLocal != null) {
-            new Thread(() -> {
-                try {
-                    serviceLocal.deletarProdutosEstoque(estoqueIdLocal);
-                    for (Produto p : snapshot) {
-                        serviceLocal.salvarProduto(p, estoqueIdLocal);
-                    }
-                    System.out.println("✓ Supabase sincronizado após troca de idioma");
-                } catch (Exception e) {
-                    System.err.println("⚠ Erro ao sincronizar Supabase: " + e.getMessage());
-                }
-            }).start();
-        }
-
-        // 3. Troca idioma e recarrega cena imediatamente — sem esperar Supabase
-        Locale novoLocale = I18n.isPt() ? Locale.ENGLISH : Locale.of("pt", "BR");
-        I18n.init(novoLocale);
-
-        try {
-            Stage stage = (Stage) btnIdioma.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(
-                    EstoqueAppFX.class.getResource("main-view.fxml"),
-                    I18n.getBundle()
-            );
-            Scene scene = new Scene(loader.load(), 1000, 600);
-            MainController novoController = loader.getController();
-            stage.setScene(scene);
-            novoController.setEstoqueAtual(estoqueIdLocal, Leitor.getNomeEstoque(), serviceLocal);
-        } catch (IOException e) {
-            mostrarInfo(Alert.AlertType.ERROR, I18n.t("error"), null, e.getMessage());
-        }
-    }
 
     public void mostrarChangelog(String changelog) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -805,13 +741,6 @@ public class MenuController {
 
         alert.getDialogPane().setContent(textArea);
         alert.showAndWait();
-    }
-
-    private void atualizarBandeira() {
-        if (imgBandeira == null) return;
-        String url = I18n.isPt() ? FLAG_BR : FLAG_US;
-        Image img = new Image(url, 24, 16, true, true, true); // true = background loading
-        imgBandeira.setImage(img);
     }
 
     public void salvarSilenciosamente() {

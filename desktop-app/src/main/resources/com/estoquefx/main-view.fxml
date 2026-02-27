@@ -44,7 +44,7 @@
             </TabPane>
 
             <!-- Botão de idioma flutuando - anchor no canto superior direito absoluto -->
-            <AnchorPane pickOnBounds="false" mouseTransparent="true">
+            <AnchorPane pickOnBounds="false">
                 <Button fx:id="btnIdioma" onAction="#onTrocarIdioma"
                         mouseTransparent="false"
                         AnchorPane.topAnchor="2.0"
