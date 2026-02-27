@@ -3,41 +3,48 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.image.ImageView?>
+
 <HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.estoquefx.controller.estoque.MenuController">
- <MenuBar >
-     <Menu text="%menu.help">
-         <MenuItem onAction="#onReportarBug" text="%menu.help.report" />
-         <MenuItem onAction="#onSugestoes" text="%menu.help.suggest" />
-         <MenuItem onAction="#onTrocarEstoque" text="%menu.help.switch" />
-         <MenuItem onAction="#onSair" text="%menu.help.exit" />
-         <MenuItem onAction="#onSobre" text="%menu.help.about" />
-     </Menu>
-     <Menu text="%menu.file">
-         <MenuItem onAction="#onAbrirArquivo" text="%menu.file.open_folder" />
-         <MenuItem onAction="#onExportarCsv" text="%menu.file.export_csv" />
-         <MenuItem onAction="#onImportarCSV" text="%menu.file.import_csv" />
-         <MenuItem onAction="#onSalvar" text="%menu.file.save" />
-     </Menu>
-     <Menu text="%menu.inventory">
-         <MenuItem onAction="#onCriarProduto" text="%menu.inventory.new_product" />
-         <MenuItem onAction="#onEntrada" text="%menu.inventory.entry" />
-         <MenuItem onAction="#onSaida" text="%menu.inventory.exit" />
-     </Menu>
-     <Menu text="%menu.print">
-         <MenuItem onAction="#onImprimir" text="%menu.print.print" />
-     </Menu>
-     <Menu text="%menu.version">
-         <MenuItem onAction="#onAvisarAtualizacoes" text="%menu.version.notify" />
-         <MenuItem onAction="#onNovidades" text="%menu.version.whats_new" />
-         <MenuItem onAction="#onVerificarAtualizacoes" text="%menu.version.check" />
-         <MenuItem onAction="#onVersoesAnteriores" text="%menu.version.previous" />
-     </Menu>
- </MenuBar>
-    <Region/>
-    <Button fx:id="btnIdioma"
-            onAction="#onTrocarIdioma"
-            style="-fx-font-size: 14px; -fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 6 2 6;"
-            text="🇧🇷" />
-
+    <MenuBar>
+        <Menu text="%menu.help">
+            <MenuItem onAction="#onReportarBug" text="%menu.help.report"/>
+            <MenuItem onAction="#onSugestoes" text="%menu.help.suggest"/>
+            <MenuItem onAction="#onTrocarEstoque" text="%menu.help.switch"/>
+            <MenuItem onAction="#onSair" text="%menu.help.exit"/>
+            <MenuItem onAction="#onSobre" text="%menu.help.about"/>
+        </Menu>
+        <Menu text="%menu.file">
+            <MenuItem onAction="#onAbrirArquivo" text="%menu.file.open_folder"/>
+            <MenuItem onAction="#onExportarCsv" text="%menu.file.export_csv"/>
+            <MenuItem onAction="#onImportarCSV" text="%menu.file.import_csv"/>
+            <MenuItem onAction="#onSalvar" text="%menu.file.save"/>
+        </Menu>
+        <Menu text="%menu.inventory">
+            <MenuItem onAction="#onCriarProduto" text="%menu.inventory.new_product"/>
+            <MenuItem onAction="#onEntrada" text="%menu.inventory.entry"/>
+            <MenuItem onAction="#onSaida" text="%menu.inventory.exit"/>
+        </Menu>
+        <Menu text="%menu.print">
+            <MenuItem onAction="#onImprimir" text="%menu.print.print"/>
+        </Menu>
+        <Menu text="%menu.version">
+            <MenuItem onAction="#onAvisarAtualizacoes" text="%menu.version.notify"/>
+            <MenuItem onAction="#onNovidades" text="%menu.version.whats_new"/>
+            <MenuItem onAction="#onVerificarAtualizacoes" text="%menu.version.check"/>
+            <MenuItem onAction="#onVersoesAnteriores" text="%menu.version.previous"/>
+        </Menu>
+    </MenuBar>
+   <!-- <Region HBox.hgrow="ALWAYS"/> -->
+    <Button fx:id="btnIdioma" onAction="#onTrocarIdioma"
+            style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 4 2 4;">
+        <graphic>
+            <ImageView fx:id="imgBandeira" fitWidth="24" fitHeight="16" preserveRatio="true"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="Switch language / Trocar idioma"/>
+        </tooltip>
+    </Button>
 </HBox>

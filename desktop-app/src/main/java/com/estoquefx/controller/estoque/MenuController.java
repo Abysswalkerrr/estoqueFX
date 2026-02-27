@@ -24,6 +24,8 @@ import javafx.geometry.Pos;
 import javafx.print.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
@@ -50,16 +52,17 @@ public class MenuController {
     private SupabaseService supabaseService;
     private String estoqueId;
 
+    private static final String FLAG_BR = "https://flagicons.lipis.dev/flags/4x3/br.png";
+    private static final String FLAG_US = "https://flagicons.lipis.dev/flags/4x3/us.png";
+
     @FXML private Button btnIdioma;
+    @FXML private ImageView imgBandeira;
 
     @FXML
     public void initialize() {
         System.out.println("📋 Inicializando MenuController...");
-        Platform.runLater(() -> {
-            if (btnIdioma != null) {
-                btnIdioma.setText(I18n.isPt() ? "🇧🇷" : "🇺🇸");
-            }
-        });    }
+        Platform.runLater(this::atualizarBandeira);
+    }
 
     // SETTERS PARA DEPENDÊNCIAS
 
@@ -780,6 +783,13 @@ public class MenuController {
 
         alert.getDialogPane().setContent(textArea);
         alert.showAndWait();
+    }
+
+    private void atualizarBandeira() {
+        if (imgBandeira == null) return;
+        String url = I18n.isPt() ? FLAG_BR : FLAG_US;
+        Image img = new Image(url, 24, 16, true, true, true); // true = background loading
+        imgBandeira.setImage(img);
     }
 
     public void salvarSilenciosamente() {
