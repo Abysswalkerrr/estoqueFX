@@ -687,7 +687,7 @@ public class MenuController {
 
     @FXML
     private void onNovidades() {
-        mostrarChangelog(AppInfo.novidades);
+        mostrarChangelog(I18n.t("novidades.changelog"));
     }
 
     @FXML
