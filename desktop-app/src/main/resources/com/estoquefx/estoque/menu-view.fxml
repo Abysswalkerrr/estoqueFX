@@ -8,7 +8,7 @@
 
 <HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.estoquefx.controller.estoque.MenuController">
-    <MenuBar>
+    <MenuBar HBox.hgrow="ALWAYS">
         <Menu text="%menu.help">
             <MenuItem onAction="#onReportarBug" text="%menu.help.report"/>
             <MenuItem onAction="#onSugestoes" text="%menu.help.suggest"/>
@@ -37,9 +37,8 @@
             <MenuItem onAction="#onVersoesAnteriores" text="%menu.version.previous"/>
         </Menu>
     </MenuBar>
-   <!-- <Region HBox.hgrow="ALWAYS"/> -->
     <Button fx:id="btnIdioma" onAction="#onTrocarIdioma"
-            style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 4 2 4;">
+            style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 2 6 2 6;">
         <graphic>
             <ImageView fx:id="imgBandeira" fitWidth="24" fitHeight="16" preserveRatio="true"/>
         </graphic>
